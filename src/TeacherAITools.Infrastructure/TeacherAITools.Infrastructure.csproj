@@ -18,9 +18,4 @@
 		<ProjectReference Include="..\TeacherAITools.Application\TeacherAITools.Application.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Common\" />
-	  <Folder Include="Users\" />
-	</ItemGroup>
-
 </Project>

@@ -21,7 +21,6 @@
 	  <Folder Include="Authentication\Common\" />
 	  <Folder Include="Authentication\Commands\" />
 	  <Folder Include="Authentication\Queries\" />
-	  <Folder Include="Common\Interfaces\Persistence\" />
 	</ItemGroup>
 
 </Project>
