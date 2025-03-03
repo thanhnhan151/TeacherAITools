@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using TeacherAITools.Domain.Entities;
 
 namespace TeacherAITools.Infrastructure.Common.Persistence
@@ -20,16 +19,16 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var builder = new ConfigurationBuilder()
-                                  .SetBasePath(Directory.GetCurrentDirectory())
-                                  .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-            IConfigurationRoot configuration = builder.Build();
+            //var builder = new ConfigurationBuilder()
+            //                      .SetBasePath(Directory.GetCurrentDirectory())
+            //                      .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            //IConfigurationRoot configuration = builder.Build();
 
-            optionsBuilder.UseSqlServer(configuration.GetConnectionString("DeployConnection"), sqlOptions =>
-                sqlOptions.EnableRetryOnFailure(
-                    maxRetryCount: 5,
-                    maxRetryDelay: TimeSpan.FromSeconds(30),
-                    errorNumbersToAdd: null));
+            //optionsBuilder.UseSqlServer(configuration.GetConnectionString("DeployConnection"), sqlOptions =>
+            //    sqlOptions.EnableRetryOnFailure(
+            //        maxRetryCount: 5,
+            //        maxRetryDelay: TimeSpan.FromSeconds(30),
+            //        errorNumbersToAdd: null));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

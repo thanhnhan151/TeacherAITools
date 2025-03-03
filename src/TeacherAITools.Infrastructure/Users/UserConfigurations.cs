@@ -8,7 +8,34 @@ namespace TeacherAITools.Infrastructure.Users
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            throw new NotImplementedException();
+            builder.ToTable("User");
+
+            builder.HasKey(u => u.UserId);
+
+            builder.Property(u => u.Username)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            builder.Property(u => u.Email)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            builder.Property(u => u.Fullname)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            builder.Property(u => u.PasswordHash)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            builder.Property(u => u.PhoneNumber)
+                .IsRequired()
+                .HasMaxLength(11);
+
+            builder.HasOne(u => u.Role)
+                .WithMany(r => r.Users)
+                .HasForeignKey(u => u.RoleId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

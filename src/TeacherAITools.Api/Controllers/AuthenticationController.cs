@@ -1,17 +1,40 @@
 ﻿using Asp.Versioning;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
+using TeacherAITools.Application.Authentication.Common;
+using TeacherAITools.Application.Authentication.Queries.Login;
+using TeacherAITools.Application.Common.Exceptions;
+using TeacherAITools.Domain.Wrappers;
 
 namespace TeacherAITools.Api.Controllers
 {
     [Route("api/v{version:apiVersion}/auth")]
     [ApiVersion(1)]
-    public class AuthenticationController(ISender _mediator) : ApiController
+    public class AuthenticationController(
+        IMediator mediator,
+        ILogger<AuthenticationController> logger) : ApiController(mediator, logger)
     {
-        [HttpPost]
-        public async Task<IActionResult> LoginAsync([FromBody] )
+        [HttpPost("login")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(Response<AuthenticationResult>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> LoginAsync([FromBody] LoginQuery query)
         {
-
+            try
+            {
+                return Ok(await mediator.Send(query));
+            }
+            catch (ApiException e)
+            {
+                return BadRequest(new
+                {
+                    errorCode = e.ErrorCode,
+                    error = e.Error,
+                    errorMessage = e.ErrorMessage
+                });
+            }
         }
     }
 }

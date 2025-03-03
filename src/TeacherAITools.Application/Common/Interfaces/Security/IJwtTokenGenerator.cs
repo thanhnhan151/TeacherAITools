@@ -4,6 +4,7 @@ namespace TeacherAITools.Application.Common.Interfaces.Security
 {
     public interface IJwtTokenGenerator
     {
-        string GenerateToken(User user);
+        string GenerateJwtToken(User user);
+        string GenerateJwtRefreshToken(User user);
     }
 }

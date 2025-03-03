@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -22,7 +23,7 @@ namespace TeacherAITools.Infrastructure
             services
                 .AddSecurity(configuration)
                 .AddServices()
-                .AddPersistence();
+                .AddPersistence(configuration);
 
             return services;
         }
@@ -62,8 +63,14 @@ namespace TeacherAITools.Infrastructure
             return services;
         }
 
-        private static IServiceCollection AddPersistence(this IServiceCollection services)
+        private static IServiceCollection AddPersistence(
+            this IServiceCollection services,
+            IConfiguration configuration)
         {
+            services.AddDbContext<TeacherAIToolsDbContext>(options =>
+            {
+                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+            });
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;

@@ -12,10 +12,5 @@ namespace TeacherAITools.Infrastructure.Users
             , ILogger logger) : base(dbContext, logger)
         {
         }
-
-        public Task<User?> LoginAsync(string username, string password)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

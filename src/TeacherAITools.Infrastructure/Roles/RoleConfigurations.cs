@@ -8,7 +8,13 @@ namespace TeacherAITools.Infrastructure.Roles
     {
         public void Configure(EntityTypeBuilder<Role> builder)
         {
-            throw new NotImplementedException();
+            builder.ToTable("Role");
+
+            builder.HasKey(r => r.RoleId);
+
+            builder.Property(r => r.RoleName)
+                .IsRequired()
+                .HasMaxLength(26);
         }
     }
 }

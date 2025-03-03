@@ -1,17 +1,33 @@
-﻿namespace TeacherAITools.Application.Common.Interfaces.Persistence.Base
+﻿using System.Linq.Expressions;
+
+namespace TeacherAITools.Application.Common.Interfaces.Persistence.Base
 {
     public interface IRepository<TEntity> where TEntity : class
     {
-        Task<TEntity?> GetEntityByIdAsync(long id);
+        Task<IQueryable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? expression = null, Func<IQueryable<TEntity>, IQueryable<TEntity>>? includeFunc = null,
+            bool disableTracking = true);
 
-        Task AddEntityAsync(TEntity entity);
+        Task<IQueryable<TEntity>> GetAsync(Expression<Func<TEntity, bool>>? expression = null);
 
-        void UpdateEntity(TEntity entity);
+        Task<IQueryable<TEntity>> GetAsync(Expression<Func<TEntity, bool>>? expression = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+            Func<IQueryable<TEntity>, IQueryable<TEntity>>? includeFunc = null,
+            bool disableTracking = true);
 
-        Task<ICollection<TEntity>> GetAllEntitiesAsync();
+        Task<TEntity?> GetByIdAsync(object id);
 
-        Task AddEntitiesAsync(ICollection<TEntity> entities);
+        Task<TEntity> AddAsync(TEntity entity);
 
-        Task DisableAsync(int id);
+        Task UpdateAsync(TEntity entity);
+
+        Task DeleteAsync(TEntity entity);
+
+        Task AddRangeAsync(IEnumerable<TEntity> entities);
+
+        Task DeleteRangeAsync(IEnumerable<TEntity> entities);
+
+        Task DeleteAsync(object id);
+
+        bool Any();
     }
 }
