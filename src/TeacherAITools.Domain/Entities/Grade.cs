@@ -1,0 +1,10 @@
+﻿namespace TeacherAITools.Domain.Entities
+{
+    public class Grade
+    {
+        public int GradeId { get; set; }
+        public int GradeNumber { get; set; }
+
+        public virtual ICollection<Curriculum> Curriculums { get; set; } = [];
+    }
+}

@@ -32,9 +32,17 @@ namespace TeacherAITools.Infrastructure.Users
                 .IsRequired()
                 .HasMaxLength(11);
 
+            builder.Property(u => u.Address)
+                .HasMaxLength(50);
+
             builder.HasOne(u => u.Role)
                 .WithMany(r => r.Users)
                 .HasForeignKey(u => u.RoleId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            builder.HasOne(u => u.Manager)
+                .WithMany(u => u.Teachers)
+                .HasForeignKey(u => u.ManagerId)
                 .OnDelete(DeleteBehavior.SetNull);
         }
     }

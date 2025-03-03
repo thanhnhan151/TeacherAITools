@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TeacherAITools.Domain.Entities;
 
-namespace TeacherAITools.Infrastructure.Roles
+namespace TeacherAITools.Infrastructure.Users
 {
     public class RoleConfigurations : IEntityTypeConfiguration<Role>
     {
