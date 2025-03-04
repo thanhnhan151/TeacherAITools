@@ -32,19 +32,18 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
         public DbSet<Period> Periods { get; set; }
         public DbSet<PeriodDetail> PeriodDetails { get; set; }
         public DbSet<LessonHistory> LessonHistories { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+        public DbSet<NotificationType> NotificationTypes { get; set; }
+        public DbSet<Blog> Blogs { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Prompt> Prompts { get; set; }
+        public DbSet<School> Schools { get; set; }
+        public DbSet<City> Cities { get; set; }
+        public DbSet<District> Districts { get; set; }
+        public DbSet<Ward> Wards { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //var builder = new ConfigurationBuilder()
-            //                      .SetBasePath(Directory.GetCurrentDirectory())
-            //                      .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-            //IConfigurationRoot configuration = builder.Build();
-
-            //optionsBuilder.UseSqlServer(configuration.GetConnectionString("DeployConnection"), sqlOptions =>
-            //    sqlOptions.EnableRetryOnFailure(
-            //        maxRetryCount: 5,
-            //        maxRetryDelay: TimeSpan.FromSeconds(30),
-            //        errorNumbersToAdd: null));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

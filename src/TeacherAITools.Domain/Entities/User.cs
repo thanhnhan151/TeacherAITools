@@ -23,8 +23,17 @@ namespace TeacherAITools.Domain.Entities
         public int? ManagerId { get; set; }
         public virtual User Manager { get; set; } = null!;
 
+        public int? SchoolId { get; set; }
+        public virtual School School { get; set; } = null!;
+
+        public int? WardId { get; set; }
+        public virtual Ward Ward { get; set; } = null!;
+
         // Navigation
         public virtual ICollection<Lesson> Lessons { get; set; } = [];
         public virtual ICollection<User> Teachers { get; set; } = [];
+        public virtual ICollection<Notification> Notifications { get; set; } = [];
+        public virtual ICollection<Comment> Comments { get; set; } = [];
+        public virtual ICollection<Prompt> Prompts { get; set; } = [];
     }
 }
