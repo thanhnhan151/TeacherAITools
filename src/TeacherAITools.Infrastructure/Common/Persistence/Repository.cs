@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
+using TeacherAITools.Domain.Entities.Base.Implementations;
 using TeacherAITools.Domain.Entities.Base.Interfaces;
 
 namespace TeacherAITools.Infrastructure.Common.Persistence
@@ -102,6 +104,40 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
         public bool Any()
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<BasePaginationEntity<TEntity>> PaginationAsync(
+            int page = 0,
+            int pageSize = 20,
+            Expression<Func<TEntity, bool>>? filter = null,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeFunc = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+            CancellationToken cancellationToken = default)
+        {
+            IQueryable<TEntity> query = _dbContext.Set<TEntity>();
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            if (includeFunc != null)
+            {
+                query = includeFunc(query);
+            }
+
+            if (orderBy != null)
+            {
+                query = orderBy(query);
+            }
+            var total = await query.CountAsync(cancellationToken);
+
+            query = query.Skip((page - 1) * pageSize)
+                .Take(pageSize);
+
+            var data = await query.ToListAsync(cancellationToken);
+
+            return new BasePaginationEntity<TEntity>() { Data = data, Total = total };
         }
     }
 }

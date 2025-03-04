@@ -66,11 +66,10 @@ namespace TeacherAITools.Api.Controllers
         [AllowAnonymous]
         [ProducesResponseType(typeof(Response<List<GetUserResponse>>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync([FromQuery] GetUsersQuery query)
         {
             try
             {
-                var query = new GetUsersQuery();
                 return Ok(await mediator.Send(query));
             }
             catch (ApiException e)

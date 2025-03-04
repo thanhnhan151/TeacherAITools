@@ -22,7 +22,7 @@ namespace TeacherAITools.Application.Users.Queries.GetUserById
 
             var response = new GetUserResponse
             {
-                Id = user.UserId,
+                UserId = user.UserId,
                 Fullname = user.Fullname,
                 Username = user.Username,
                 Email = user.Email,

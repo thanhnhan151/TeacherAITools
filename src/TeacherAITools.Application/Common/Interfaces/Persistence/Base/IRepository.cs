@@ -1,4 +1,6 @@
-﻿using System.Linq.Expressions;
+﻿using Microsoft.EntityFrameworkCore.Query;
+using System.Linq.Expressions;
+using TeacherAITools.Domain.Entities.Base.Implementations;
 using TeacherAITools.Domain.Entities.Base.Interfaces;
 
 namespace TeacherAITools.Application.Common.Interfaces.Persistence.Base
@@ -30,5 +32,12 @@ namespace TeacherAITools.Application.Common.Interfaces.Persistence.Base
         Task DeleteAsync(object id);
 
         bool Any();
+
+        Task<BasePaginationEntity<TEntity>> PaginationAsync(int page = 0,
+        int pageSize = 20,
+        Expression<Func<TEntity, bool>>? filter = null,
+        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeFunc = null,
+        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+         CancellationToken cancellationToken = default);
     }
 }

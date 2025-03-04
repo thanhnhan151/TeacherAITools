@@ -17,21 +17,21 @@ namespace TeacherAITools.Application.Users.Commands.CreateUser
         public async Task<Response<GetUserResponse>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
             var userQuery = await _unitOfWork.Users.GetAsync(
-                user => user.Email.ToLower().Equals(request.Email.ToLower()) ||
-                        user.Username.ToLower().Equals(request.Email.ToLower()));
+                user => user.Email.ToLower().Equals(request.CreateUserRequest.Email.ToLower()) ||
+                        user.Username.ToLower().Equals(request.CreateUserRequest.Email.ToLower()));
 
             if (userQuery.FirstOrDefault() is not null) throw new ApiException(ResponseCode.USERNAME_EMAIL_ERR);
 
             var newUser = new User
             {
-                Username = request.Username,
-                PasswordHash = request.Password,
-                Fullname = request.Fullname,
-                Email = request.Email,
-                PhoneNumber = request.PhoneNumber,
-                Address = request.Address,
-                Gender = request.Gender,
-                DateOfBirth = request.DateOfBirth,
+                Username = request.CreateUserRequest.Username,
+                PasswordHash = request.CreateUserRequest.Password,
+                Fullname = request.CreateUserRequest.Fullname,
+                Email = request.CreateUserRequest.Email,
+                PhoneNumber = request.CreateUserRequest.PhoneNumber,
+                Address = request.CreateUserRequest.Address,
+                Gender = request.CreateUserRequest.Gender,
+                DateOfBirth = request.CreateUserRequest.DateOfBirth,
                 RoleId = 1
             };
 
