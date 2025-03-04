@@ -4,42 +4,71 @@ namespace TeacherAITools.Application.Common.Enums
 {
     public enum ResponseCode
     {
+        #region Common
+
         [Description("Success")]
-        Success = 0,
+        SUCCESS = 0,
         [Description("Failed")]
-        Failed = 1,
+        FAILED = 1,
         [Description("Common Error")]
-        CommonError = 2,
+        COMMON_ERR = 2,
         [Description("Invalid param")]
-        InvalidParam = 3,
+        INVALID_PARAM = 3,
         [Description("Invalid session")]
-        InvalidSession = 4,
+        INVALID_SESSION = 4,
         [Description("Unhandled request")]
-        UnhandledRequest = 5,
+        UNHANDLED_REQUEST = 5,
         [Description("Error when calling third party")]
-        ThirdPartyError = 6,
+        THIRD_PARTY_ERR = 6,
         [Description("Error when processing JSON")]
-        JsonProcessingError = 7,
+        JSON_PROCESS_ERR = 7,
         [Description("Invalid response code")]
-        ResponseCodeInvalid = 8,
+        INVALID_RESPONSE_CODE = 8,
         [Description("Key is conflict")]
-        Conflict = 9,
+        CONFLICT = 9,
 
-        // Auth
+        #endregion
+
+        #region Authen && Author
+
         [Description("Invalid username or password")]
-        InvalidUsernameOrPassword = 10,
+        INVALID_CREDENTIALS = 10,
         [Description("Error occurs when login with Google")]
-        GoogleAuthError = 11,
+        GOOGLE_AUTH_ERR = 11,
         [Description("Invalid refresh token")]
-        RefreshTokenInvalid = 12,
+        INVALID_REFRESH_TOKEN = 12,
         [Description("Authentication failed")]
-        AuthenticationFailed = 13,
+        FAILED_AUTHENTICATION = 13,
         [Description("Authentication failed: Outside email")]
-        AuthenticationFailedOutsideEmail = 14,
+        AUTH_ERR_OUT_EMAIL = 14,
         [Description("Invalid code")]
-        CodeInvalid = 15,
+        INVALID_CODE = 15,
+        [Description("Validation Error")] VALIDATION_ERR = 16,
+        [Description("Unauthorized")] UNAUTHORIZED = 17,
+        [Description("Google Id Token is invalid")] AUTH_ERR_GOOGLE_TOKEN = 18,
+        [Description("Refresh Token is invalid")] AUTH_ERR_REFRESH_TOKEN = 19,
 
-        [Description("Unauthorized")]
-        UnauthorizedRequest = 11,
+        #endregion
+
+        #region User
+        [Description("Username or Email has already been registered")]
+        USERNAME_EMAIL_ERR = 20,
+        [Description("Created successfully!")]
+        CREATED_SUCCESS = 21,
+        [Description("Updated successfully!")]
+        UPDATED_SUCCESS = 22,
+        [Description("Disabled successfully!")]
+        DISABLED_SUCCESS = 23,
+        [Description("Created unsuccessfully!")]
+        CREATED_UNSUCC = 24,
+        [Description("Updated unsuccessfully!")]
+        UPDATED_UNSUCC = 25,
+        [Description("Disabled unsuccessfully!")]
+        DISABLED_UNSUCC = 26,
+        [Description("User not found!")]
+        USER_NOT_FOUND = 27,
+        [Description("Your account is inactive! Please contact Admin for more info")]
+        INACTIVE_USER = 28,
+        #endregion
     }
 }

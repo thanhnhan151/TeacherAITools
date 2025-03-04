@@ -2,12 +2,13 @@
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
+using TeacherAITools.Domain.Entities.Base.Interfaces;
 
 namespace TeacherAITools.Infrastructure.Common.Persistence
 {
     public class Repository<TEntity>(
         TeacherAIToolsDbContext dbContext,
-        ILogger logger) : IRepository<TEntity> where TEntity : class
+        ILogger logger) : IRepository<TEntity> where TEntity : class, IAuditableEntity
     {
         protected TeacherAIToolsDbContext _dbContext = dbContext;
         protected readonly ILogger _logger = logger;
@@ -62,14 +63,20 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
             return await _dbContext.Set<TEntity>().FindAsync(id);
         }
 
-        public Task<TEntity> AddAsync(TEntity entity)
+        public async Task<TEntity> AddAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            await _dbContext.Set<TEntity>().AddAsync(entity);
+            return entity;
         }
 
         public Task UpdateAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            if (_dbContext.Entry(entity).State == EntityState.Detached) _dbContext.Set<TEntity>().Attach(entity);
+
+            _dbContext.Entry(entity).State = EntityState.Modified;
+
+            _dbContext.Set<TEntity>().Update(entity);
+            return Task.CompletedTask;
         }
 
         public Task DeleteAsync(TEntity entity)

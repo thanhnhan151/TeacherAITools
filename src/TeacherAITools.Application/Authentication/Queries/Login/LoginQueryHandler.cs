@@ -25,12 +25,14 @@ namespace TeacherAITools.Application.Authentication.Queries.Login
                                     && user.PasswordHash.Equals(request.Password),
                 includeFunc: user => user.Include(u => u.Role));
 
-            var user = userQuery.FirstOrDefault() ?? throw new ApiException(ResponseCode.InvalidUsernameOrPassword);
+            var user = userQuery.FirstOrDefault() ?? throw new ApiException(ResponseCode.INVALID_CREDENTIALS);
+
+            if (!user.IsActive) throw new ApiException(ResponseCode.INACTIVE_USER);
 
             var token = _jwtTokenGenerator.GenerateJwtToken(user);
             var refreshToken = _jwtTokenGenerator.GenerateJwtRefreshToken(user);
 
-            return new Response<AuthenticationResult>(code: (int)ResponseCode.Success, data: new AuthenticationResult(token, refreshToken), message: ResponseCode.Success.GetDescription());
+            return new Response<AuthenticationResult>(code: (int)ResponseCode.SUCCESS, data: new AuthenticationResult(token, refreshToken), message: ResponseCode.SUCCESS.GetDescription());
         }
     }
 }

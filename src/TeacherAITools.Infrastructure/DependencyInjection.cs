@@ -21,6 +21,7 @@ namespace TeacherAITools.Infrastructure
             IConfiguration configuration)
         {
             services
+                .AddHttpContextAccessor()
                 .AddSecurity(configuration)
                 .AddServices()
                 .AddPersistence(configuration);
@@ -31,6 +32,7 @@ namespace TeacherAITools.Infrastructure
         private static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
 
             return services;
         }
