@@ -9,7 +9,6 @@ on:
 env:
   API_PROJECT_PATH: 'src/TeacherAITools.Api/TeacherAITools.Api.csproj'
   AZURE_WEBAPP_NAME: 'teacheraitools'
-  AZURE_WEBAPP_PACKAGE_PATH: '/home/runner/work/TeacherAITools/TeacherAITools/src/TeacherAITools.Api/bin/Release/net8.0/publish/'
   DOTNET_VERSION: '8.x'
 
 jobs:
@@ -38,6 +37,8 @@ jobs:
     name: deploy
     needs: build
     runs-on: ubuntu-latest
+    environment:
+      name: 'production'
 
     steps:
       - name: Deploy 🚀
@@ -45,4 +46,5 @@ jobs:
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
-          package: "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+          slot-name: 'production'
+          package: .
