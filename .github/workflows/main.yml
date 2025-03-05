@@ -7,7 +7,7 @@ on:
       - main
 
 env:
-  API_PROJECT_PATH: 'src/TeacherAITools.Api/TeacherAITools.Api.csproj'
+  API_PROJECT_PATH: 'src/TeacherAITools.Api'
   AZURE_WEBAPP_NAME: 'teacheraitools'
   DOTNET_VERSION: '8.x'
 
@@ -25,13 +25,21 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Restore 📦
-        run: dotnet restore ${{ env.API_PROJECT_PATH }}
+        run: dotnet restore
+        working-directory: ${{ env.API_PROJECT_PATH }}
 
       - name: Build 🏗️
-        run: dotnet build ${{ env.API_PROJECT_PATH }} --configuration Release --no-restore
+        run: dotnet build --configuration Release --no-restore
+        working-directory: ${{ env.API_PROJECT_PATH }}
 
       - name: Publish 📂
-        run: dotnet publish ${{ env.API_PROJECT_PATH }} --configuration Release --no-build
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/teacheraitoolsapi --no-build
+
+      - name: Publish Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: .net-app
+          path: ${{env.DOTNET_ROOT}}/teacheraitoolsapi
 
   deploy:
     name: deploy
@@ -39,9 +47,16 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
+      - name: Download Artiface
+        uses: actions/download-artifact@v4
+        with:
+          name: .net-app
+    
       - name: Deploy 🚀
+        id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
