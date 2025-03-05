@@ -9,7 +9,7 @@ on:
 env:
   API_PROJECT_PATH: 'src/TeacherAITools.Api/TeacherAITools.Api.csproj'
   AZURE_WEBAPP_NAME: teacheraitools
-  AZURE_WEBAPP_PACKAGE_PATH: './publish'
+  AZURE_WEBAPP_PACKAGE_PATH: '.\publish'
   DOTNET_VERSION: '8.x'
 
 jobs:
@@ -35,7 +35,7 @@ jobs:
         run: dotnet publish ${{ env.API_PROJECT_PATH }} --configuration Release --no-build --output '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
 
   deploy:
-    name: Deploy to Azure
+    name: deploy
     needs: build
     runs-on: ubuntu-latest
 
