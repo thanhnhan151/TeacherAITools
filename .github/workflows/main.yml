@@ -9,7 +9,7 @@ on:
 env:
   API_PROJECT_PATH: 'src/TeacherAITools.Api/TeacherAITools.Api.csproj'
   AZURE_WEBAPP_NAME: 'teacheraitools'
-  AZURE_WEBAPP_PACKAGE_PATH: '/publish'
+  AZURE_WEBAPP_PACKAGE_PATH: '/home/runner/work/TeacherAITools/TeacherAITools/src/TeacherAITools.Api/bin/Release/net8.0/publish/'
   DOTNET_VERSION: '8.x'
 
 jobs:
