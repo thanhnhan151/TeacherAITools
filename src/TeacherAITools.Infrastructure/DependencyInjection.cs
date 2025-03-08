@@ -71,7 +71,7 @@ namespace TeacherAITools.Infrastructure
         {
             services.AddDbContext<TeacherAIToolsDbContext>(options =>
             {
-                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+                options.UseNpgsql(configuration.GetConnectionString("DeployConnection"));
             });
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
