@@ -24,11 +24,11 @@ namespace TeacherAITools.Api.Controllers
         [AllowAnonymous]
         [ProducesResponseType(typeof(Response<GetUserResponse>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> LoginAsync([FromBody] CreateUserCommand command)
+        public async Task<IActionResult> LoginAsync([FromBody] CreateUserRequest request)
         {
             try
             {
-                return Ok(await mediator.Send(command));
+                return Ok(await mediator.Send(new CreateUserCommand(request)));
             }
             catch (ApiException e)
             {
