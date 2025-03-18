@@ -70,5 +70,19 @@ namespace TeacherAITools.Application.Common.Enums
         [Description("Your account is inactive! Please contact Admin for more info")]
         INACTIVE_USER = 28,
         #endregion
+
+        #region Module
+        [Description("Module is already exists.")]
+        MODULE_ALREADY_EXISTS = 29,
+        [Description("Module not found!")]
+        MODULE_NOT_FOUND = 30,
+        [Description("Deleted successfully!")]
+        DELETED_SUCCESS = 31,
+        #endregion
+
+        #region Curriculum
+        [Description("Curriculum not found!")]
+        CURRICULUM_NOT_FOUND = 32,
+        #endregion
     }
 }
