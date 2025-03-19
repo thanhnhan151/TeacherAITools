@@ -29,7 +29,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\TeacherAITools.Application\TeacherAITools.Application.csproj" />
-		<ProjectReference Include="..\TeacherAITools.Contracts\TeacherAITools.Contracts.csproj" />
 		<ProjectReference Include="..\TeacherAITools.Infrastructure\TeacherAITools.Infrastructure.csproj" />
 	</ItemGroup>
 

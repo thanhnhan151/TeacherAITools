@@ -3,6 +3,7 @@ using TeacherAITools.Application.Common.Interfaces.Persistence;
 using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
 using TeacherAITools.Infrastructure.Curriculums;
 using TeacherAITools.Infrastructure.Modules;
+using TeacherAITools.Infrastructure.Schools;
 using TeacherAITools.Infrastructure.Users;
 
 namespace TeacherAITools.Infrastructure.Common.Persistence
@@ -19,6 +20,8 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
 
         public ICurriculumRepository Curriculums { get; private set; }
 
+        public ISchoolRepository Schools { get; private set; }
+
         public UnitOfWork(
             TeacherAIToolsDbContext dbContext,
             ILoggerFactory loggerFactory)
@@ -28,8 +31,12 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
             _logger = loggerFactory.CreateLogger("logs");
 
             Users = new UserRepository(_dbContext, _logger);
+
             Modules = new ModuleRepository(_dbContext, _logger);
+
             Curriculums = new CurriculumRepository(_dbContext, _logger);
+
+            Schools = new SchoolRepository(_dbContext, _logger);
         }
 
         public async Task CompleteAsync() => await _dbContext.SaveChangesAsync();

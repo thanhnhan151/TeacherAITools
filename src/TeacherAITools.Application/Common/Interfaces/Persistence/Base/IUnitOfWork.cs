@@ -3,8 +3,12 @@
     public interface IUnitOfWork
     {
         IUserRepository Users { get; }
+
         IModuleRepository Modules { get; }
+
         ICurriculumRepository Curriculums { get; }
+
+        ISchoolRepository Schools { get; }
 
         Task CompleteAsync();
     }

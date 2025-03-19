@@ -3,11 +3,11 @@ using TeacherAITools.Application.Common.Interfaces.Persistence;
 using TeacherAITools.Domain.Entities;
 using TeacherAITools.Infrastructure.Common.Persistence;
 
-namespace TeacherAITools.Infrastructure.Users
+namespace TeacherAITools.Infrastructure.Schools
 {
-    public class UserRepository(
+    public class SchoolRepository(
         TeacherAIToolsDbContext dbContext,
-        ILogger logger) : Repository<User>(dbContext, logger), IUserRepository
+        ILogger logger) : Repository<School>(dbContext, logger), ISchoolRepository
     {
     }
 }

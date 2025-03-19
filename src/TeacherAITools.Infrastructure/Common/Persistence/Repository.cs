@@ -4,13 +4,12 @@ using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
 using TeacherAITools.Domain.Entities.Base.Implementations;
-using TeacherAITools.Domain.Entities.Base.Interfaces;
 
 namespace TeacherAITools.Infrastructure.Common.Persistence
 {
     public class Repository<TEntity>(
         TeacherAIToolsDbContext dbContext,
-        ILogger logger) : IRepository<TEntity> where TEntity : class, IAuditableEntity
+        ILogger logger) : IRepository<TEntity> where TEntity : class
     {
         protected TeacherAIToolsDbContext _dbContext = dbContext;
         protected readonly ILogger _logger = logger;

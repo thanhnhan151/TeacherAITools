@@ -1,11 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 using TeacherAITools.Domain.Entities.Base.Implementations;
-using TeacherAITools.Domain.Entities.Base.Interfaces;
 
 namespace TeacherAITools.Application.Common.Interfaces.Persistence.Base
 {
-    public interface IRepository<TEntity> where TEntity : class, IAuditableEntity
+    public interface IRepository<TEntity> where TEntity : class
     {
         Task<IQueryable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? expression = null, Func<IQueryable<TEntity>, IQueryable<TEntity>>? includeFunc = null,
             bool disableTracking = true);
