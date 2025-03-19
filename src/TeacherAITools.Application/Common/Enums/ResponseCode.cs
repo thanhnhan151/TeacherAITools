@@ -89,7 +89,17 @@ namespace TeacherAITools.Application.Common.Enums
         [Description("School not found!")]
         SCHOOL_NOT_FOUND = 33,
         [Description("School's name has already exist!")]
-        SCHOOL_NAME_ERR = 34
+        SCHOOL_NAME_ERR = 34,
+        #endregion
+
+        #region City
+        [Description("City not found!")]
+        CITY_NOT_FOUND = 35,
+        #endregion
+
+        #region District
+        [Description("District not found!")]
+        DISTRICT_NOT_FOUND = 36
         #endregion
     }
 }

@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using TeacherAITools.Application.Common.Mappings;
 
 namespace TeacherAITools.Application
 {
@@ -7,6 +8,8 @@ namespace TeacherAITools.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(MappingProfiles));
+
             services.AddMediatR(options =>
             {
                 options.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);

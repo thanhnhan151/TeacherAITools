@@ -18,7 +18,7 @@ namespace TeacherAITools.Api.Controllers
     [ApiVersion(1)]
     public class SchoolsController(
         IMediator mediator,
-        ILogger<UsersController> logger) : ApiController(mediator, logger)
+        ILogger<SchoolsController> logger) : ApiController(mediator, logger)
     {
         [HttpPost]
         [AllowAnonymous]

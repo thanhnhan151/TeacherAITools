@@ -10,6 +10,10 @@
 
         ISchoolRepository Schools { get; }
 
+        ICityRepository Cities { get; }
+
+        IDistrictRepository Districts { get; }
+
         Task CompleteAsync();
     }
 }
