@@ -18,8 +18,8 @@ namespace TeacherAITools.Domain.Entities
         public int RequirementId { get; set; }
         public virtual Requirement Requirement { get; set; } = null!;
 
-        public int TeachingToolId { get; set; }
-        public virtual TeachingTool TeachingTool { get; set; } = null!;
+        public int SchoolSupplyId { get; set; }
+        public virtual SchoolSupply SchoolSupply { get; set; } = null!;
 
         public int NoteId { get; set; }
         public virtual Note Note { get; set; } = null!;
@@ -37,5 +37,7 @@ namespace TeacherAITools.Domain.Entities
         public virtual ICollection<Quiz> Quizzes { get; set; } = [];
 
         public virtual ICollection<Period> Periods { get; set; } = [];
+
+        public virtual ICollection<Prompt> Prompts { get; set; } = [];
     }
 }

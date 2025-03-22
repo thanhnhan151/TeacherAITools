@@ -18,6 +18,16 @@ namespace TeacherAITools.Infrastructure.Modules
             builder.Property(m => m.Desciption)
                 .HasMaxLength(50);
 
+            builder.HasOne(u => u.Grade)
+                .WithMany(r => r.Modules)
+                .HasForeignKey(u => u.GradeId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            builder.HasOne(u => u.Book)
+                .WithMany(r => r.Modules)
+                .HasForeignKey(u => u.BookId)
+                .OnDelete(DeleteBehavior.SetNull);
+
             builder.HasOne(m => m.Curriculum)
                 .WithMany(m => m.Modules)
                 .HasForeignKey(m => m.CurriculumId)

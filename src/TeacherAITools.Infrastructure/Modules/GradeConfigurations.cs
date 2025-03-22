@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TeacherAITools.Domain.Entities;
 
-namespace TeacherAITools.Infrastructure.Curriculums
+namespace TeacherAITools.Infrastructure.Modules
 {
     public class GradeConfigurations : IEntityTypeConfiguration<Grade>
     {

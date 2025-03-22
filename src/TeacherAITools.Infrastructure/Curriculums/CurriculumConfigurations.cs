@@ -18,11 +18,6 @@ namespace TeacherAITools.Infrastructure.Curriculums
             builder.Property(c => c.Description)
                 .HasMaxLength(50);
 
-            builder.HasOne(u => u.Grade)
-                .WithMany(r => r.Curriculums)
-                .HasForeignKey(u => u.GradeId)
-                .OnDelete(DeleteBehavior.SetNull);
-
             builder.HasOne(u => u.SchoolYear)
                 .WithMany(r => r.Curriculums)
                 .HasForeignKey(u => u.SchoolYearId)

@@ -10,6 +10,10 @@ namespace TeacherAITools.Domain.Entities
         public DateTime PublicationDate { get; set; }
         public string? Tags { get; set; } = string.Empty;
 
+        // Foreign Key
+        public int CategoryId { get; set; }
+        public virtual Category Category { get; set; } = null!;
+
         // Navigation
         public virtual ICollection<Comment> Comments { get; set; } = [];
     }

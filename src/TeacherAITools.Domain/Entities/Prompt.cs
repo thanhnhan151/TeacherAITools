@@ -9,5 +9,8 @@
         // Foreign Key
         public int UserId { get; set; }
         public virtual User User { get; set; } = null!;
+
+        public int LessonId { get; set; }
+        public virtual Lesson Lesson { get; set; } = null!;
     }
 }
