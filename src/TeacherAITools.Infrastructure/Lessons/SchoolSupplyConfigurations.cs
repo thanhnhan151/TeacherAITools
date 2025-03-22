@@ -4,13 +4,13 @@ using TeacherAITools.Domain.Entities;
 
 namespace TeacherAITools.Infrastructure.Lessons
 {
-    public class TeachingToolConfigurations : IEntityTypeConfiguration<TeachingTool>
+    public class SchoolSupplyConfigurations : IEntityTypeConfiguration<SchoolSupply>
     {
-        public void Configure(EntityTypeBuilder<TeachingTool> builder)
+        public void Configure(EntityTypeBuilder<SchoolSupply> builder)
         {
-            builder.ToTable("TeachingTool");
+            builder.ToTable("SchoolSupply");
 
-            builder.HasKey(t => t.TeachingToolId);
+            builder.HasKey(t => t.SchoolSupplyId);
 
             builder.Property(t => t.Description)
                 .IsRequired()

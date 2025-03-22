@@ -5,6 +5,6 @@
         public int GradeId { get; set; }
         public int GradeNumber { get; set; }
 
-        public virtual ICollection<Curriculum> Curriculums { get; set; } = [];
+        public virtual ICollection<Module> Modules { get; set; } = [];
     }
 }

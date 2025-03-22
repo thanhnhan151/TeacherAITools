@@ -22,7 +22,7 @@ namespace TeacherAITools.Application.Curriculums.Queries.GetCurriculumById
         {
             var curriculumQuery = await _unitOfWork.Curriculums.GetAsync(curriculum => curriculum.CurriculumId == request.id);
 
-            var curriculum = curriculumQuery.Include(c => c.Grade).Include(c => c.SchoolYear).FirstOrDefault() ?? throw new ApiException(ResponseCode.CURRICULUM_NOT_FOUND);
+            var curriculum = curriculumQuery/*.Include(c => c.Grade)*/.Include(c => c.SchoolYear).FirstOrDefault() ?? throw new ApiException(ResponseCode.CURRICULUM_NOT_FOUND);
 
             var response = new GetCurriculumResponse
             {
@@ -30,7 +30,7 @@ namespace TeacherAITools.Application.Curriculums.Queries.GetCurriculumById
                 Name = curriculum.Name,
                 Description = curriculum.Description,
                 TotalPeriods = curriculum.TotalPeriods,
-                GradeNumber = curriculum.Grade.GradeNumber,
+                //GradeNumber = curriculum.Grade.GradeNumber,
                 Year = curriculum.SchoolYear.Year
             };
 

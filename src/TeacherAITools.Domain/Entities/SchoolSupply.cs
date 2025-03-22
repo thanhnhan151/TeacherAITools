@@ -1,8 +1,8 @@
 ﻿namespace TeacherAITools.Domain.Entities
 {
-    public class TeachingTool
+    public class SchoolSupply
     {
-        public int TeachingToolId { get; set; }
+        public int SchoolSupplyId { get; set; }
         public string Description { get; set; } = string.Empty;
 
         // Navigation

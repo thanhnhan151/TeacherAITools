@@ -33,9 +33,9 @@ namespace TeacherAITools.Infrastructure.Lessons
                 .HasForeignKey(l => l.RequirementId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            builder.HasOne(l => l.TeachingTool)
+            builder.HasOne(l => l.SchoolSupply)
                 .WithMany(l => l.Lessons)
-                .HasForeignKey(l => l.TeachingToolId)
+                .HasForeignKey(l => l.SchoolSupplyId)
                 .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasOne(l => l.Note)

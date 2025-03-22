@@ -14,6 +14,12 @@ namespace TeacherAITools.Domain.Entities
         public int CurriculumId { get; set; }
         public virtual Curriculum Curriculum { get; set; } = null!;
 
+        public int GradeId { get; set; }
+        public virtual Grade Grade { get; set; } = null!;
+
+        public int BookId { get; set; }
+        public virtual Book Book { get; set; } = null!;
+
         // Navigation
         public virtual ICollection<Lesson> Lessons { get; set; } = [];
     }

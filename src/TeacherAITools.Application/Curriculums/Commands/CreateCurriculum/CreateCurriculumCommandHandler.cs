@@ -24,7 +24,7 @@ namespace TeacherAITools.Application.Curriculums.Commands.CreateCurriculum
                 Name = request.createCurriculumRequest.Name,
                 Description = request.createCurriculumRequest.Description,
                 TotalPeriods = request.createCurriculumRequest.TotalPeriods,
-                GradeId = request.createCurriculumRequest.GradeId,
+                //GradeId = request.createCurriculumRequest.GradeId,
                 SchoolYearId = request.createCurriculumRequest.SchoolYearId
             };
 

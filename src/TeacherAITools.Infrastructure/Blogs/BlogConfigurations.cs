@@ -18,6 +18,11 @@ namespace TeacherAITools.Infrastructure.Blogs
 
             builder.Property(b => b.Body)
                 .HasMaxLength(100);
+
+            builder.HasOne(c => c.Category)
+                .WithMany(c => c.Blogs)
+                .HasForeignKey(c => c.CategoryId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

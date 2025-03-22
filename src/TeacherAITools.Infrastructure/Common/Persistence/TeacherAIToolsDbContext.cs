@@ -20,11 +20,12 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
         public DbSet<SchoolYear> SchoolYears { get; set; }
         public DbSet<Curriculum> Curriculums { get; set; }
         public DbSet<Module> Modules { get; set; }
+        public DbSet<Book> Books { get; set; }
         public DbSet<Lesson> Lessons { get; set; }
         public DbSet<LessonType> LessonTypes { get; set; }
         public DbSet<Week> Weeks { get; set; }
         public DbSet<Requirement> Requirements { get; set; }
-        public DbSet<TeachingTool> TeachingTools { get; set; }
+        public DbSet<SchoolSupply> SchoolSupplies { get; set; }
         public DbSet<Note> Notes { get; set; }
         public DbSet<Quiz> Quizzes { get; set; }
         public DbSet<QuizQuestion> QuizQuestions { get; set; }
@@ -35,6 +36,7 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<NotificationType> NotificationTypes { get; set; }
         public DbSet<Blog> Blogs { get; set; }
+        public DbSet<Category> Categories { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Prompt> Prompts { get; set; }
         public DbSet<School> Schools { get; set; }

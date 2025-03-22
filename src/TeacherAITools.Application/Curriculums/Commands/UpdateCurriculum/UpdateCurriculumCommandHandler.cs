@@ -26,12 +26,12 @@ namespace TeacherAITools.Application.Curriculums.Commands.UpdateCurriculum
             curriculum.Name = request.updateCurriculumRequest.Name;
             curriculum.Description = request.updateCurriculumRequest.Description;
             curriculum.TotalPeriods = request.updateCurriculumRequest.TotalPeriods;
-            curriculum.GradeId = request.updateCurriculumRequest.GradeId;
+            //curriculum.GradeId = request.updateCurriculumRequest.GradeId;
             curriculum.SchoolYearId = request.updateCurriculumRequest.SchoolYearId;
 
             await _unitOfWork.Curriculums.UpdateAsync(curriculum);
             await _unitOfWork.CompleteAsync();
-            
+
             return new Response<GetCurriculumResponse>(code: (int)ResponseCode.UPDATED_SUCCESS, message: ResponseCode.UPDATED_SUCCESS.GetDescription());
         }
     }
