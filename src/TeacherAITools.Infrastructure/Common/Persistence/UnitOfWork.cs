@@ -4,6 +4,7 @@ using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
 using TeacherAITools.Infrastructure.Blogs;
 using TeacherAITools.Infrastructure.Citites;
 using TeacherAITools.Infrastructure.Curriculums;
+using TeacherAITools.Infrastructure.Lessons;
 using TeacherAITools.Infrastructure.Modules;
 using TeacherAITools.Infrastructure.Schools;
 using TeacherAITools.Infrastructure.Users;
@@ -33,6 +34,7 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
         public IBlogRepository Blogs { get; private set; }
 
         public ICommentRepository Comments { get; private set; }
+        public ILessonsRepository Lessons { get; private set; }
 
         public UnitOfWork(
             TeacherAIToolsDbContext dbContext,
@@ -59,6 +61,8 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
             Blogs = new BlogRepository(_dbContext, _logger);
 
             Comments = new CommentRepository(_dbContext, _logger);
+            
+            Lessons = new LessonsRepository(_dbContext, _logger);
         }
 
         public async Task CompleteAsync() => await _dbContext.SaveChangesAsync();
