@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using TeacherAITools.Application.Comments.Commands.CreateComment;
 using TeacherAITools.Application.Comments.Common;
 using TeacherAITools.Application.Common.Enums;
 using TeacherAITools.Application.Common.Extensions;
@@ -6,7 +7,7 @@ using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
 using TeacherAITools.Domain.Entities;
 using TeacherAITools.Domain.Wrappers;
 
-namespace TeacherAITools.Application.Comments.Commands
+namespace TeacherAITools.Application.Comments.Commands.CreateCommand
 {
     public class CreateCommentCommandHandler(
         IUnitOfWork unitOfWork) : IRequestHandler<CreateCommentCommand, Response<GetCommentResponse>>
@@ -17,10 +18,10 @@ namespace TeacherAITools.Application.Comments.Commands
         {
             var newComment = new Comment
             {
-                CommentBody = request.CommentBody,
-                TimeStamp = request.TimeStamp,
-                UserId = request.UserId,
-                BlogId = request.BlogId
+                CommentBody = request.Comment.Body,
+                TimeStamp = DateTime.UtcNow,
+                UserId = 4,
+                BlogId = request.Id
             };
 
             var result = await _unitOfWork.Comments.AddAsync(newComment);
