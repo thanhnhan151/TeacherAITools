@@ -13,6 +13,7 @@
         ICityRepository Cities { get; }
 
         IDistrictRepository Districts { get; }
+        ILessonsRepository Lessons { get; }
 
         ICategoryRepository Categories { get; }
 
