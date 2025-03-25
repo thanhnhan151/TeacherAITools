@@ -20,9 +20,4 @@
 		<ProjectReference Include="..\TeacherAITools.Domain\TeacherAITools.Domain.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Blogs\Commands\DisableBlog\" />
-	  <Folder Include="Blogs\Commands\UpdateBlog\" />
-	</ItemGroup>
-
 </Project>
