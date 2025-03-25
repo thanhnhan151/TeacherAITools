@@ -111,5 +111,10 @@ namespace TeacherAITools.Application.Common.Enums
         [Description("Comment not found!")]
         COMMENT_NOT_FOUND = 38,
         #endregion
+
+        #region Lesson
+        [Description("Lesson not found!")]
+        LESSON_NOT_FOUND = 37,
+        #endregion
     }
 }
