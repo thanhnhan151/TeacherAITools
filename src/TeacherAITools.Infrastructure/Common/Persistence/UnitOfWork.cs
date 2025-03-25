@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using TeacherAITools.Application.Common.Interfaces.Persistence;
 using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
+using TeacherAITools.Infrastructure.Blogs;
 using TeacherAITools.Infrastructure.Citites;
 using TeacherAITools.Infrastructure.Curriculums;
 using TeacherAITools.Infrastructure.Modules;
@@ -27,6 +28,12 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
 
         public IDistrictRepository Districts { get; private set; }
 
+        public ICategoryRepository Categories { get; private set; }
+
+        public IBlogRepository Blogs { get; private set; }
+
+        public ICommentRepository Comments { get; private set; }
+
         public UnitOfWork(
             TeacherAIToolsDbContext dbContext,
             ILoggerFactory loggerFactory)
@@ -46,6 +53,12 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
             Cities = new CityRepository(_dbContext, _logger);
 
             Districts = new DistrictRepository(_dbContext, _logger);
+
+            Categories = new CategoryRepository(_dbContext, _logger);
+
+            Blogs = new BlogRepository(_dbContext, _logger);
+
+            Comments = new CommentRepository(_dbContext, _logger);
         }
 
         public async Task CompleteAsync() => await _dbContext.SaveChangesAsync();

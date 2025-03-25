@@ -5,7 +5,7 @@
         public int CommentId { get; set; }
         public string CommentBody { get; set; } = string.Empty;
         public DateTime TimeStamp { get; set; }
-        public bool Status { get; set; }
+        public bool Status { get; set; } = true;
 
         // Foreign Key
         public int UserId { get; set; }

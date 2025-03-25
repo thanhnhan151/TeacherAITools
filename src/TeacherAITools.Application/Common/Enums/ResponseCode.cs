@@ -99,7 +99,12 @@ namespace TeacherAITools.Application.Common.Enums
 
         #region District
         [Description("District not found!")]
-        DISTRICT_NOT_FOUND = 36
+        DISTRICT_NOT_FOUND = 36,
+        #endregion
+
+        #region Blog
+        [Description("Blog not found!")]
+        BLOG_NOT_FOUND = 37,
         #endregion
     }
 }
