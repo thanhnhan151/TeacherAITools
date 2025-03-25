@@ -14,6 +14,12 @@
 
         IDistrictRepository Districts { get; }
 
+        ICategoryRepository Categories { get; }
+
+        IBlogRepository Blogs { get; }
+
+        ICommentRepository Comments { get; }
+
         Task CompleteAsync();
     }
 }
