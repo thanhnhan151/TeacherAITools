@@ -2,25 +2,31 @@
 using TeacherAITools.Application.Comments.Commands.CreateComment;
 using TeacherAITools.Application.Comments.Common;
 using TeacherAITools.Application.Common.Enums;
+using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.Common.Extensions;
 using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
+using TeacherAITools.Application.Common.Interfaces.Services;
 using TeacherAITools.Domain.Entities;
 using TeacherAITools.Domain.Wrappers;
 
 namespace TeacherAITools.Application.Comments.Commands.CreateCommand
 {
     public class CreateCommentCommandHandler(
-        IUnitOfWork unitOfWork) : IRequestHandler<CreateCommentCommand, Response<GetCommentResponse>>
+        IUnitOfWork unitOfWork,
+        ICurrentUserService currUserService) : IRequestHandler<CreateCommentCommand, Response<GetCommentResponse>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly ICurrentUserService _currUserService = currUserService;
 
         public async Task<Response<GetCommentResponse>> Handle(CreateCommentCommand request, CancellationToken cancellationToken)
         {
+            string userId = _currUserService.CurrentPrincipal ?? throw new ApiException(ResponseCode.FAILED_AUTHENTICATION);
+
             var newComment = new Comment
             {
                 CommentBody = request.Comment.Body,
                 TimeStamp = DateTime.UtcNow,
-                UserId = 4,
+                UserId = Int32.Parse(userId),
                 BlogId = request.Id
             };
 

@@ -134,7 +134,7 @@ namespace TeacherAITools.Api.Controllers
 
         #region Comment
         [HttpPost("{blogId}/comments")]
-        [AllowAnonymous]
+        [Authorize]
         [ProducesResponseType(typeof(Response<GetUserResponse>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> AddCommentAsync(int blogId, [FromBody] CreateUpdateCommentRequest request)
