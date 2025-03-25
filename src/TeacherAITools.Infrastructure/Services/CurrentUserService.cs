@@ -30,8 +30,9 @@ namespace TeacherAITools.Infrastructure.Services
 
                 var claims = identity.Claims;
 
-                var email = claims.FirstOrDefault(o => o.Type == ClaimTypes.Email)?.Value ?? null;
-                return email;
+                var userId = claims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier)?.Value ?? null;
+
+                return userId;
             }
         }
 
