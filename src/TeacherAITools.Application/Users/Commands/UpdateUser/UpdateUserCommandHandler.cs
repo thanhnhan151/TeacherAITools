@@ -23,7 +23,6 @@ namespace TeacherAITools.Application.Users.Commands.UpdateUser
             user.Email = request.UpdateUserRequest.Email;
             user.PhoneNumber = request.UpdateUserRequest.PhoneNumber;
             user.DateOfBirth = request.UpdateUserRequest.DateOfBirth;
-            user.ImgURL = request.UpdateUserRequest.ImgURL;
             user.Address = request.UpdateUserRequest.Address;
 
             await _unitOfWork.Users.UpdateAsync(user);

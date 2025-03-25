@@ -13,14 +13,14 @@ namespace TeacherAITools.Application.Comments.Commands.CreateCommand
 {
     public class CreateCommentCommandHandler(
         IUnitOfWork unitOfWork,
-        ICurrentUserService currUserService) : IRequestHandler<CreateCommentCommand, Response<GetCommentResponse>>
+        ICurrentUserService currentUserService) : IRequestHandler<CreateCommentCommand, Response<GetCommentResponse>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        private readonly ICurrentUserService _currUserService = currUserService;
+        private readonly ICurrentUserService _currentUserService = currentUserService;
 
         public async Task<Response<GetCommentResponse>> Handle(CreateCommentCommand request, CancellationToken cancellationToken)
         {
-            string userId = _currUserService.CurrentPrincipal ?? throw new ApiException(ResponseCode.FAILED_AUTHENTICATION);
+            string userId = _currentUserService.CurrentPrincipal ?? throw new ApiException(ResponseCode.FAILED_AUTHENTICATION);
 
             var newComment = new Comment
             {
