@@ -5,12 +5,9 @@ using TeacherAITools.Infrastructure.Common.Persistence;
 
 namespace TeacherAITools.Infrastructure.Lessons
 {
-    public class LessonsRepository:  Repository<Lesson>, ILessonsRepository
+    public class LessonsRepository(
+       TeacherAIToolsDbContext dbContext,
+       ILogger logger) : Repository<Lesson>(dbContext, logger), ILessonsRepository
     {
-         public LessonsRepository(
-            TeacherAIToolsDbContext dbContext
-            , ILogger logger) : base(dbContext, logger)
-        {
-        }
     }
 }

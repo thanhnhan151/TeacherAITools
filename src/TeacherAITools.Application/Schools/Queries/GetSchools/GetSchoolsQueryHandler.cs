@@ -31,7 +31,7 @@ namespace TeacherAITools.Application.Schools.Queries.GetSchools
                     PageSize = request.PageSize,
                     TotalSize = result.Total,
                     TotalPage = (int?)((result?.Total + (long)request.PageSize - 1) / (long)request.PageSize) ?? 0,
-                    Items = result.Data.ConvertAll(school => new GetSchoolResponse()
+                    Items = result!.Data!.ConvertAll(school => new GetSchoolResponse()
                     {
                         SchoolId = school.SchoolId,
                         Name = school.Name,
