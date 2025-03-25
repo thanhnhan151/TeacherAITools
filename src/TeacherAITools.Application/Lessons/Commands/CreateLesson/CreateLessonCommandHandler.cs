@@ -8,14 +8,9 @@ using TeacherAITools.Domain.Wrappers;
 
 namespace TeacherAITools.Application.Lessons.Commands.CreateLesson
 {
-    public class CreateLessonCommandHandler : IRequestHandler<CreateLessonCommand, Response<GetLessonResponse>>
+    public class CreateLessonCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<CreateLessonCommand, Response<GetLessonResponse>>
     {
-        private readonly IUnitOfWork _unitOfWork;
-
-        public CreateLessonCommandHandler(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
         public async Task<Response<GetLessonResponse>> Handle(CreateLessonCommand request, CancellationToken cancellationToken)
         {
@@ -26,7 +21,7 @@ namespace TeacherAITools.Application.Lessons.Commands.CreateLesson
                 TotalPeriods = request.createLessonRequest.TotalPeriods,
                 LessonTypeId = request.createLessonRequest.LessonTypeId,
                 RequirementId = request.createLessonRequest.RequirementId,
-                TeachingToolId = request.createLessonRequest.TeachingToolId,
+                SchoolSupplyId = request.createLessonRequest.SchoolSupplyId,
                 NoteId = request.createLessonRequest.NoteId,
                 UserId = request.createLessonRequest.UserId,
                 WeekId = request.createLessonRequest.WeekId,

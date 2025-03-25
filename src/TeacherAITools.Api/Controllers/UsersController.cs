@@ -7,6 +7,7 @@ using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.Users.Commands.CreateUser;
 using TeacherAITools.Application.Users.Commands.DisableUser;
 using TeacherAITools.Application.Users.Commands.UpdateUser;
+using TeacherAITools.Application.Users.Commands.UploadProfileImg;
 using TeacherAITools.Application.Users.Common;
 using TeacherAITools.Application.Users.Queries.GetUserById;
 using TeacherAITools.Application.Users.Queries.GetUsers;
@@ -117,6 +118,27 @@ namespace TeacherAITools.Api.Controllers
             catch (ApiException e)
             {
                 return NotFound(new
+                {
+                    errorCode = e.ErrorCode,
+                    error = e.Error,
+                    errorMessage = e.ErrorMessage
+                });
+            }
+        }
+
+        [HttpPost("profile-img")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(Response<GetUserResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> UploadAsync(IFormFile file)
+        {
+            try
+            {
+                return Ok(await mediator.Send(new UploadProfileImgCommand(file)));
+            }
+            catch (ApiException e)
+            {
+                return BadRequest(new
                 {
                     errorCode = e.ErrorCode,
                     error = e.Error,

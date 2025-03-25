@@ -114,7 +114,7 @@ namespace TeacherAITools.Application.Common.Enums
 
         #region Lesson
         [Description("Lesson not found!")]
-        LESSON_NOT_FOUND = 37,
+        LESSON_NOT_FOUND = 39,
         #endregion
     }
 }

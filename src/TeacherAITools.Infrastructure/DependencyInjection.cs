@@ -33,6 +33,7 @@ namespace TeacherAITools.Infrastructure
         {
             services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
+            services.AddScoped<IUploadFileService, UploadFileService>();
 
             return services;
         }

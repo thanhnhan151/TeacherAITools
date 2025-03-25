@@ -16,16 +16,10 @@ namespace TeacherAITools.Api.Controllers
 {
     [Route("api/v{version:apiVersion}/lessons")]
     [ApiVersion(1)]
-    public class LessonsController : ApiController
+    public class LessonsController(IMediator mediator, ILogger<LessonsController> logger) : ApiController(mediator, logger)
     {
-        private readonly IMediator _mediator;
-        private readonly ILogger<LessonsController> _logger;
-
-        public LessonsController(IMediator mediator, ILogger<LessonsController> logger) : base(mediator, logger)
-        {
-            _mediator = mediator;
-            _logger = logger;
-        }
+        private readonly IMediator _mediator = mediator;
+        private readonly ILogger<LessonsController> _logger = logger;
 
         [HttpPost]
         [AllowAnonymous]

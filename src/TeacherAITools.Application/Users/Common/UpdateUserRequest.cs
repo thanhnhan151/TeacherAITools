@@ -5,6 +5,5 @@
         string Email,
         string PhoneNumber,
         DateOnly? DateOfBirth,
-        string ImgURL,
         string Address);
 }

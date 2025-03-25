@@ -9,14 +9,9 @@ using TeacherAITools.Domain.Wrappers;
 
 namespace TeacherAITools.Application.Lessons.Queries.GetLessonById
 {
-    public class GetLessonByIdQueryHandler : IRequestHandler<GetLessonByIdQuery, Response<GetLessonResponse>>
+    public class GetLessonByIdQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetLessonByIdQuery, Response<GetLessonResponse>>
     {
-        private readonly IUnitOfWork _unitOfWork;
-
-        public GetLessonByIdQueryHandler(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
         public async Task<Response<GetLessonResponse>> Handle(GetLessonByIdQuery request, CancellationToken cancellationToken)
         {
@@ -25,7 +20,7 @@ namespace TeacherAITools.Application.Lessons.Queries.GetLessonById
             var lesson = lessonQuery
                 .Include(l => l.LessonType)
                 .Include(l => l.Requirement)
-                .Include(l => l.TeachingTool)
+                .Include(l => l.SchoolSupply)
                 .Include(l => l.Note)
                 .Include(l => l.User)
                 .Include(l => l.Week)
@@ -42,7 +37,7 @@ namespace TeacherAITools.Application.Lessons.Queries.GetLessonById
                 IsPublic = lesson.IsPublic,
                 LessonType = lesson.LessonType.LessonTypeName,
                 Requirement = lesson.Requirement.Description,
-                TeachingTool = lesson.TeachingTool.Description,
+                SchoolSupply = lesson.SchoolSupply.Description,
                 Note = lesson.Note.Description,
                 User = lesson.User.Username,
                 Week = lesson.Week.WeekNumber,

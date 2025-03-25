@@ -32,7 +32,7 @@ namespace TeacherAITools.Application.Users.Commands.CreateUser
                 Address = request.Address,
                 Gender = request.Gender,
                 DateOfBirth = request.DateOfBirth,
-                RoleId = 1
+                RoleId = request.RoleId
             };
 
             var result = await _unitOfWork.Users.AddAsync(newUser);

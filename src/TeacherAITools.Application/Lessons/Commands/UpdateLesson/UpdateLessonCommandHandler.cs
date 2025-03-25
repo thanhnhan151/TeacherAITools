@@ -8,14 +8,9 @@ using TeacherAITools.Domain.Wrappers;
 
 namespace TeacherAITools.Application.Lessons.Commands.UpdateLesson
 {
-    public class UpdateLessonCommandHandler : IRequestHandler<UpdateLessonCommand, Response<GetLessonResponse>>
+    public class UpdateLessonCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<UpdateLessonCommand, Response<GetLessonResponse>>
     {
-        private readonly IUnitOfWork _unitOfWork;
-
-        public UpdateLessonCommandHandler(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
         public async Task<Response<GetLessonResponse>> Handle(UpdateLessonCommand request, CancellationToken cancellationToken)
         {
@@ -28,7 +23,7 @@ namespace TeacherAITools.Application.Lessons.Commands.UpdateLesson
             lesson.TotalPeriods = request.updateLessonRequest.TotalPeriods;
             lesson.LessonTypeId = request.updateLessonRequest.LessonTypeId;
             lesson.RequirementId = request.updateLessonRequest.RequirementId;
-            lesson.TeachingToolId = request.updateLessonRequest.TeachingToolId;
+            lesson.SchoolSupplyId = request.updateLessonRequest.SchoolSupplyId;
             lesson.NoteId = request.updateLessonRequest.NoteId;
             lesson.UserId = request.updateLessonRequest.UserId;
             lesson.WeekId = request.updateLessonRequest.WeekId;
@@ -36,7 +31,7 @@ namespace TeacherAITools.Application.Lessons.Commands.UpdateLesson
 
             await _unitOfWork.Lessons.UpdateAsync(lesson);
             await _unitOfWork.CompleteAsync();
-            
+
             return new Response<GetLessonResponse>(code: (int)ResponseCode.UPDATED_SUCCESS, message: ResponseCode.UPDATED_SUCCESS.GetDescription());
         }
     }

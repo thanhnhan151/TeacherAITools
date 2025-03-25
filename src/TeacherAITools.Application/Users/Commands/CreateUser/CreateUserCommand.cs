@@ -13,5 +13,6 @@ namespace TeacherAITools.Application.Users.Commands.CreateUser
     string PhoneNumber,
     DateOnly DateOfBirth,
     Gender Gender,
+    int RoleId,
     string Address) : IRequest<Response<GetUserResponse>>;
 }
