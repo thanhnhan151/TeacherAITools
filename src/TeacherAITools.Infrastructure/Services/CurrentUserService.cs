@@ -6,7 +6,6 @@ using System.Security.Claims;
 using System.Text;
 using TeacherAITools.Application.Common.Enums;
 using TeacherAITools.Application.Common.Exceptions;
-using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
 using TeacherAITools.Application.Common.Interfaces.Services;
 using TeacherAITools.Infrastructure.Security;
 
@@ -14,19 +13,16 @@ namespace TeacherAITools.Infrastructure.Services
 {
     public class CurrentUserService(
         IHttpContextAccessor accessor,
-        IUnitOfWork unitOfWork,
         IOptions<JwtSettings> jwtOptions) : ICurrentUserService
     {
         private readonly IHttpContextAccessor _accessor = accessor;
-        private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly JwtSettings _jwtSettings = jwtOptions.Value;
 
         public string? CurrentPrincipal
         {
             get
             {
-                var identity = _accessor?.HttpContext?.User.Identity as ClaimsIdentity;
-                if (identity == null || !identity.IsAuthenticated) return null;
+                if (_accessor?.HttpContext?.User.Identity is not ClaimsIdentity identity || !identity.IsAuthenticated) return null;
 
                 var claims = identity.Claims;
 
