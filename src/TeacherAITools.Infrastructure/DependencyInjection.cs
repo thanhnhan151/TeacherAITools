@@ -31,6 +31,7 @@ namespace TeacherAITools.Infrastructure
 
         private static IServiceCollection AddServices(this IServiceCollection services)
         {
+            services.AddScoped<AuditableEntitiesInterceptor>();
             services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
             services.AddScoped<IUploadFileService, UploadFileService>();
@@ -70,6 +71,7 @@ namespace TeacherAITools.Infrastructure
             this IServiceCollection services,
             IConfiguration configuration)
         {
+            services.Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"));
             services.AddDbContext<TeacherAIToolsDbContext>(options =>
             {
                 options.UseNpgsql(configuration.GetConnectionString("DeployConnection"));

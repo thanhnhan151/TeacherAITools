@@ -52,7 +52,8 @@ namespace TeacherAITools.Application.Common.Mappings
 
             #region Comment
             CreateMap<Comment, GetCommentResponse>()
-                .ForMember(m => m.User, m => m.MapFrom(m => m.User.Fullname));
+                .ForMember(m => m.User, m => m.MapFrom(m => m.User.Fullname))
+                .ForMember(m => m.TimeStamp, m => m.MapFrom(m => m.TimeStamp.ToString("o")));
             #endregion
         }
     }

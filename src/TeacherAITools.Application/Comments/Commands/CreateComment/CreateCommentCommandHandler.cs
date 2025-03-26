@@ -13,10 +13,12 @@ namespace TeacherAITools.Application.Comments.Commands.CreateCommand
 {
     public class CreateCommentCommandHandler(
         IUnitOfWork unitOfWork,
-        ICurrentUserService currentUserService) : IRequestHandler<CreateCommentCommand, Response<GetCommentResponse>>
+        ICurrentUserService currentUserService,
+        IDateTimeProvider dateTimeProvider) : IRequestHandler<CreateCommentCommand, Response<GetCommentResponse>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly ICurrentUserService _currentUserService = currentUserService;
+        private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
 
         public async Task<Response<GetCommentResponse>> Handle(CreateCommentCommand request, CancellationToken cancellationToken)
         {
@@ -25,7 +27,7 @@ namespace TeacherAITools.Application.Comments.Commands.CreateCommand
             var newComment = new Comment
             {
                 CommentBody = request.Comment.Body,
-                TimeStamp = DateTime.UtcNow,
+                TimeStamp = _dateTimeProvider.UtcNow,
                 UserId = Int32.Parse(userId),
                 BlogId = request.Id
             };

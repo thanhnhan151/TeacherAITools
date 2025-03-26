@@ -20,7 +20,23 @@ namespace TeacherAITools.Application.Users.Commands.UploadProfileImg
 
         public async Task<Response<GetUserResponse>> Handle(UploadProfileImgCommand request, CancellationToken cancellationToken)
         {
-            string imgUrl = await _uploadFileService.UploadImage(request.File);
+            var fileExtension = Path.GetExtension(request.File.FileName);
+            switch (fileExtension)
+            {
+                case ".jpg":
+                case ".jpeg":
+                case ".png":
+                case ".gif":
+                    break;
+                default:
+                    throw new ApiException(ResponseCode.INVALID_FILE_EXTENSION);
+            }
+
+            long size = request.File.Length;
+            if (size > 5 * 1024 * 1024)
+                throw new ApiException(ResponseCode.INVALID_FILE_SIZE);
+
+            string imgUrl = await _uploadFileService.CloudinaryStorage(request.File);
 
             string userId = _currentUserService.CurrentPrincipal ?? throw new ApiException(ResponseCode.FAILED_AUTHENTICATION);
 

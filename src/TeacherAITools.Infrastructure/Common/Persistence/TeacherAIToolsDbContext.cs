@@ -5,13 +5,23 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
 {
     public class TeacherAIToolsDbContext : DbContext
     {
-        public TeacherAIToolsDbContext()
-        {
-        }
+        private readonly AuditableEntitiesInterceptor _auditableEntitiesInterceptor;
 
-        public TeacherAIToolsDbContext(DbContextOptions<TeacherAIToolsDbContext> options)
+        //public TeacherAIToolsDbContext()
+        //{
+        //}
+
+        public TeacherAIToolsDbContext(
+            DbContextOptions<TeacherAIToolsDbContext> options,
+            AuditableEntitiesInterceptor auditableEntitiesInterceptor)
         : base(options)
         {
+            _auditableEntitiesInterceptor = auditableEntitiesInterceptor;
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.AddInterceptors(_auditableEntitiesInterceptor);
         }
 
         public DbSet<User> Users { get; set; }
@@ -43,10 +53,6 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
         public DbSet<City> Cities { get; set; }
         public DbSet<District> Districts { get; set; }
         public DbSet<Ward> Wards { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
