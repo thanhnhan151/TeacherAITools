@@ -1,54 +1,66 @@
-﻿using Firebase.Storage;
+﻿using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using TeacherAITools.Application.Common.Interfaces.Services;
 
 namespace TeacherAITools.Infrastructure.Services
 {
-    public class UploadFileService(
-        IConfiguration configuration) : IUploadFileService
+    public class UploadFileService : IUploadFileService
     {
-        private readonly IConfiguration _configuration = configuration;
+        private readonly Cloudinary _cloudinary;
 
-        public async Task<string> UploadImage(IFormFile file)
+        public UploadFileService(IOptions<CloudinarySettings> config)
         {
-            var _apiKey = _configuration["Firebase:ApiKey"];
-            var _storage = _configuration["Firebase:Storage"];
+            var acc = new Account
+                (
+                    config.Value.CloudName,
+                    config.Value.ApiKey,
+                    config.Value.ApiSecret
+                );
 
-            var storage = new FirebaseStorage(_storage);
+            _cloudinary = new Cloudinary(acc);
+        }
 
-            var fileName = $"{Guid.NewGuid()}_{file.FileName}";
+        public async Task<string> CloudinaryStorage(IFormFile file)
+        {
+            var uploadResult = new ImageUploadResult();
 
-            string folderName;
-            var fileExtension = Path.GetExtension(file.FileName);
-
-            switch (fileExtension)
+            if (file.Length > 0)
             {
-                case ".jpg":
-                case ".jpeg":
-                case ".png":
-                    folderName = "images";
-                    break;
-                case ".docx":
-                    folderName = "docx";
-                    break;
-                case ".ppt":
-                case ".pptx":
-                    folderName = "ppt";
-                    break;
-                case ".mp4":
-                case ".mov":
-                    folderName = "videos";
-                    break;
-                default:
-                    folderName = "other";
-                    break;
+                using var stream = file.OpenReadStream();
+                var uploadParams = new ImageUploadParams()
+                {
+                    File = new FileDescription(file.FileName, stream)
+                };
+
+                uploadResult = await _cloudinary.UploadAsync(uploadParams);
             }
 
-            using var stream = file.OpenReadStream();
-            var storageReference = storage.Child(folderName).Child(fileName);
-            await storageReference.PutAsync(stream);
-            return await storageReference.GetDownloadUrlAsync();
+            return uploadResult.SecureUrl.AbsoluteUri;
         }
+
+        //public async Task<string> UploadImage(IFormFile file)
+        //{
+        //    var _apiKey = _configuration["Firebase:ApiKey"];
+        //    var _storage = _configuration["Firebase:Storage"];
+
+        //    var storage = new FirebaseStorage(_storage);
+
+        //    var fileName = $"{Guid.NewGuid()}_{file.FileName}";
+        //    var fileExtension = Path.GetExtension(file.FileName);
+        //    string folderName = fileExtension switch
+        //    {
+        //        ".jpg" or ".jpeg" or ".png" => "images",
+        //        ".docx" => "docx",
+        //        ".ppt" or ".pptx" => "ppt",
+        //        ".mp4" or ".mov" => "videos",
+        //        _ => "other",
+        //    };
+        //    using var stream = file.OpenReadStream();
+        //    var storageReference = storage.Child(folderName).Child(fileName);
+        //    await storageReference.PutAsync(stream);
+        //    return await storageReference.GetDownloadUrlAsync();
+        //}
     }
 }

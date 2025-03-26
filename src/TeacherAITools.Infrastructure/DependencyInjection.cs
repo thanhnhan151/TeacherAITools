@@ -70,6 +70,7 @@ namespace TeacherAITools.Infrastructure
             this IServiceCollection services,
             IConfiguration configuration)
         {
+            services.Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"));
             services.AddDbContext<TeacherAIToolsDbContext>(options =>
             {
                 options.UseNpgsql(configuration.GetConnectionString("DeployConnection"));

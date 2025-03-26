@@ -20,7 +20,7 @@ namespace TeacherAITools.Application.Users.Commands.UploadProfileImg
 
         public async Task<Response<GetUserResponse>> Handle(UploadProfileImgCommand request, CancellationToken cancellationToken)
         {
-            string imgUrl = await _uploadFileService.UploadImage(request.File);
+            string imgUrl = await _uploadFileService.CloudinaryStorage(request.File);
 
             string userId = _currentUserService.CurrentPrincipal ?? throw new ApiException(ResponseCode.FAILED_AUTHENTICATION);
 
