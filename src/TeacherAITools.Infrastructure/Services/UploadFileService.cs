@@ -24,22 +24,18 @@ namespace TeacherAITools.Infrastructure.Services
 
         public async Task<string> CloudinaryStorage(IFormFile file)
         {
-            var uploadResult = new ImageUploadResult();
-
-            if (file.Length > 0)
+            using var stream = file.OpenReadStream();
+            var uploadParams = new ImageUploadParams()
             {
-                using var stream = file.OpenReadStream();
-                var uploadParams = new ImageUploadParams()
-                {
-                    File = new FileDescription(file.FileName, stream)
-                };
+                File = new FileDescription(file.FileName, stream)
+            };
 
-                uploadResult = await _cloudinary.UploadAsync(uploadParams);
-            }
+            var result = await _cloudinary.UploadAsync(uploadParams);
 
-            return uploadResult.SecureUrl.AbsoluteUri;
+            return result.SecureUrl.AbsoluteUri;
         }
 
+        #region Firebase
         //public async Task<string> UploadImage(IFormFile file)
         //{
         //    var _apiKey = _configuration["Firebase:ApiKey"];
@@ -62,5 +58,6 @@ namespace TeacherAITools.Infrastructure.Services
         //    await storageReference.PutAsync(stream);
         //    return await storageReference.GetDownloadUrlAsync();
         //}
+        #endregion
     }
 }

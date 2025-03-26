@@ -116,5 +116,12 @@ namespace TeacherAITools.Application.Common.Enums
         [Description("Lesson not found!")]
         LESSON_NOT_FOUND = 39,
         #endregion
+
+        #region Photo
+        [Description("Invalid file extension")]
+        INVALID_FILE_EXTENSION = 40,
+        [Description("Maximun size can be 5mb")]
+        INVALID_FILE_SIZE = 41,
+        #endregion
     }
 }
