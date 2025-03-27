@@ -8,5 +8,6 @@ namespace TeacherAITools.Application.Modules.Common
         public int Semester { get; set; }
         public int TotalPeriods { get; set; }
         public string Curriculum { get; set; } = string.Empty;
+        public string Book { get; set; } = string.Empty;
     }
 }

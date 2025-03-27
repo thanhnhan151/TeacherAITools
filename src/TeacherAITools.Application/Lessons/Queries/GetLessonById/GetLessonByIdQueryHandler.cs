@@ -25,6 +25,7 @@ namespace TeacherAITools.Application.Lessons.Queries.GetLessonById
                 .Include(l => l.User)
                 .Include(l => l.Week)
                 .Include(l => l.Module)
+                .Include(l => l.Periods)
                 .FirstOrDefault() ?? throw new ApiException(ResponseCode.LESSON_NOT_FOUND);
 
             var response = new GetLessonResponse
@@ -41,7 +42,12 @@ namespace TeacherAITools.Application.Lessons.Queries.GetLessonById
                 Note = lesson.Note.Description,
                 User = lesson.User.Username,
                 Week = lesson.Week.WeekNumber,
-                Module = lesson.Module.Name
+                Module = lesson.Module.Name,
+                PeriodsResponses = lesson.Periods.ToList().ConvertAll(period => new PeriodsResponse
+                {
+                    Id = period.Id,
+                    Number = period.Number
+                })
             };
 
             return new Response<GetLessonResponse>(code: (int)ResponseCode.SUCCESS, data: response, message: ResponseCode.SUCCESS.GetDescription());

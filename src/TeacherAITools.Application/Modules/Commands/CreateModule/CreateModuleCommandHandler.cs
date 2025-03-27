@@ -31,7 +31,8 @@ namespace TeacherAITools.Application.Modules.Commands.CreateModule
                 Desciption = request.createModuleRequest.Desciption,
                 Semester = request.createModuleRequest.Semester,
                 TotalPeriods = request.createModuleRequest.TotalPeriods,
-                CurriculumId = request.createModuleRequest.CurriculumId
+                CurriculumId = request.createModuleRequest.CurriculumId,
+                BookId = request.createModuleRequest.BookId
             };
 
             var result = await _unitOfWork.Modules.AddAsync(module);
