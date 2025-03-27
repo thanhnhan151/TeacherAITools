@@ -5,5 +5,6 @@ namespace TeacherAITools.Application.Modules.Common{
         public int Semester { get; set; }
         public int TotalPeriods { get; set; }
         public int CurriculumId { get; set; }
+        public int BookId { get; set; }
     }
 }

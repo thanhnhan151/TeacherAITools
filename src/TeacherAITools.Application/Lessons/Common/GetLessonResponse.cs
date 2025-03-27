@@ -15,5 +15,12 @@ namespace TeacherAITools.Application.Lessons.Common
         public string User { get; set; } = string.Empty;
         public int Week { get; set; }
         public string Module { get; set; } = string.Empty;
+        public List<PeriodsResponse>? PeriodsResponses { get; set; }
+    }
+
+    public class PeriodsResponse
+    {
+        public int Id { get; set; }
+        public int Number { get; set; }
     }
 }

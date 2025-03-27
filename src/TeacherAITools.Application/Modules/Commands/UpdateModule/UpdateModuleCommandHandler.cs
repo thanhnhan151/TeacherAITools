@@ -29,6 +29,7 @@ namespace TeacherAITools.Application.Modules.Commands.UpdateModule
             module.Semester = request.updateModuleRequest.Semester;
             module.TotalPeriods = request.updateModuleRequest.TotalPeriods;
             module.CurriculumId = request.updateModuleRequest.CurriculumId;
+            module.BookId = request.updateModuleRequest.BookId;
 
             await _unitOfWork.Modules.UpdateAsync(module);
             await _unitOfWork.CompleteAsync();

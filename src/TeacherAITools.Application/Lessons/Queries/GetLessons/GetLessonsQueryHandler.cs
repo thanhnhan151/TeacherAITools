@@ -49,7 +49,11 @@ namespace TeacherAITools.Application.Lessons.Queries.GetLessons
                         Note = lesson.Note.Description,
                         User = lesson.User.Username,
                         Week = lesson.Week.WeekNumber,
-                        Module = lesson.Module.Name
+                        Module = lesson.Module.Name,
+                        PeriodsResponses = lesson.Periods.ToList().ConvertAll(period => new PeriodsResponse{
+                            Id = period.Id,
+                            Number = period.Number
+                        })
                     })
                 },
                 message: ResponseCode.SUCCESS.GetDescription());

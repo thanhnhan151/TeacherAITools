@@ -31,7 +31,8 @@ namespace TeacherAITools.Application.Modules.Queries.GetModuleById
                 Desciption = module.Desciption,
                 Semester = module.Semester,
                 TotalPeriods = module.TotalPeriods,
-                Curriculum = module.Curriculum.Name
+                Curriculum = module.Curriculum.Name,
+                Book = module.Book.BookName
             };
 
             return new Response<GetModuleResponse>(code: (int)ResponseCode.SUCCESS, data: response, message: ResponseCode.SUCCESS.GetDescription());
