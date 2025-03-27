@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TeacherAITools.Application.Common.Enums;
 using TeacherAITools.Application.Common.Exceptions;
@@ -9,9 +10,12 @@ using TeacherAITools.Domain.Wrappers;
 
 namespace TeacherAITools.Application.Schools.Queries.GetSchoolById
 {
-    public class GetSchoolByIdQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetSchoolByIdQuery, Response<GetSchoolResponse>>
+    public class GetSchoolByIdQueryHandler(
+        IUnitOfWork unitOfWork,
+        IMapper mapper) : IRequestHandler<GetSchoolByIdQuery, Response<GetSchoolResponse>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<Response<GetSchoolResponse>> Handle(GetSchoolByIdQuery request, CancellationToken cancellationToken)
         {
@@ -21,19 +25,7 @@ namespace TeacherAITools.Application.Schools.Queries.GetSchoolById
                                            .ThenInclude(w => w.District)
                                                        .ThenInclude(d => d.City).FirstOrDefault() ?? throw new ApiException(ResponseCode.SCHOOL_NOT_FOUND);
 
-            var response = new GetSchoolResponse
-            {
-                SchoolId = school.SchoolId,
-                Name = school.Name,
-                Description = school.Description,
-                ImageURL = school.ImageURL,
-                Address = school.Address,
-                Ward = school.Ward.WardName,
-                District = school.Ward.District.DistrictName,
-                City = school.Ward.District.City.CityName
-            };
-
-            return new Response<GetSchoolResponse>(code: (int)ResponseCode.SUCCESS, data: response, message: ResponseCode.SUCCESS.GetDescription());
+            return new Response<GetSchoolResponse>(code: (int)ResponseCode.SUCCESS, data: _mapper.Map<GetSchoolResponse>(school), message: ResponseCode.SUCCESS.GetDescription());
         }
     }
 }

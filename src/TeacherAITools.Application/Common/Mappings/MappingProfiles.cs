@@ -5,6 +5,7 @@ using TeacherAITools.Application.Cities.Common;
 using TeacherAITools.Application.Comments.Common;
 using TeacherAITools.Application.Common.Extensions;
 using TeacherAITools.Application.Districts.Common;
+using TeacherAITools.Application.Schools.Common;
 using TeacherAITools.Application.Users.Common;
 using TeacherAITools.Domain.Entities;
 using TeacherAITools.Domain.Wrappers;
@@ -44,16 +45,26 @@ namespace TeacherAITools.Application.Common.Mappings
 
             #region Blog
             CreateMap<Blog, GetBlogResponse>()
-                .ForMember(b => b.Category, b => b.MapFrom(b => b.Category.CategoryName));
+                .ForMember(b => b.Category, b => b.MapFrom(b => b.Category.CategoryName))
+                .ForMember(m => m.PublicationDate, m => m.MapFrom(m => m.PublicationDate.GetFormatDateTime()));
             CreateMap<Blog, GetBlogDetailResponse>()
-                .ForMember(b => b.Category, b => b.MapFrom(b => b.Category.CategoryName));
+                .ForMember(b => b.Category, b => b.MapFrom(b => b.Category.CategoryName))
+                .ForMember(m => m.PublicationDate, m => m.MapFrom(m => m.PublicationDate.GetFormatDateTime()));
             CreateMap<PaginatedList<Blog>, PaginatedList<GetBlogResponse>>();
             #endregion
 
             #region Comment
             CreateMap<Comment, GetCommentResponse>()
                 .ForMember(m => m.User, m => m.MapFrom(m => m.User.Fullname))
-                .ForMember(m => m.TimeStamp, m => m.MapFrom(m => m.TimeStamp.ToString("o")));
+                .ForMember(m => m.TimeStamp, m => m.MapFrom(m => m.TimeStamp.GetFormatDateTime()));
+            #endregion
+
+            #region School
+            CreateMap<School, GetSchoolResponse>()
+                .ForMember(s => s.Ward, s => s.MapFrom(s => s.Ward.WardName))
+                .ForMember(s => s.District, s => s.MapFrom(s => s.Ward.District.DistrictName))
+                .ForMember(s => s.City, s => s.MapFrom(s => s.Ward.District.City.CityName));
+            CreateMap<PaginatedList<School>, PaginatedList<GetSchoolResponse>>();
             #endregion
         }
     }
