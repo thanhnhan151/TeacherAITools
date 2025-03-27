@@ -7,6 +7,5 @@ namespace TeacherAITools.Application.Blogs.Commands.CreateBlog
     public record CreateBlogCommand(
         string Title,
         string Body,
-        DateTime PublicationDate,
         int CategoryId) : IRequest<Response<GetBlogResponse>>;
 }

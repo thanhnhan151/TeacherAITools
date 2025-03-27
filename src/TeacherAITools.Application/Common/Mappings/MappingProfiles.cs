@@ -45,16 +45,18 @@ namespace TeacherAITools.Application.Common.Mappings
 
             #region Blog
             CreateMap<Blog, GetBlogResponse>()
-                .ForMember(b => b.Category, b => b.MapFrom(b => b.Category.CategoryName));
+                .ForMember(b => b.Category, b => b.MapFrom(b => b.Category.CategoryName))
+                .ForMember(m => m.PublicationDate, m => m.MapFrom(m => m.PublicationDate.GetFormatDateTime()));
             CreateMap<Blog, GetBlogDetailResponse>()
-                .ForMember(b => b.Category, b => b.MapFrom(b => b.Category.CategoryName));
+                .ForMember(b => b.Category, b => b.MapFrom(b => b.Category.CategoryName))
+                .ForMember(m => m.PublicationDate, m => m.MapFrom(m => m.PublicationDate.GetFormatDateTime()));
             CreateMap<PaginatedList<Blog>, PaginatedList<GetBlogResponse>>();
             #endregion
 
             #region Comment
             CreateMap<Comment, GetCommentResponse>()
                 .ForMember(m => m.User, m => m.MapFrom(m => m.User.Fullname))
-                .ForMember(m => m.TimeStamp, m => m.MapFrom(m => m.TimeStamp.ToString("o")));
+                .ForMember(m => m.TimeStamp, m => m.MapFrom(m => m.TimeStamp.GetFormatDateTime()));
             #endregion
 
             #region School

@@ -4,7 +4,7 @@
     {
         public int CommentId { get; set; }
         public string CommentBody { get; set; } = string.Empty;
-        public DateTime TimeStamp { get; set; }
+        public string TimeStamp { get; set; } = string.Empty;
         public string User { get; set; } = string.Empty;
     }
 }
