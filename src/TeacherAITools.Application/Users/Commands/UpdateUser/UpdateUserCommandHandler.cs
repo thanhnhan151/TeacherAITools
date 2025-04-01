@@ -15,14 +15,32 @@ namespace TeacherAITools.Application.Users.Commands.UpdateUser
 
         public async Task<Response<GetUserResponse>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
+            List<string> errorMessages = [];
+
             var userQuery = await _unitOfWork.Users.GetAsync(expression: u => u.UserId == request.Id, disableTracking: true);
 
-            var user = userQuery.FirstOrDefault() ?? throw new ApiException(ResponseCode.USER_NOT_FOUND);
+            var user = userQuery.FirstOrDefault();
+
+            if (user is null)
+            {
+                errorMessages.Add(ResponseCode.USER_NOT_FOUND.GetDescription());
+                throw new ValidationException(ResponseCode.USER_NOT_FOUND, errorMessages);
+            }
+
+            var validator = new UpdateUserCommandValidator(_unitOfWork);
+            var result = await validator.ValidateAsync(request.UpdateUserRequest, cancellationToken);
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    errorMessages.Add(error.ErrorMessage);
+                }
+                throw new ValidationException(ResponseCode.CREATED_UNSUCC, errorMessages);
+            }
 
             user.Fullname = request.UpdateUserRequest.Fullname;
             user.Email = request.UpdateUserRequest.Email;
             user.PhoneNumber = request.UpdateUserRequest.PhoneNumber;
-            user.DateOfBirth = request.UpdateUserRequest.DateOfBirth;
             user.Address = request.UpdateUserRequest.Address;
 
             await _unitOfWork.Users.UpdateAsync(user);

@@ -37,6 +37,8 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
 
         public ILessonsRepository Lessons { get; private set; }
 
+        public IRoleRepository Roles { get; private set; }
+
         public UnitOfWork(
             TeacherAIToolsDbContext dbContext,
             ILoggerFactory loggerFactory)
@@ -64,6 +66,8 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
             Comments = new CommentRepository(_dbContext, _logger);
 
             Lessons = new LessonsRepository(_dbContext, _logger);
+
+            Roles = new RoleRepository(_dbContext, _logger);
         }
 
         public async Task CompleteAsync() => await _dbContext.SaveChangesAsync();

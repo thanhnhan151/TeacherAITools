@@ -15,9 +15,28 @@ namespace TeacherAITools.Application.Blogs.Commands.UpdateBlog
 
         public async Task<Response<GetBlogResponse>> Handle(UpdateBlogCommand request, CancellationToken cancellationToken)
         {
+            List<string> errorMessages = [];
+
             var blogQuery = await _unitOfWork.Blogs.GetAsync(expression: u => u.BlogId == request.Id, disableTracking: true);
 
-            var blog = blogQuery.FirstOrDefault() ?? throw new ApiException(ResponseCode.BLOG_NOT_FOUND);
+            var blog = blogQuery.FirstOrDefault();
+
+            if (blog is null)
+            {
+                errorMessages.Add(ResponseCode.BLOG_NOT_FOUND.GetDescription());
+                throw new ValidationException(ResponseCode.BLOG_NOT_FOUND, errorMessages);
+            }
+
+            var validator = new UpdateBlogCommandValidator();
+            var result = await validator.ValidateAsync(request.UpdateBlogRequest, cancellationToken);
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    errorMessages.Add(error.ErrorMessage);
+                }
+                throw new ValidationException(ResponseCode.CREATED_UNSUCC, errorMessages);
+            }
 
             blog.Title = request.UpdateBlogRequest.Title;
             blog.Body = request.UpdateBlogRequest.Body;

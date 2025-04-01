@@ -2,6 +2,5 @@
 {
     public record UpdateSchoolRequest(
         string Name,
-        string Description,
-        string ImageURL);
+        string Description);
 }
