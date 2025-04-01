@@ -21,6 +21,8 @@
 
         ICommentRepository Comments { get; }
 
+        IRoleRepository Roles { get; }
+
         Task CompleteAsync();
     }
 }

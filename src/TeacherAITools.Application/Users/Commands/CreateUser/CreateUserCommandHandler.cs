@@ -16,11 +16,18 @@ namespace TeacherAITools.Application.Users.Commands.CreateUser
 
         public async Task<Response<GetUserResponse>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            var userQuery = await _unitOfWork.Users.GetAsync(
-                user => user.Email.ToLower().Equals(request.Email.ToLower()) ||
-                        user.Username.ToLower().Equals(request.Email.ToLower()));
-
-            if (userQuery.FirstOrDefault() is not null) throw new ApiException(ResponseCode.USERNAME_EMAIL_ERR);
+            var validator = new CreateUserCommandValidator(_unitOfWork);
+            var result = await validator.ValidateAsync(request, cancellationToken);
+            if (!result.IsValid)
+            {
+                //Add all error messages to an array
+                var errorMessages = new List<string>();
+                foreach (var error in result.Errors)
+                {
+                    errorMessages.Add(error.ErrorMessage);
+                }
+                throw new ValidationException(ResponseCode.CREATED_UNSUCC, errorMessages);
+            }
 
             var newUser = new User
             {
@@ -36,7 +43,7 @@ namespace TeacherAITools.Application.Users.Commands.CreateUser
                 SchoolId = request.SchoolId
             };
 
-            var result = await _unitOfWork.Users.AddAsync(newUser);
+            var res = await _unitOfWork.Users.AddAsync(newUser);
 
             await _unitOfWork.CompleteAsync();
 

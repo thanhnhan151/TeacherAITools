@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using TeacherAITools.Application.Common.Mappings;
+using TeacherAITools.Application.Users.Commands.CreateUser;
 
 namespace TeacherAITools.Application
 {
@@ -17,6 +18,8 @@ namespace TeacherAITools.Application
                 //options.AddOpenBehavior(typeof(AuthorizationBehavior<,>));
                 //options.AddOpenBehavior(typeof(ValidationBehavior<,>));
             });
+
+            services.AddScoped<IValidator<CreateUserCommand>, CreateUserCommandValidator>();
 
             services.AddValidatorsFromAssemblyContaining(typeof(DependencyInjection));
             return services;
