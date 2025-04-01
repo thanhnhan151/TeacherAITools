@@ -35,7 +35,8 @@ namespace TeacherAITools.Application.Common.Mappings
                 .ForMember(u => u.School, u => u.MapFrom(u => u.School.Name))
                 .ForMember(u => u.Manager, u => u.MapFrom(u => u.ManagerId != null ? u.Manager.Fullname : "N/A"))
                 .ForMember(u => u.Role, u => u.MapFrom(u => u.Role.RoleName))
-                .ForMember(u => u.Gender, u => u.MapFrom(u => u.Gender.GetDescription()));
+                .ForMember(u => u.Gender, u => u.MapFrom(u => u.Gender.GetDescription()))
+                .ForMember(m => m.DateOfBirth, m => m.MapFrom(m => m.DateOfBirth.GetFormatDate()));
             CreateMap<PaginatedList<User>, PaginatedList<GetUserResponse>>();
             #endregion
 

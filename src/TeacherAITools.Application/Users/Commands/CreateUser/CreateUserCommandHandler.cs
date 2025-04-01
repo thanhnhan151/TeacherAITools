@@ -20,7 +20,6 @@ namespace TeacherAITools.Application.Users.Commands.CreateUser
             var result = await validator.ValidateAsync(request, cancellationToken);
             if (!result.IsValid)
             {
-                //Add all error messages to an array
                 var errorMessages = new List<string>();
                 foreach (var error in result.Errors)
                 {

@@ -25,6 +25,9 @@ namespace TeacherAITools.Application.Users.Commands.CreateUser
             RuleFor(u => u.PhoneNumber)
                 .NotEmpty().WithMessage("Phone number is required!");
 
+            RuleFor(u => u.Address)
+                .NotEmpty().WithMessage("Address is required!");
+
             RuleFor(u => u.Email)
                 .NotEmpty().WithMessage("Email is required!")
                 .MustAsync(async (email, cancellation) => await CheckExistUsernameEmail(email, "Email"))

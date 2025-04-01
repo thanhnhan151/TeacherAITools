@@ -14,13 +14,31 @@ namespace TeacherAITools.Application.Schools.Commands.UpdateSchool
 
         public async Task<Response<GetSchoolResponse>> Handle(UpdateSchoolCommand request, CancellationToken cancellationToken)
         {
+            List<string> errorMessages = [];
+
             var schoolQuery = await _unitOfWork.Schools.GetAsync(expression: u => u.SchoolId == request.Id, disableTracking: true);
 
-            var school = schoolQuery.FirstOrDefault() ?? throw new ApiException(ResponseCode.SCHOOL_NOT_FOUND);
+            var school = schoolQuery.FirstOrDefault();
+
+            if (school is null)
+            {
+                errorMessages.Add(ResponseCode.SCHOOL_NOT_FOUND.GetDescription());
+                throw new ValidationException(ResponseCode.SCHOOL_NOT_FOUND, errorMessages);
+            }
+
+            var validator = new UpdateSchoolCommandValidator(_unitOfWork);
+            var result = await validator.ValidateAsync(request.UpdateSchoolRequest, cancellationToken);
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    errorMessages.Add(error.ErrorMessage);
+                }
+                throw new ValidationException(ResponseCode.CREATED_UNSUCC, errorMessages);
+            }
 
             school.Name = request.UpdateSchoolRequest.Name;
             school.Description = request.UpdateSchoolRequest.Description;
-            school.ImageURL = request.UpdateSchoolRequest.ImageURL;
 
             await _unitOfWork.Schools.UpdateAsync(school);
             await _unitOfWork.CompleteAsync();

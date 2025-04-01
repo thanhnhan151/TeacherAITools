@@ -15,10 +15,17 @@ namespace TeacherAITools.Application.Schools.Commands.CreateSchool
 
         public async Task<Response<GetSchoolResponse>> Handle(CreateSchoolCommand request, CancellationToken cancellationToken)
         {
-            var schoolQuery = await _unitOfWork.Schools.GetAsync(
-               school => school.Name.Equals(request.Name));
-
-            if (schoolQuery.FirstOrDefault() is not null) throw new ApiException(ResponseCode.SCHOOL_NAME_ERR);
+            var validator = new CreateSchoolCommandValidator(_unitOfWork);
+            var result = await validator.ValidateAsync(request, cancellationToken);
+            if (!result.IsValid)
+            {
+                var errorMessages = new List<string>();
+                foreach (var error in result.Errors)
+                {
+                    errorMessages.Add(error.ErrorMessage);
+                }
+                throw new ValidationException(ResponseCode.CREATED_UNSUCC, errorMessages);
+            }
 
             var newSchool = new School
             {
@@ -29,7 +36,7 @@ namespace TeacherAITools.Application.Schools.Commands.CreateSchool
                 WardId = request.WardId
             };
 
-            var result = await _unitOfWork.Schools.AddAsync(newSchool);
+            var res = await _unitOfWork.Schools.AddAsync(newSchool);
 
             await _unitOfWork.CompleteAsync();
 

@@ -4,6 +4,5 @@
         string Fullname,
         string Email,
         string PhoneNumber,
-        DateOnly? DateOfBirth,
         string Address);
 }

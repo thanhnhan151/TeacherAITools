@@ -94,12 +94,12 @@ namespace TeacherAITools.Api.Controllers
             {
                 return Ok(await mediator.Send(new UpdateUserCommand(id, request)));
             }
-            catch (ApiException e)
+            catch (ValidationException e)
             {
                 return NotFound(new
                 {
                     errorCode = e.ErrorCode,
-                    error = e.Error,
+                    errors = e.Errors,
                     errorMessage = e.ErrorMessage
                 });
             }
