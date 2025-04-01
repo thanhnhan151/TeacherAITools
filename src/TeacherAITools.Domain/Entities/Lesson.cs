@@ -7,6 +7,7 @@ namespace TeacherAITools.Domain.Entities
         public int LessonId { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
+        public string DisapprovedReason { get; set; } = string.Empty;
         public int TotalPeriods { get; set; }
         public bool IsApproved { get; set; }
         public bool IsPublic { get; set; }

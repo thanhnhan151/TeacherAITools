@@ -18,6 +18,9 @@ namespace TeacherAITools.Infrastructure.Lessons
             builder.Property(l => l.Description)
                 .HasMaxLength(50);
 
+            builder.Property(l => l.DisapprovedReason)
+                .HasMaxLength(50);
+
             builder.HasOne(l => l.LessonType)
                 .WithMany(l => l.Lessons)
                 .HasForeignKey(l => l.LessonTypeId)
