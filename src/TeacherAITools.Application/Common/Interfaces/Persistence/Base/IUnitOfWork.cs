@@ -23,6 +23,8 @@
 
         IRoleRepository Roles { get; }
 
+        INotificationRepository Notifications { get; }
+
         Task CompleteAsync();
     }
 }
