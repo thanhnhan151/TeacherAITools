@@ -6,6 +6,7 @@ using System.Net;
 using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.Lessons.Commands.CreateLesson;
 using TeacherAITools.Application.Lessons.Commands.DeleteLesson;
+using TeacherAITools.Application.Lessons.Commands.UpdateIsApprovedLesson;
 using TeacherAITools.Application.Lessons.Commands.UpdateLesson;
 using TeacherAITools.Application.Lessons.Common;
 using TeacherAITools.Application.Lessons.Queries.GetLessonById;
@@ -93,6 +94,27 @@ namespace TeacherAITools.Api.Controllers
             try
             {
                 return Ok(await _mediator.Send(new UpdateLessonCommand(id, request)));
+            }
+            catch (ApiException e)
+            {
+                return NotFound(new
+                {
+                    errorCode = e.ErrorCode,
+                    error = e.Error,
+                    errorMessage = e.ErrorMessage
+                });
+            }
+        }
+
+        [HttpPut("is-approved/{id}")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(Response<GetLessonResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> UpdateIsApprovedAsync(int id, [FromBody] UpdateIsApprovedRequest request)
+        {
+            try
+            {
+                return Ok(await _mediator.Send(new UpdateIsApprovedLessonCommand(id, request)));
             }
             catch (ApiException e)
             {

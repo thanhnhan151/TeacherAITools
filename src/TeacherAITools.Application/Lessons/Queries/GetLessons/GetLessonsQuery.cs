@@ -9,9 +9,11 @@ namespace TeacherAITools.Application.Lessons.Queries.GetLessons
 {
     public class GetLessonsQuery : PaginationRequest<Lesson>, IRequest<PaginationResponse<GetLessonResponse>>
     {
+        public bool isApproved { get; set; }
         public override Expression<Func<Lesson, bool>> GetExpressions()
         {
-            Expression<Func<Lesson, bool>> expression = _ => true;
+            Expression<Func<Lesson, bool>> expression = lesson => isApproved == lesson.IsApproved;
+
             return expression;
         }
     }
