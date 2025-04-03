@@ -4,5 +4,5 @@ using TeacherAITools.Domain.Wrappers;
 
 namespace TeacherAITools.Application.Authentication.Queries.Login
 {
-    public record LoginQuery(string Email, string Password) : IRequest<Response<AuthenticationResult>>;
+    public record LoginQuery(string Username, string Password) : IRequest<Response<AuthenticationResult>>;
 }
