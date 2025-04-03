@@ -11,6 +11,7 @@
         public string Gender { get; set; } = string.Empty;
         public string ImgURL { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
+        public string Grade { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
         public string School { get; set; } = string.Empty;
         public string Manager { get; set; } = "N/A";

@@ -29,6 +29,7 @@ namespace TeacherAITools.Application.Users.Queries.GetUsers
         string? SortOrder,
         bool IsActive,
         int? RoleId,
+        int? GradeId,
         int Page,
         int PageSize) : IRequest<Response<PaginatedList<GetUserResponse>>>;
 }

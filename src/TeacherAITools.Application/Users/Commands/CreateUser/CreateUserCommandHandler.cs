@@ -28,6 +28,7 @@ namespace TeacherAITools.Application.Users.Commands.CreateUser
                 throw new ValidationException(ResponseCode.CREATED_UNSUCC, errorMessages);
             }
 
+
             var newUser = new User
             {
                 Username = request.Username,
@@ -35,7 +36,8 @@ namespace TeacherAITools.Application.Users.Commands.CreateUser
                 Email = request.Email,
                 RoleId = request.RoleId,
                 SchoolId = request.SchoolId,
-                GradeId = request.GradeId
+                GradeId = request.GradeId,
+                IsActive = false
             };
 
             var res = await _unitOfWork.Users.AddAsync(newUser);
