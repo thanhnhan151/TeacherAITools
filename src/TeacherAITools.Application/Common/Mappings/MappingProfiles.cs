@@ -34,9 +34,10 @@ namespace TeacherAITools.Application.Common.Mappings
             CreateMap<User, GetUserResponse>()
                 .ForMember(u => u.School, u => u.MapFrom(u => u.School.Name))
                 .ForMember(u => u.Manager, u => u.MapFrom(u => u.ManagerId != null ? u.Manager.Fullname : "N/A"))
-                .ForMember(u => u.Role, u => u.MapFrom(u => u.Role.RoleName))
+                .ForMember(u => u.Role, u => u.MapFrom(u => $"{u.Role.RoleName} lớp {u.Grade.GradeNumber}"))
                 .ForMember(u => u.Gender, u => u.MapFrom(u => u.Gender.GetDescription()))
-                .ForMember(m => m.DateOfBirth, m => m.MapFrom(m => m.DateOfBirth.GetFormatDate()));
+                .ForMember(m => m.DateOfBirth, m => m.MapFrom(m => m.DateOfBirth.GetFormatDate()))
+                .ForMember(m => m.Address, m => m.MapFrom(m => $"{m.Address}, phường {m.Ward.WardName}, quận {m.Ward.District.DistrictName}, TP. {m.Ward.District.City.CityName}"));
             CreateMap<PaginatedList<User>, PaginatedList<GetUserResponse>>();
             #endregion
 

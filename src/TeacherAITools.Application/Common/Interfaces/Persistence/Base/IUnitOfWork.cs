@@ -13,6 +13,7 @@
         ICityRepository Cities { get; }
 
         IDistrictRepository Districts { get; }
+
         ILessonsRepository Lessons { get; }
 
         ICategoryRepository Categories { get; }
@@ -24,6 +25,8 @@
         IRoleRepository Roles { get; }
 
         INotificationRepository Notifications { get; }
+
+        IGradeRepository Grades { get; }
 
         Task CompleteAsync();
     }
