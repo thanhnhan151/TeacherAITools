@@ -6,6 +6,7 @@ using TeacherAITools.Infrastructure.Citites;
 using TeacherAITools.Infrastructure.Curriculums;
 using TeacherAITools.Infrastructure.Lessons;
 using TeacherAITools.Infrastructure.Modules;
+using TeacherAITools.Infrastructure.Notifications;
 using TeacherAITools.Infrastructure.Schools;
 using TeacherAITools.Infrastructure.Users;
 
@@ -39,6 +40,8 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
 
         public IRoleRepository Roles { get; private set; }
 
+        public INotificationRepository Notifications { get; private set; }
+
         public UnitOfWork(
             TeacherAIToolsDbContext dbContext,
             ILoggerFactory loggerFactory)
@@ -67,7 +70,9 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
 
             Lessons = new LessonsRepository(_dbContext, _logger);
 
-            Roles = new RoleRepository(_dbContext, _logger);
+            Roles = new RoleRepository(_dbContext, _logger); 
+
+            Notifications = new NotificationRepository(_dbContext, _logger);
         }
 
         public async Task CompleteAsync() => await _dbContext.SaveChangesAsync();
