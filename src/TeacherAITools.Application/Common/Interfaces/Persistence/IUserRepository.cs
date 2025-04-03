@@ -11,8 +11,11 @@ namespace TeacherAITools.Application.Common.Interfaces.Persistence
             , string? sortColumn
             , string? sortOrder
             , int? roleId
+            , int? gradeId
             , bool isActive
             , int page
             , int pageSize);
+
+        Task<bool> CheckSchoolManagerAsync(int roleId, int schoolId);
     }
 }

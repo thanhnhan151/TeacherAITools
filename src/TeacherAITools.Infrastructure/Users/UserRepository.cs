@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 using TeacherAITools.Application.Common.Interfaces.Persistence;
+using TeacherAITools.Domain.Common;
 using TeacherAITools.Domain.Entities;
 using TeacherAITools.Domain.Wrappers;
 using TeacherAITools.Infrastructure.Common.Persistence;
@@ -17,6 +18,7 @@ namespace TeacherAITools.Infrastructure.Users
             string? sortColumn,
             string? sortOrder,
             int? roleId,
+            int? gradeId,
             bool isActive,
             int page,
             int pageSize)
@@ -44,6 +46,11 @@ namespace TeacherAITools.Infrastructure.Users
                 usersQuery = usersQuery.Where(c => c.RoleId == roleId);
             }
 
+            if (gradeId != null)
+            {
+                usersQuery = usersQuery.Where(c => c.GradeId == gradeId);
+            }
+
             if (sortOrder?.ToLower() == "asc")
             {
                 usersQuery = usersQuery.OrderBy(GetSortProperty(sortColumn));
@@ -65,5 +72,12 @@ namespace TeacherAITools.Infrastructure.Users
             //"dob" => user => user.DoB,
             _ => user => user.UserId
         };
+
+        public async Task<bool> CheckSchoolManagerAsync(int roleId, int schoolId)
+        {
+            var result = await _dbContext.Users.Where(u => u.RoleId == (int)AvailableRole.SubjectSpecialistManager).FirstOrDefaultAsync();
+
+            return true;
+        }
     }
 }

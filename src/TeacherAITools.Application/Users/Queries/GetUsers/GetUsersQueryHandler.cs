@@ -23,6 +23,7 @@ namespace TeacherAITools.Application.Users.Queries.GetUsers
                     request.SortColumn,
                     request.SortOrder,
                     request.RoleId,
+                    request.GradeId,
                     request.IsActive,
                     request.Page,
                     request.PageSize
