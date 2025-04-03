@@ -22,9 +22,14 @@ namespace TeacherAITools.Infrastructure.Users
             int pageSize)
         {
             IQueryable<User> usersQuery = _dbContext.Users
+                .Where(u => u.RoleId != 1)
                 .Include(u => u.Role)
                 .Include(u => u.Manager)
-                .Include(u => u.School);
+                .Include(u => u.School)
+                .Include(u => u.Grade)
+                .Include(u => u.Ward)
+                        .ThenInclude(w => w.District)
+                                    .ThenInclude(d => d.City);
 
             if (isActive) usersQuery = usersQuery.Where(u => u.IsActive);
 

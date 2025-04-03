@@ -42,6 +42,9 @@ namespace TeacherAITools.Application.Users.Commands.UpdateUser
             user.Email = request.UpdateUserRequest.Email;
             user.PhoneNumber = request.UpdateUserRequest.PhoneNumber;
             user.Address = request.UpdateUserRequest.Address;
+            user.DateOfBirth = request.UpdateUserRequest.DateOfBirth;
+            user.Gender = request.UpdateUserRequest.Gender;
+            user.WardId = request.UpdateUserRequest.WardId;
 
             await _unitOfWork.Users.UpdateAsync(user);
             await _unitOfWork.CompleteAsync();

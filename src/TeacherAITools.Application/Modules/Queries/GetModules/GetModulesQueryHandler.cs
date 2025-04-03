@@ -22,7 +22,8 @@ namespace TeacherAITools.Application.Modules.Queries.GetModules
             var result = await _unitOfWork.Modules.PaginationAsync(
                 page: request.PageNumber,
                 pageSize: request.PageSize,
-                includeFunc: m => m.Include(m => m.Curriculum),
+                includeFunc: m => m.Include(m => m.Curriculum)
+                                   .Include(m => m.Book),
                 orderBy: request.GetOrder(),
                 filter: request.GetExpressions(),
                 cancellationToken: cancellationToken);

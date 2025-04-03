@@ -54,6 +54,11 @@ namespace TeacherAITools.Infrastructure.Users
                 .WithMany(u => u.Users)
                 .HasForeignKey(u => u.WardId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            builder.HasOne(u => u.Grade)
+                .WithMany(u => u.Users)
+                .HasForeignKey(u => u.GradeId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

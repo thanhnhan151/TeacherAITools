@@ -19,15 +19,6 @@ namespace TeacherAITools.Application.Users.Commands.CreateUser
             RuleFor(u => u.Password)
                 .NotEmpty().WithMessage("Password is required!");
 
-            RuleFor(u => u.Fullname)
-                .NotEmpty().WithMessage("Fullname is required!");
-
-            RuleFor(u => u.PhoneNumber)
-                .NotEmpty().WithMessage("Phone number is required!");
-
-            RuleFor(u => u.Address)
-                .NotEmpty().WithMessage("Address is required!");
-
             RuleFor(u => u.Email)
                 .NotEmpty().WithMessage("Email is required!")
                 .MustAsync(async (email, cancellation) => await CheckExistUsernameEmail(email, "Email"))
@@ -42,6 +33,11 @@ namespace TeacherAITools.Application.Users.Commands.CreateUser
                 .NotEmpty().WithMessage("School is required!")
                 .MustAsync(async (schoolId, cancellation) => await AlreadyExistId(schoolId, "SchoolId"))
                 .WithMessage("School does not exist!");
+
+            RuleFor(p => p.GradeId)
+                .NotEmpty().WithMessage("Grade is required!")
+                .MustAsync(async (gradeId, cancellation) => await AlreadyExistId(gradeId, "GradeId"))
+                .WithMessage("Grade does not exist!");
         }
 
         private async Task<bool> AlreadyExistId(int id, string option)
@@ -55,6 +51,10 @@ namespace TeacherAITools.Application.Users.Commands.CreateUser
                 case "schoolid":
                     var school = await _unitOfWork.Schools.GetByIdAsync(id);
                     if (school is null) return false;
+                    return true;
+                case "gradeid":
+                    var grade = await _unitOfWork.Grades.GetByIdAsync(id);
+                    if (grade is null) return false;
                     return true;
                 default:
                     return false;
