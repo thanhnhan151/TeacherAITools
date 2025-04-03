@@ -32,14 +32,10 @@ namespace TeacherAITools.Application.Users.Commands.CreateUser
             {
                 Username = request.Username,
                 PasswordHash = request.Password,
-                Fullname = request.Fullname,
                 Email = request.Email,
-                PhoneNumber = request.PhoneNumber,
-                Address = request.Address,
-                Gender = request.Gender,
-                DateOfBirth = request.DateOfBirth,
                 RoleId = request.RoleId,
-                SchoolId = request.SchoolId
+                SchoolId = request.SchoolId,
+                GradeId = request.GradeId
             };
 
             var res = await _unitOfWork.Users.AddAsync(newUser);

@@ -11,7 +11,7 @@ namespace TeacherAITools.Domain.Entities
         public string Fullname { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
-        public DateOnly DateOfBirth { get; set; }
+        public DateOnly DateOfBirth { get; set; } = new DateOnly(2000, 1, 1);
         public Gender Gender { get; set; }
         public string? ImgURL { get; set; } = string.Empty;
         public string? Address { get; set; } = string.Empty;
@@ -28,6 +28,9 @@ namespace TeacherAITools.Domain.Entities
 
         public int? WardId { get; set; }
         public virtual Ward Ward { get; set; } = null!;
+
+        public int? GradeId { get; set; }
+        public virtual Grade Grade { get; set; } = null!;
 
         // Navigation
         public virtual ICollection<Lesson> Lessons { get; set; } = [];

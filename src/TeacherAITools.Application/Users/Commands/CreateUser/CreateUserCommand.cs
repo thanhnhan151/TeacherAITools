@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using TeacherAITools.Application.Users.Common;
-using TeacherAITools.Domain.Common;
 using TeacherAITools.Domain.Wrappers;
 
 namespace TeacherAITools.Application.Users.Commands.CreateUser
@@ -8,12 +7,8 @@ namespace TeacherAITools.Application.Users.Commands.CreateUser
     public record CreateUserCommand(
     string Username,
     string Password,
-    string Fullname,
     string Email,
-    string PhoneNumber,
-    DateOnly DateOfBirth,
-    Gender Gender,
     int RoleId,
     int SchoolId,
-    string Address) : IRequest<Response<GetUserResponse>>;
+    int GradeId) : IRequest<Response<GetUserResponse>>;
 }

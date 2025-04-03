@@ -42,6 +42,8 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
 
         public INotificationRepository Notifications { get; private set; }
 
+        public IGradeRepository Grades { get; private set; }
+
         public UnitOfWork(
             TeacherAIToolsDbContext dbContext,
             ILoggerFactory loggerFactory)
@@ -70,9 +72,11 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
 
             Lessons = new LessonsRepository(_dbContext, _logger);
 
-            Roles = new RoleRepository(_dbContext, _logger); 
+            Roles = new RoleRepository(_dbContext, _logger);
 
             Notifications = new NotificationRepository(_dbContext, _logger);
+
+            Grades = new GradeRepository(_dbContext, _logger);
         }
 
         public async Task CompleteAsync() => await _dbContext.SaveChangesAsync();

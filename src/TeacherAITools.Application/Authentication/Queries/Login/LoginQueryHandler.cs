@@ -20,7 +20,7 @@ namespace TeacherAITools.Application.Authentication.Queries.Login
         public async Task<Response<AuthenticationResult>> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
             var userQuery = await _unitOfWork.Users.GetAsync(
-                expression: user => user.Email.ToLower().Equals(request.Email.ToLower())
+                expression: user => user.Username.ToLower().Equals(request.Username.ToLower())
                                     && user.PasswordHash != null
                                     && user.PasswordHash.Equals(request.Password),
                 includeFunc: user => user.Include(u => u.Role));

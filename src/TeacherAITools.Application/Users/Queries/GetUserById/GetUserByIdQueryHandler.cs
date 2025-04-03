@@ -25,6 +25,10 @@ namespace TeacherAITools.Application.Users.Queries.GetUserById
                 .Include(r => r.Role)
                 .Include(u => u.Manager)
                 .Include(u => u.School)
+                .Include(u => u.Grade)
+                .Include(u => u.Ward)
+                        .ThenInclude(w => w.District)
+                                    .ThenInclude(d => d.City)
                 .FirstOrDefault() ?? throw new ApiException(ResponseCode.USER_NOT_FOUND);
 
             return new Response<GetUserResponse>(code: (int)ResponseCode.SUCCESS, data: _mapper.Map<GetUserResponse>(user), message: ResponseCode.SUCCESS.GetDescription());
