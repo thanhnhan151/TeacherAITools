@@ -7,6 +7,7 @@ using TeacherAITools.Infrastructure.Curriculums;
 using TeacherAITools.Infrastructure.Lessons;
 using TeacherAITools.Infrastructure.Modules;
 using TeacherAITools.Infrastructure.Notifications;
+using TeacherAITools.Infrastructure.Periods;
 using TeacherAITools.Infrastructure.Schools;
 using TeacherAITools.Infrastructure.Users;
 
@@ -43,6 +44,24 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
         public INotificationRepository Notifications { get; private set; }
 
         public IGradeRepository Grades { get; private set; }
+        
+        public ILessonTypeRepository LessonTypes { get; private set; }
+
+        public IRequirementRepository Requirements { get; private set; }
+        
+        public INoteRepository Notes { get; private set; }
+        
+        public ISchoolSupplyRepository SchoolSupplies { get; private set; }
+
+        public IWeekRepository Weeks { get; private set; }
+
+        public ISchoolYearRepository SchoolYears { get; private set; }
+
+        public IBookRepository Books { get; private set; }
+        
+        public IPeriodRepository Periods { get; private set; }
+        
+        public IPeriodDetailRepository PeriodDetails { get; private set; }
 
         public UnitOfWork(
             TeacherAIToolsDbContext dbContext,
@@ -77,6 +96,24 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
             Notifications = new NotificationRepository(_dbContext, _logger);
 
             Grades = new GradeRepository(_dbContext, _logger);
+            
+            LessonTypes = new LessonTypeRepository(_dbContext, _logger);
+
+            Requirements = new RequirementRepository(_dbContext, _logger);
+            
+            Notes = new NoteRepository(_dbContext, _logger);
+            
+            SchoolSupplies = new SchoolSupplyRepository(_dbContext, _logger);
+
+            Weeks = new WeekRepository(_dbContext, _logger);
+            
+            SchoolYears = new SchoolYearRepository(_dbContext, _logger);
+            
+            Books = new BookRepository(_dbContext, _logger);
+            
+            Periods = new PeriodRepository(_dbContext, _logger);
+            
+            PeriodDetails = new PeriodDetailRepository(_dbContext, _logger);
         }
 
         public async Task CompleteAsync() => await _dbContext.SaveChangesAsync();

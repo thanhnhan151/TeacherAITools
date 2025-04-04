@@ -1,5 +1,6 @@
 using MediatR;
 using TeacherAITools.Application.Common.Enums;
+using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.Common.Extensions;
 using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
 using TeacherAITools.Application.Curriculums.Common;
@@ -19,6 +20,11 @@ namespace TeacherAITools.Application.Curriculums.Commands.CreateCurriculum
 
         public async Task<Response<GetCurriculumResponse>> Handle(CreateCurriculumCommand request, CancellationToken cancellationToken)
         {
+            if(!_unitOfWork.SchoolYears.Any(
+                x => x.SchoolYearId == request.createCurriculumRequest.SchoolYearId)){
+                    throw new ApiException(ResponseCode.ID_SCHOOL_YEAR_DONT_EXIST);
+            }
+
             var curriculum = new Curriculum
             {
                 Name = request.createCurriculumRequest.Name,

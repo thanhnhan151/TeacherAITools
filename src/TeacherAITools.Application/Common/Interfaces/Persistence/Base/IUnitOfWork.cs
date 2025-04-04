@@ -28,6 +28,24 @@
 
         IGradeRepository Grades { get; }
 
+        ILessonTypeRepository LessonTypes { get; }
+
+        IRequirementRepository Requirements { get; }
+
+        INoteRepository Notes { get; }
+
+        ISchoolSupplyRepository SchoolSupplies { get; }
+
+        IWeekRepository Weeks { get; }
+
+        ISchoolYearRepository SchoolYears { get; }
+
+        IBookRepository Books { get; }
+
+        IPeriodRepository Periods { get; }
+
+        IPeriodDetailRepository PeriodDetails { get; }
+
         Task CompleteAsync();
     }
 }

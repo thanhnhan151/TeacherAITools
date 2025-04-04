@@ -1,5 +1,6 @@
 using MediatR;
 using TeacherAITools.Application.Common.Enums;
+using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.Common.Extensions;
 using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
 using TeacherAITools.Application.Lessons.Common;
@@ -14,8 +15,47 @@ namespace TeacherAITools.Application.Lessons.Commands.CreateLesson
 
         public async Task<Response<GetLessonResponse>> Handle(CreateLessonCommand request, CancellationToken cancellationToken)
         {
+            if(!_unitOfWork.LessonTypes.Any(
+                x => x.LessonTypeId == request.createLessonRequest.LessonTypeId)){
+                    throw new ApiException(ResponseCode.ID_LESSON_TYPE_DONT_EXIST);
+            }
+
+            if(!_unitOfWork.Requirements.Any(
+                x => x.RequirementId == request.createLessonRequest.RequirementId)){
+                    throw new ApiException(ResponseCode.ID_REQUIREMENT_DONT_EXIST);
+            }
+
+            if(!_unitOfWork.Notes.Any(
+                x => x.NoteId == request.createLessonRequest.NoteId)){
+                    throw new ApiException(ResponseCode.ID_NOTE_DONT_EXIST);
+            }
+
+            if(!_unitOfWork.SchoolSupplies.Any(
+                x => x.SchoolSupplyId == request.createLessonRequest.SchoolSupplyId)){
+                    throw new ApiException(ResponseCode.ID_WEEK_DONT_EXIST);
+            }
+
+            if(!_unitOfWork.SchoolSupplies.Any(
+                x => x.SchoolSupplyId == request.createLessonRequest.SchoolSupplyId)){
+                    throw new ApiException(ResponseCode.ID_WEEK_DONT_EXIST);
+            }
+
+            if(!_unitOfWork.Users.Any(
+                x => x.UserId == request.createLessonRequest.UserId)){
+                    throw new ApiException(ResponseCode.USER_NOT_FOUND);
+            }
+
+            if(!_unitOfWork.Modules.Any(
+                x => x.ModuleId == request.createLessonRequest.ModuleId)){
+                    throw new ApiException(ResponseCode.MODULE_NOT_FOUND);
+            }
+
+            var lessonId = _unitOfWork.Lessons.GetLastIdLesson() + 1;
+            var periodId = _unitOfWork.Periods.GetLastIdPeriod() + 1;
+
             var lesson = new Lesson
             {
+                LessonId = lessonId,
                 Name = request.createLessonRequest.Name,
                 Description = request.createLessonRequest.Description,
                 TotalPeriods = request.createLessonRequest.TotalPeriods,
@@ -28,6 +68,22 @@ namespace TeacherAITools.Application.Lessons.Commands.CreateLesson
                 ModuleId = request.createLessonRequest.ModuleId
             };
 
+            var period = new Period{
+                Id = periodId,
+                Number = request.createLessonRequest.Number,
+                LessonId = lessonId
+            };
+
+            var periodDetail = new PeriodDetail{
+                StartUp = request.createLessonRequest.StartUp,
+                Knowledge = request.createLessonRequest.Knowledge,
+                Practice = request.createLessonRequest.Practice,
+                Apply = request.createLessonRequest.Apply,
+                PeriodId = periodId
+            };
+
+            await _unitOfWork.PeriodDetails.AddAsync(periodDetail);
+            await _unitOfWork.Periods.AddAsync(period);
             var result = await _unitOfWork.Lessons.AddAsync(lesson);
 
             await _unitOfWork.CompleteAsync();

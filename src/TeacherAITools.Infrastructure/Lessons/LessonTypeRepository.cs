@@ -5,13 +5,9 @@ using TeacherAITools.Infrastructure.Common.Persistence;
 
 namespace TeacherAITools.Infrastructure.Lessons
 {
-    public class LessonsRepository(
+    public class LessonTypeRepository(
        TeacherAIToolsDbContext dbContext,
-       ILogger logger) : Repository<Lesson>(dbContext, logger), ILessonsRepository
+       ILogger logger) : Repository<LessonType>(dbContext, logger), ILessonTypeRepository
     {
-        public int GetLastIdLesson(){
-            var lesson = _dbContext.Lessons.Last();
-            return lesson is not null ? lesson.LessonId : 0;
-        }
     }
 }

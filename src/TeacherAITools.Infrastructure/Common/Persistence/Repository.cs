@@ -100,9 +100,9 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
             throw new NotImplementedException();
         }
 
-        public bool Any()
+        public bool Any(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return _dbContext.Set<TEntity>().Any(predicate);
         }
 
         public async Task<BasePaginationEntity<TEntity>> PaginationAsync(

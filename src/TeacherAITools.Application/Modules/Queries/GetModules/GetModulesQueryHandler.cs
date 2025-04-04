@@ -43,6 +43,7 @@ namespace TeacherAITools.Application.Modules.Queries.GetModules
                         Semester = module.Semester,
                         TotalPeriods = module.TotalPeriods,
                         Curriculum = module.Curriculum.Name,
+                        GradeNumber = module.Grade.GradeNumber,
                         Book = module.Book.BookName
                     })
                 },
