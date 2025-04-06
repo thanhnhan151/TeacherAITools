@@ -19,6 +19,11 @@ namespace TeacherAITools.Application.Curriculums.Commands.UpdateCurriculum
 
         public async Task<Response<GetCurriculumResponse>> Handle(UpdateCurriculumCommand request, CancellationToken cancellationToken)
         {
+            if(!_unitOfWork.SchoolYears.Any(
+                x => x.SchoolYearId == request.updateCurriculumRequest.SchoolYearId)){
+                    throw new ApiException(ResponseCode.ID_SCHOOL_YEAR_DONT_EXIST);
+            }
+
             var curriculumQuery = await _unitOfWork.Curriculums.GetAsync(expression: m => m.CurriculumId == request.Id, disableTracking: true);
 
             var curriculum = curriculumQuery.FirstOrDefault() ?? throw new ApiException(ResponseCode.CURRICULUM_NOT_FOUND);

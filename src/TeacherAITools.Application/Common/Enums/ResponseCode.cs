@@ -123,5 +123,29 @@ namespace TeacherAITools.Application.Common.Enums
         [Description("Maximun size can be 5mb")]
         INVALID_FILE_SIZE = 41,
         #endregion
+
+        [Description("Specified lesson type not exist in database.")]
+        ID_LESSON_TYPE_DONT_EXIST = 42,
+
+        [Description("Specified requirement not exist in database.")]
+        ID_REQUIREMENT_DONT_EXIST = 43,
+
+        [Description("Specified note not exist in database.")]
+        ID_NOTE_DONT_EXIST = 44,
+
+        [Description("Specified school supply not exist in database.")]
+        ID_SCHOOL_SUPPLY_DONT_EXIST = 45,
+
+        [Description("Specified week not exist in database.")]
+        ID_WEEK_DONT_EXIST = 46,
+
+        [Description("Specified school year not exist in database.")]
+        ID_SCHOOL_YEAR_DONT_EXIST = 47,
+
+        [Description("Specified grade not exist in database.")]
+        ID_GRADE_DONT_EXIST = 48,
+
+        [Description("Specified book not exist in database.")]
+        ID_BOOK_DONT_EXIST = 49,
     }
 }

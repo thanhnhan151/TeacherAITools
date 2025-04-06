@@ -20,6 +20,21 @@ namespace TeacherAITools.Application.Modules.Commands.UpdateModule
 
         public async Task<Response<GetModuleResponse>> Handle(UpdateModuleCommand request, CancellationToken cancellationToken)
         {
+            if(!_unitOfWork.Curriculums.Any(
+                x => x.CurriculumId == request.updateModuleRequest.CurriculumId)){
+                    throw new ApiException(ResponseCode.CURRICULUM_NOT_FOUND);
+            }
+
+            if(!_unitOfWork.Grades.Any(
+                x => x.GradeId == request.updateModuleRequest.GradeId)){
+                    throw new ApiException(ResponseCode.ID_GRADE_DONT_EXIST);
+            }
+
+            if(!_unitOfWork.Books.Any(
+                x => x.BookId == request.updateModuleRequest.BookId)){
+                    throw new ApiException(ResponseCode.ID_BOOK_DONT_EXIST);
+            }
+
             var moduleQuery = await _unitOfWork.Modules.GetAsync(expression: m => m.ModuleId == request.Id, disableTracking: true);
 
             var module = moduleQuery.FirstOrDefault() ?? throw new ApiException(ResponseCode.MODULE_NOT_FOUND);
@@ -29,6 +44,7 @@ namespace TeacherAITools.Application.Modules.Commands.UpdateModule
             module.Semester = request.updateModuleRequest.Semester;
             module.TotalPeriods = request.updateModuleRequest.TotalPeriods;
             module.CurriculumId = request.updateModuleRequest.CurriculumId;
+            module.GradeId = request.updateModuleRequest.GradeId;
             module.BookId = request.updateModuleRequest.BookId;
 
             await _unitOfWork.Modules.UpdateAsync(module);

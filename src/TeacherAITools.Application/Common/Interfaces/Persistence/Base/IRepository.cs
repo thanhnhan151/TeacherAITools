@@ -30,7 +30,7 @@ namespace TeacherAITools.Application.Common.Interfaces.Persistence.Base
 
         Task DeleteAsync(object id);
 
-        bool Any();
+        bool Any(Expression<Func<TEntity, bool>> predicate);
 
         Task<BasePaginationEntity<TEntity>> PaginationAsync(int page = 0,
         int pageSize = 20,
