@@ -68,22 +68,6 @@ namespace TeacherAITools.Application.Lessons.Commands.CreateLesson
                 ModuleId = request.createLessonRequest.ModuleId
             };
 
-            var period = new Period{
-                Id = periodId,
-                Number = request.createLessonRequest.Number,
-                LessonId = lessonId
-            };
-
-            var periodDetail = new PeriodDetail{
-                StartUp = request.createLessonRequest.StartUp,
-                Knowledge = request.createLessonRequest.Knowledge,
-                Practice = request.createLessonRequest.Practice,
-                Apply = request.createLessonRequest.Apply,
-                PeriodId = periodId
-            };
-
-            await _unitOfWork.PeriodDetails.AddAsync(periodDetail);
-            await _unitOfWork.Periods.AddAsync(period);
             var result = await _unitOfWork.Lessons.AddAsync(lesson);
 
             await _unitOfWork.CompleteAsync();

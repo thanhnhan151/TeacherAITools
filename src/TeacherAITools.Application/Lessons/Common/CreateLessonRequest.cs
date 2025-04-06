@@ -14,10 +14,5 @@ namespace TeacherAITools.Application.Lessons.Common
         public int UserId { get; set; }
         public int WeekId { get; set; }
         public int ModuleId { get; set; }
-         public int Number { get; set; }
-         public string StartUp { get; set; } = string.Empty;
-        public string Knowledge { get; set; } = string.Empty;
-        public string Practice { get; set; } = string.Empty;
-        public string Apply { get; set; } = string.Empty;
     }
 }
