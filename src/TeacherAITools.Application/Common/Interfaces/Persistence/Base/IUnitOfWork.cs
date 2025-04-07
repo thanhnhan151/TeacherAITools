@@ -46,6 +46,10 @@
 
         IPeriodDetailRepository PeriodDetails { get; }
 
+        IPromptRepository Prompts { get; }
+
+        IQuizRepository Quizzes { get; }
+
         Task CompleteAsync();
     }
 }

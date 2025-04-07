@@ -5,6 +5,9 @@ using TeacherAITools.Application.Cities.Common;
 using TeacherAITools.Application.Comments.Common;
 using TeacherAITools.Application.Common.Extensions;
 using TeacherAITools.Application.Districts.Common;
+using TeacherAITools.Application.Grades.Common;
+using TeacherAITools.Application.Modules.Common;
+using TeacherAITools.Application.Roles.Common;
 using TeacherAITools.Application.Schools.Common;
 using TeacherAITools.Application.Users.Common;
 using TeacherAITools.Domain.Entities;
@@ -68,6 +71,21 @@ namespace TeacherAITools.Application.Common.Mappings
                 .ForMember(s => s.District, s => s.MapFrom(s => s.Ward.District.DistrictName))
                 .ForMember(s => s.City, s => s.MapFrom(s => s.Ward.District.City.CityName));
             CreateMap<PaginatedList<School>, PaginatedList<GetSchoolResponse>>();
+            #endregion
+
+            #region Grade
+            CreateMap<Grade, GetGradeResponse>();
+            CreateMap<Grade, GetGradeDetailResponse>();
+            CreateMap<Module, GetModuleItem>();
+            #endregion
+
+            #region Role
+            CreateMap<Role, GetRoleResponse>();
+            #endregion
+
+            #region Module
+            CreateMap<Module, GetModuleDetailResponse>();
+            CreateMap<Lesson, GetLessonItem>();
             #endregion
         }
     }

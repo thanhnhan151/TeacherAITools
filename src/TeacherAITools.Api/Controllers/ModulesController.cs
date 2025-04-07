@@ -7,6 +7,7 @@ using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.Modules.Commands.CreateModule;
 using TeacherAITools.Application.Modules.Commands.DeleteModule;
 using TeacherAITools.Application.Modules.Common;
+using TeacherAITools.Application.Modules.Queries.GetLessonsByModuleId;
 using TeacherAITools.Application.Modules.Queries.GetModuleById;
 using TeacherAITools.Application.Modules.Queries.GetModules;
 using TeacherAITools.Application.Users.Commands.UpdateUser;
@@ -78,6 +79,27 @@ namespace TeacherAITools.Api.Controllers
             try
             {
                 return Ok(await _mediator.Send(query));
+            }
+            catch (ApiException e)
+            {
+                return BadRequest(new
+                {
+                    errorCode = e.ErrorCode,
+                    error = e.Error,
+                    errorMessage = e.ErrorMessage
+                });
+            }
+        }
+
+        [HttpGet("{id}/lessons")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(Response<List<GetModuleResponse>>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetAsync(int id)
+        {
+            try
+            {
+                return Ok(await _mediator.Send(new GetLessonsByModuleIdQuery(id)));
             }
             catch (ApiException e)
             {
