@@ -20,6 +20,8 @@ namespace TeacherAITools.Application.Common.Interfaces.Persistence.Base
 
         Task<TEntity> AddAsync(TEntity entity);
 
+        Task AddWithNoTrackingAsync(TEntity entity);
+
         Task UpdateAsync(TEntity entity);
 
         Task DeleteAsync(TEntity entity);

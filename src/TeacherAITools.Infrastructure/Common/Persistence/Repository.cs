@@ -85,9 +85,9 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
             throw new NotImplementedException();
         }
 
-        public Task AddRangeAsync(IEnumerable<TEntity> entities)
+        public async Task AddRangeAsync(IEnumerable<TEntity> entities)
         {
-            throw new NotImplementedException();
+            await _dbContext.Set<TEntity>().AddRangeAsync(entities);
         }
 
         public Task DeleteRangeAsync(IEnumerable<TEntity> entities)
@@ -137,6 +137,13 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
             var data = await query.ToListAsync(cancellationToken);
 
             return new BasePaginationEntity<TEntity>() { Data = data, Total = total };
+        }
+
+        public async Task AddWithNoTrackingAsync(TEntity entity)
+        {
+            _dbContext.Set<TEntity>().AsNoTracking();
+
+            await _dbContext.Set<TEntity>().AddAsync(entity);
         }
     }
 }

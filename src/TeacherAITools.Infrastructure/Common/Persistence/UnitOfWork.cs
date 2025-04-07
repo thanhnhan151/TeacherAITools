@@ -69,6 +69,10 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
 
         public IQuizRepository Quizzes { get; private set; }
 
+        public IQuizQuestionRepository QuizQuestions { get; private set; }
+
+        public IQuizAnswerRepository QuizAnswers { get; private set; }
+
         public UnitOfWork(
             TeacherAIToolsDbContext dbContext,
             ILoggerFactory loggerFactory)
@@ -124,8 +128,14 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
             Prompts = new PromptRepository(_dbContext, _logger);
 
             Quizzes = new QuizRepository(_dbContext, _logger);
+
+            QuizQuestions = new QuizQuestionRepository(_dbContext, _logger);
+
+            QuizAnswers = new QuizAnswerRepository(_dbContext, _logger);
         }
 
         public async Task CompleteAsync() => await _dbContext.SaveChangesAsync();
+
+        public void Complete() => _dbContext.SaveChanges();
     }
 }
