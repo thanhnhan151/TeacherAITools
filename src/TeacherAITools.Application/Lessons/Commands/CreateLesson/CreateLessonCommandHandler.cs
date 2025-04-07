@@ -51,7 +51,6 @@ namespace TeacherAITools.Application.Lessons.Commands.CreateLesson
             }
 
             var lessonId = _unitOfWork.Lessons.GetLastIdLesson() + 1;
-            var periodId = _unitOfWork.Periods.GetLastIdPeriod() + 1;
 
             var lesson = new Lesson
             {

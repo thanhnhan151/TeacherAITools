@@ -10,7 +10,7 @@ namespace TeacherAITools.Infrastructure.Lessons
        ILogger logger) : Repository<Lesson>(dbContext, logger), ILessonsRepository
     {
         public int GetLastIdLesson(){
-            var lesson = _dbContext.Lessons.Last();
+            var lesson = _dbContext.Lessons.OrderBy(e => e.LessonId).LastOrDefault();
             return lesson is not null ? lesson.LessonId : 0;
         }
     }
