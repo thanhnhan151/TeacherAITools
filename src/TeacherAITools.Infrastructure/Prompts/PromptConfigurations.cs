@@ -13,8 +13,7 @@ namespace TeacherAITools.Infrastructure.Promps
             builder.HasKey(p => p.PromptId);
 
             builder.Property(p => p.Description)
-                .IsRequired()
-                .HasMaxLength(150);
+                .IsRequired();
 
             builder.HasOne(p => p.User)
                 .WithMany(p => p.Prompts)
