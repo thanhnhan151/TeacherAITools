@@ -6,6 +6,7 @@ using TeacherAITools.Application.Comments.Common;
 using TeacherAITools.Application.Common.Extensions;
 using TeacherAITools.Application.Districts.Common;
 using TeacherAITools.Application.Grades.Common;
+using TeacherAITools.Application.Modules.Common;
 using TeacherAITools.Application.Roles.Common;
 using TeacherAITools.Application.Schools.Common;
 using TeacherAITools.Application.Users.Common;
@@ -80,6 +81,11 @@ namespace TeacherAITools.Application.Common.Mappings
 
             #region Role
             CreateMap<Role, GetRoleResponse>();
+            #endregion
+
+            #region Module
+            CreateMap<Module, GetModuleDetailResponse>();
+            CreateMap<Lesson, GetLessonItem>();
             #endregion
         }
     }
