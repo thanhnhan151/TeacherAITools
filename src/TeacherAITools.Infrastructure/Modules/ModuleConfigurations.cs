@@ -13,10 +13,10 @@ namespace TeacherAITools.Infrastructure.Modules
             builder.HasKey(m => m.ModuleId);
 
             builder.Property(m => m.Name)
-                .HasMaxLength(50);
+                .HasMaxLength(150);
 
             builder.Property(m => m.Desciption)
-                .HasMaxLength(50);
+                .HasMaxLength(150);
 
             builder.HasOne(u => u.Grade)
                 .WithMany(r => r.Modules)

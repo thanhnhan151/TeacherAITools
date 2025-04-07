@@ -13,7 +13,7 @@ namespace TeacherAITools.Infrastructure.Lessons
             builder.HasKey(l => l.LessonId);
 
             builder.Property(l => l.Name)
-                .HasMaxLength(50);
+                .HasMaxLength(200);
 
             builder.Property(l => l.Description)
                 .HasMaxLength(50);
