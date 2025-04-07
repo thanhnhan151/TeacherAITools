@@ -1,6 +1,6 @@
-namespace TeacherAITools.Application.Lessons.Common
+﻿namespace TeacherAITools.Application.Lessons.Common
 {
-    public class GetLessonResponse
+    public class GetLessonDetailResponse
     {
         public int LessonId { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -15,5 +15,22 @@ namespace TeacherAITools.Application.Lessons.Common
         public string User { get; set; } = string.Empty;
         public int Week { get; set; }
         public string Module { get; set; } = string.Empty;
+        public List<PeriodResponse>? Period { get; set; }
+    }
+
+    public class PeriodResponse
+    {
+        public int Id { get; set; }
+        public int Number { get; set; }
+        public List<GetPeriodDetail> PeriodDetails { get; set; } = [];
+    }
+
+    public class GetPeriodDetail
+    {
+        public int Id { get; set; }
+        public string StartUp { get; set; } = string.Empty;
+        public string Knowledge { get; set; } = string.Empty;
+        public string Practice { get; set; } = string.Empty;
+        public string Apply { get; set; } = string.Empty;
     }
 }

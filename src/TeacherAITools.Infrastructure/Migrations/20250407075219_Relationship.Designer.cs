@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TeacherAITools.Infrastructure.Common.Persistence;
@@ -11,9 +12,11 @@ using TeacherAITools.Infrastructure.Common.Persistence;
 namespace TeacherAITools.Infrastructure.Migrations
 {
     [DbContext(typeof(TeacherAIToolsDbContext))]
-    partial class TeacherAIToolsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250407075219_Relationship")]
+    partial class Relationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -643,10 +646,7 @@ namespace TeacherAITools.Infrastructure.Migrations
             modelBuilder.Entity("TeacherAITools.Domain.Entities.QuizAnswer", b =>
                 {
                     b.Property<int>("AnswerId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("AnswerId"));
 
                     b.Property<string>("Answer")
                         .IsRequired()
@@ -660,8 +660,6 @@ namespace TeacherAITools.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("AnswerId");
-
-                    b.HasIndex("QuestionId");
 
                     b.ToTable("QuizAnswer", (string)null);
                 });
@@ -1155,8 +1153,9 @@ namespace TeacherAITools.Infrastructure.Migrations
                 {
                     b.HasOne("TeacherAITools.Domain.Entities.QuizQuestion", "QuizQuestion")
                         .WithMany("QuizAnswers")
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("AnswerId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
                     b.Navigation("QuizQuestion");
                 });

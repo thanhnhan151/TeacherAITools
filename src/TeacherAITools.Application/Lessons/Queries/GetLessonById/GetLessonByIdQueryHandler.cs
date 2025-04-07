@@ -9,11 +9,11 @@ using TeacherAITools.Domain.Wrappers;
 
 namespace TeacherAITools.Application.Lessons.Queries.GetLessonById
 {
-    public class GetLessonByIdQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetLessonByIdQuery, Response<GetLessonResponse>>
+    public class GetLessonByIdQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetLessonByIdQuery, Response<GetLessonDetailResponse>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-        public async Task<Response<GetLessonResponse>> Handle(GetLessonByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Response<GetLessonDetailResponse>> Handle(GetLessonByIdQuery request, CancellationToken cancellationToken)
         {
             var lessonQuery = await _unitOfWork.Lessons.GetAsync(lesson => lesson.LessonId == request.id);
 
@@ -26,9 +26,10 @@ namespace TeacherAITools.Application.Lessons.Queries.GetLessonById
                 .Include(l => l.Week)
                 .Include(l => l.Module)
                 .Include(l => l.Periods)
+                        .ThenInclude(p => p.PeriodDetails)
                 .FirstOrDefault() ?? throw new ApiException(ResponseCode.LESSON_NOT_FOUND);
 
-            var response = new GetLessonResponse
+            var response = new GetLessonDetailResponse
             {
                 LessonId = lesson.LessonId,
                 Name = lesson.Name,
@@ -43,14 +44,22 @@ namespace TeacherAITools.Application.Lessons.Queries.GetLessonById
                 User = lesson.User.Username,
                 Week = lesson.Week.WeekNumber,
                 Module = lesson.Module.Name,
-                PeriodsResponses = lesson.Periods.ToList().ConvertAll(period => new PeriodsResponse
+                Period = lesson.Periods.ToList().ConvertAll(period => new PeriodResponse
                 {
                     Id = period.Id,
-                    Number = period.Number
+                    Number = period.Number,
+                    PeriodDetails = period.PeriodDetails.ToList().ConvertAll(detail => new GetPeriodDetail
+                    {
+                        Id = detail.Id,
+                        StartUp = detail.StartUp,
+                        Knowledge = detail.Knowledge,
+                        Practice = detail.Practice,
+                        Apply = detail.Apply
+                    })
                 })
             };
 
-            return new Response<GetLessonResponse>(code: (int)ResponseCode.SUCCESS, data: response, message: ResponseCode.SUCCESS.GetDescription());
+            return new Response<GetLessonDetailResponse>(code: (int)ResponseCode.SUCCESS, data: response, message: ResponseCode.SUCCESS.GetDescription());
         }
     }
 }

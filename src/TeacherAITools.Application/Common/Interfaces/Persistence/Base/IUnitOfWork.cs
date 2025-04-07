@@ -50,6 +50,12 @@
 
         IQuizRepository Quizzes { get; }
 
+        IQuizQuestionRepository QuizQuestions { get; }
+
+        IQuizAnswerRepository QuizAnswers { get; }
+
         Task CompleteAsync();
+
+        void Complete();
     }
 }
