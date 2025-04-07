@@ -14,7 +14,7 @@ namespace TeacherAITools.Infrastructure.Periods
        ILogger logger) : Repository<Period>(dbContext, logger), IPeriodRepository
     {
         public int GetLastIdPeriod(){
-            var period = _dbContext.Periods.Last();
+            var period = _dbContext.Periods.OrderBy(e => e.Id).LastOrDefault();
             return period is not null ? period.Id : 0;
         }
     }
