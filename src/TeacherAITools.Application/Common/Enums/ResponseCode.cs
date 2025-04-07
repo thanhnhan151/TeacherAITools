@@ -152,5 +152,11 @@ namespace TeacherAITools.Application.Common.Enums
         [Description("Quiz not found!")]
         QUIZ_NOT_FOUND = 50,
         #endregion
+
+        [Description("Subject specialist has already existed!")]
+        MANAGER_HAS_EXISTED = 51,
+
+        [Description("Vice manager has already existed!")]
+        VICE_MANAGER_HAS_EXISTED = 52,
     }
 }

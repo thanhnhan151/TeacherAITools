@@ -24,6 +24,7 @@ namespace TeacherAITools.Application.Users.Queries.GetUsers
                     request.SortOrder,
                     request.RoleId,
                     request.GradeId,
+                    request.SchoolId,
                     request.IsActive,
                     request.Page,
                     request.PageSize
