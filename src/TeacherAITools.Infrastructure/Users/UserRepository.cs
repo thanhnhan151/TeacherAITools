@@ -19,7 +19,8 @@ namespace TeacherAITools.Infrastructure.Users
             string? sortOrder,
             int? roleId,
             int? gradeId,
-            bool isActive,
+            int? schoolId,
+            int? isActive,
             int page,
             int pageSize)
         {
@@ -33,7 +34,21 @@ namespace TeacherAITools.Infrastructure.Users
                         .ThenInclude(w => w.District)
                                     .ThenInclude(d => d.City);
 
-            if (isActive) usersQuery = usersQuery.Where(u => u.IsActive);
+            switch (isActive)
+            {
+                case 1:
+                    usersQuery = usersQuery.Where(u => u.IsActive);
+                    break;
+                case 0:
+                    usersQuery = usersQuery.Where(u => u.IsActive == false);
+                    break;
+                default: break;
+            }
+
+            //if (isActive == false)
+            //{
+            //    usersQuery = usersQuery.Where(u => u.IsActive == false);
+            //}
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -73,11 +88,40 @@ namespace TeacherAITools.Infrastructure.Users
             _ => user => user.UserId
         };
 
-        public async Task<bool> CheckSchoolManagerAsync(int roleId, int schoolId)
+        public async Task<int> CheckSchoolManagerAsync(int roleId, int gradeId, int schoolId)
         {
-            var result = await _dbContext.Users.Where(u => u.RoleId == (int)AvailableRole.SubjectSpecialistManager).FirstOrDefaultAsync();
+            switch (roleId)
+            {
+                case (int)AvailableRole.SubjectSpecialistManager:
+                    var result = await _dbContext.Users.Where(u => u.GradeId == gradeId
+                                                                && u.SchoolId == schoolId
+                                                                && u.RoleId == roleId)
+                                                       .FirstOrDefaultAsync();
 
-            return true;
+                    if (result is not null) return 1;
+                    break;
+
+                case (int)AvailableRole.ViceManager:
+                    var result1 = await _dbContext.Users.Where(u => u.GradeId == gradeId
+                                                                 && u.SchoolId == schoolId
+                                                                 && u.RoleId == roleId)
+                                                       .FirstOrDefaultAsync();
+
+                    if (result1 is not null) return 0;
+                    break;
+
+            }
+
+            return -1;
+        }
+
+        public async Task<int> GetSchoolManager(int gradeId, int schoolId)
+        {
+            var result = await _dbContext.Users.Where(u => u.RoleId == (int)AvailableRole.SubjectSpecialistManager && u.GradeId == gradeId && u.SchoolId == schoolId).FirstOrDefaultAsync();
+
+            if (result is not null) return result.UserId;
+
+            return 0;
         }
     }
 }
