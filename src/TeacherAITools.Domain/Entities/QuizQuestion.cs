@@ -6,7 +6,7 @@
         public string QuestionName { get; set; } = string.Empty;
 
         // Foreign Key
-        public int QuizId { get; set; }
+        public int? QuizId { get; set; }
         public virtual Quiz Quiz { get; set; } = null!;
 
         // Navigation

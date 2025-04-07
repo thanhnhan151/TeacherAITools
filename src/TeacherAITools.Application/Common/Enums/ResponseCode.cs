@@ -147,5 +147,10 @@ namespace TeacherAITools.Application.Common.Enums
 
         [Description("Specified book not exist in database.")]
         ID_BOOK_DONT_EXIST = 49,
+
+        #region Quiz
+        [Description("Quiz not found!")]
+        QUIZ_NOT_FOUND = 50,
+        #endregion
     }
 }

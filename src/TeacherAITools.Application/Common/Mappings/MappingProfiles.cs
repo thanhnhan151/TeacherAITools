@@ -7,6 +7,7 @@ using TeacherAITools.Application.Common.Extensions;
 using TeacherAITools.Application.Districts.Common;
 using TeacherAITools.Application.Grades.Common;
 using TeacherAITools.Application.Modules.Common;
+using TeacherAITools.Application.Quizzes.Common;
 using TeacherAITools.Application.Roles.Common;
 using TeacherAITools.Application.Schools.Common;
 using TeacherAITools.Application.Users.Common;
@@ -86,6 +87,14 @@ namespace TeacherAITools.Application.Common.Mappings
             #region Module
             CreateMap<Module, GetModuleDetailResponse>();
             CreateMap<Lesson, GetLessonItem>();
+            #endregion
+
+            #region Quiz
+            CreateMap<Quiz, GetQuizResponse>();
+            CreateMap<Quiz, GetQuizDetailResponse>();
+            CreateMap<QuizQuestion, GetQuizQuestion>();
+            CreateMap<QuizAnswer, GetQuizAnswer>();
+            CreateMap<PaginatedList<Quiz>, PaginatedList<GetQuizResponse>>();
             #endregion
         }
     }
