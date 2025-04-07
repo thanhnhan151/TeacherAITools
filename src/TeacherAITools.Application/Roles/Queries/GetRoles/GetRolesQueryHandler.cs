@@ -18,7 +18,7 @@ namespace TeacherAITools.Application.Roles.Queries.GetRoles
         public async Task<Response<List<GetRoleResponse>>> Handle(GetRolesQuery request, CancellationToken cancellationToken)
         {
             return new Response<List<GetRoleResponse>>(code: (int)ResponseCode.SUCCESS,
-                data: _mapper.Map<List<GetRoleResponse>>(await _unitOfWork.Roles.GetAllAsync()),
+                data: _mapper.Map<List<GetRoleResponse>>(await _unitOfWork.Roles.GetAllAsync(expression: r => r.RoleId != 1)),
                 message: ResponseCode.SUCCESS.GetDescription());
         }
     }
