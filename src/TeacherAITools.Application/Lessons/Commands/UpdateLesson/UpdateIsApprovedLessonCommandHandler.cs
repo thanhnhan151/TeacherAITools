@@ -3,9 +3,7 @@ using TeacherAITools.Application.Common.Enums;
 using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.Common.Extensions;
 using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
-using TeacherAITools.Application.Lessons.Commands.UpdateLesson;
 using TeacherAITools.Application.Lessons.Common;
-using TeacherAITools.Domain.Entities;
 using TeacherAITools.Domain.Wrappers;
 
 namespace TeacherAITools.Application.Lessons.Commands.UpdateIsApprovedLesson
@@ -20,12 +18,12 @@ namespace TeacherAITools.Application.Lessons.Commands.UpdateIsApprovedLesson
 
             var lesson = lessonQuery.FirstOrDefault() ?? throw new ApiException(ResponseCode.LESSON_NOT_FOUND);
 
-            lesson.IsApproved = request.updateIsApprovedRequest.IsApproved;
+            //lesson.IsApproved = request.updateIsApprovedRequest.IsApproved;
 
-            if (lesson.IsApproved == false)
-            {
-                lesson.DisapprovedReason = request.updateIsApprovedRequest.DisapprovedReason;
-            }
+            //if (lesson.IsApproved == false)
+            //{
+            //    lesson.DisapprovedReason = request.updateIsApprovedRequest.DisapprovedReason;
+            //}
 
             await _unitOfWork.Lessons.UpdateAsync(lesson);
             await _unitOfWork.CompleteAsync();
