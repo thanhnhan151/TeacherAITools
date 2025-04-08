@@ -30,7 +30,6 @@ namespace TeacherAITools.Application.Curriculums.Queries.GetCurriculumById
                 Name = curriculum.Name,
                 Description = curriculum.Description,
                 TotalPeriods = curriculum.TotalPeriods,
-                //GradeNumber = curriculum.Grade.GradeNumber,
                 Year = curriculum.SchoolYear.Year
             };
 

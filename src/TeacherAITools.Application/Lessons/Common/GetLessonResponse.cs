@@ -15,5 +15,6 @@ namespace TeacherAITools.Application.Lessons.Common
         public string User { get; set; } = string.Empty;
         public int Week { get; set; }
         public string Module { get; set; } = string.Empty;
+        public int GradeNumber { get; set; }
     }
 }

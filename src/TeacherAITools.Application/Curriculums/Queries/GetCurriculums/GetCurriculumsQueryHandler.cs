@@ -22,7 +22,7 @@ namespace TeacherAITools.Application.Curriculums.Queries.GetCurriculums
             var result = await _unitOfWork.Curriculums.PaginationAsync(
                 page: request.PageNumber,
                 pageSize: request.PageSize,
-                includeFunc: m => m/*.Include(m => m.Grade)*/.Include(m => m.SchoolYear),
+                includeFunc: m => m.Include(m => m.SchoolYear),
                 orderBy: request.GetOrder(),
                 filter: request.GetExpressions(),
                 cancellationToken: cancellationToken);
@@ -40,7 +40,6 @@ namespace TeacherAITools.Application.Curriculums.Queries.GetCurriculums
                         Name = curriculum.Name,
                         Description = curriculum.Description,
                         TotalPeriods = curriculum.TotalPeriods,
-                        //GradeNumber = curriculum.Grade.GradeNumber,
                         Year = curriculum.SchoolYear.Year
                     })
                 },
