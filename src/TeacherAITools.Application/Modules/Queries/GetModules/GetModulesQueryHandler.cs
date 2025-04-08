@@ -23,7 +23,8 @@ namespace TeacherAITools.Application.Modules.Queries.GetModules
                 page: request.PageNumber,
                 pageSize: request.PageSize,
                 includeFunc: m => m.Include(m => m.Curriculum)
-                                   .Include(m => m.Book),
+                                   .Include(m => m.Book)
+                                   .Include(m => m.Grade),
                 orderBy: request.GetOrder(),
                 filter: request.GetExpressions(),
                 cancellationToken: cancellationToken);

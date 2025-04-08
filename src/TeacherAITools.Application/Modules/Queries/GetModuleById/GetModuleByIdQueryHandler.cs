@@ -22,7 +22,7 @@ namespace TeacherAITools.Application.Modules.Queries.GetModuleById
         {
             var moduleQuery = await _unitOfWork.Modules.GetAsync(module => module.ModuleId == request.id);
 
-            var module = moduleQuery.Include(c => c.Curriculum).FirstOrDefault() ?? throw new ApiException(ResponseCode.MODULE_NOT_FOUND);
+            var module = moduleQuery.Include(c => c.Curriculum).Include(m => m.Grade).Include(m => m.Book).FirstOrDefault() ?? throw new ApiException(ResponseCode.MODULE_NOT_FOUND);
 
             var response = new GetModuleResponse
             {
