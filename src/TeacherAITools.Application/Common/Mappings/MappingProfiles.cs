@@ -6,11 +6,18 @@ using TeacherAITools.Application.Comments.Common;
 using TeacherAITools.Application.Common.Extensions;
 using TeacherAITools.Application.Districts.Common;
 using TeacherAITools.Application.Grades.Common;
+using TeacherAITools.Application.LessonTypes.Common;
 using TeacherAITools.Application.Modules.Common;
+using TeacherAITools.Application.Notes.Common;
+using TeacherAITools.Application.Prompts.Commnon;
 using TeacherAITools.Application.Quizzes.Common;
+using TeacherAITools.Application.Requirements.Common;
 using TeacherAITools.Application.Roles.Common;
 using TeacherAITools.Application.Schools.Common;
+using TeacherAITools.Application.SchoolSupplies.Common;
+using TeacherAITools.Application.SchoolYears.Common;
 using TeacherAITools.Application.Users.Common;
+using TeacherAITools.Application.Weeks.Common;
 using TeacherAITools.Domain.Entities;
 using TeacherAITools.Domain.Wrappers;
 
@@ -95,6 +102,23 @@ namespace TeacherAITools.Application.Common.Mappings
             CreateMap<QuizQuestion, GetQuizQuestion>();
             CreateMap<QuizAnswer, GetQuizAnswer>();
             CreateMap<PaginatedList<Quiz>, PaginatedList<GetQuizResponse>>();
+            #endregion
+
+            #region Lesson
+            CreateMap<LessonType, GetLessonTypeResponse>();
+            CreateMap<Note, GetNoteResponse>();
+            CreateMap<Requirement, GetRequirementResponse>();
+            CreateMap<Week, GetWeekResponse>();
+            CreateMap<SchoolSupply, GetSchoolSupplyResponse>();
+            CreateMap<SchoolYear, GetSchoolYearResponse>();
+            #endregion
+
+            #region Prompt
+            CreateMap<Prompt, GetPromptResponse>()
+                .ForMember(p => p.CreatedAt, p => p.MapFrom(p => p.CreatedAt.GetFormatDateTime()))
+                .ForMember(p => p.Username, p => p.MapFrom(p => p.User.Username))
+                .ForMember(p => p.LessonName, p => p.MapFrom(p => p.Lesson.Name));
+            CreateMap<PaginatedList<Prompt>, PaginatedList<GetPromptResponse>>();
             #endregion
         }
     }
