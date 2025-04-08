@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.Prompts.Commands;
+using TeacherAITools.Application.Prompts.Commnon;
+using TeacherAITools.Application.Prompts.Queries.GetPrompts;
 using TeacherAITools.Domain.Wrappers;
 
 namespace TeacherAITools.Api.Controllers
@@ -31,6 +33,27 @@ namespace TeacherAITools.Api.Controllers
                 {
                     errorCode = e.ErrorCode,
                     errors = e.Error,
+                    errorMessage = e.ErrorMessage
+                });
+            }
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(Response<PaginatedList<GetPromptResponse>>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetAllAsync([FromQuery] GetPromptsQuery query)
+        {
+            try
+            {
+                return Ok(await mediator.Send(query));
+            }
+            catch (ApiException e)
+            {
+                return BadRequest(new
+                {
+                    errorCode = e.ErrorCode,
+                    error = e.Error,
                     errorMessage = e.ErrorMessage
                 });
             }

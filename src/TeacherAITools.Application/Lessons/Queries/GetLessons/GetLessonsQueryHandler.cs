@@ -23,7 +23,8 @@ namespace TeacherAITools.Application.Lessons.Queries.GetLessons
                                    .Include(m => m.Note)
                                    .Include(m => m.User)
                                    .Include(m => m.Week)
-                                   .Include(m => m.Module),
+                                   .Include(m => m.Module)
+                                           .ThenInclude(m => m.Grade),
                 orderBy: request.GetOrder(),
                 filter: request.GetExpressions(),
                 cancellationToken: cancellationToken);
@@ -49,7 +50,8 @@ namespace TeacherAITools.Application.Lessons.Queries.GetLessons
                         Note = lesson.Note.Description,
                         User = lesson.User.Username,
                         Week = lesson.Week.WeekNumber,
-                        Module = lesson.Module.Name
+                        Module = lesson.Module.Name,
+                        GradeNumber = lesson.Module.Grade.GradeNumber,
                     })
                 },
                 message: ResponseCode.SUCCESS.GetDescription());

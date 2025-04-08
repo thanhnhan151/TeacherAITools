@@ -21,8 +21,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Prompts\Commnon\" />
-	  <Folder Include="Prompts\Queries\" />
 	  <Folder Include="Quizzes\Commands\DisableQuiz\" />
 	  <Folder Include="Quizzes\Commands\UpdateQuiz\" />
 	</ItemGroup>
