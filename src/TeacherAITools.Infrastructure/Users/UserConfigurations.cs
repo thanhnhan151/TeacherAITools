@@ -35,6 +35,9 @@ namespace TeacherAITools.Infrastructure.Users
             builder.Property(u => u.Address)
                 .HasMaxLength(50);
 
+            builder.Property(u => u.ResetPasswordOtp)
+                .HasMaxLength(6);
+
             builder.HasOne(u => u.Role)
                 .WithMany(r => r.Users)
                 .HasForeignKey(u => u.RoleId)
