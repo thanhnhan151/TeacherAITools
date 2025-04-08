@@ -115,13 +115,26 @@ namespace TeacherAITools.Infrastructure.Users
             return -1;
         }
 
-        public async Task<int> GetSchoolManager(int gradeId, int schoolId)
+        public async Task<int> GetSchoolManagerAsync(int gradeId, int schoolId)
         {
             var result = await _dbContext.Users.Where(u => u.RoleId == (int)AvailableRole.SubjectSpecialistManager && u.GradeId == gradeId && u.SchoolId == schoolId).FirstOrDefaultAsync();
 
             if (result is not null) return result.UserId;
 
             return 0;
+        }
+
+        public async Task<User?> SendOtpAsync(string email)
+        {
+            var result = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email.Equals(email));
+
+            return result is not null ? result : null;
+        }
+
+        public async Task<User?> ResetPasswordAsync(string Otp)
+        {
+            var result = await _dbContext.Users.FirstOrDefaultAsync(u => u.ResetPasswordOtp == Otp);
+            return result is not null ? result : null;
         }
     }
 }

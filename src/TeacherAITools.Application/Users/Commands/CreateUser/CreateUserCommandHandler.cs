@@ -3,6 +3,8 @@ using TeacherAITools.Application.Common.Enums;
 using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.Common.Extensions;
 using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
+using TeacherAITools.Application.Common.Interfaces.Services;
+using TeacherAITools.Application.Common.Models.Requests;
 using TeacherAITools.Application.Users.Common;
 using TeacherAITools.Domain.Common;
 using TeacherAITools.Domain.Entities;
@@ -11,9 +13,11 @@ using TeacherAITools.Domain.Wrappers;
 namespace TeacherAITools.Application.Users.Commands.CreateUser
 {
     public class CreateUserCommandHandler(
-        IUnitOfWork unitOfWork) : IRequestHandler<CreateUserCommand, Response<GetUserResponse>>
+        IUnitOfWork unitOfWork,
+        IEmailService emailService) : IRequestHandler<CreateUserCommand, Response<GetUserResponse>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly IEmailService _emailService = emailService;
 
         public async Task<Response<GetUserResponse>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
@@ -56,8 +60,17 @@ namespace TeacherAITools.Application.Users.Commands.CreateUser
 
             if (newUser.RoleId != (int)AvailableRole.SubjectSpecialistManager)
             {
-                newUser.ManagerId = await _unitOfWork.Users.GetSchoolManager(request.GradeId, request.SchoolId);
+                newUser.ManagerId = await _unitOfWork.Users.GetSchoolManagerAsync(request.GradeId, request.SchoolId);
             }
+
+            var mailRequest = new MailRequest
+            {
+                ToEmail = newUser.Email,
+                Subject = "Welcome to AI Math Tool",
+                Body = $"Username: {newUser.Username} Password: {newUser.PasswordHash}"
+            };
+
+            await _emailService.SendEmailAsync(mailRequest);
 
             var res = await _unitOfWork.Users.AddAsync(newUser);
 

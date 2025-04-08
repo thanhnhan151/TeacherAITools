@@ -19,6 +19,10 @@ namespace TeacherAITools.Application.Common.Interfaces.Persistence
 
         Task<int> CheckSchoolManagerAsync(int roleId, int gradeId, int schoolId);
 
-        Task<int> GetSchoolManager(int gradeId, int schoolId);
+        Task<int> GetSchoolManagerAsync(int gradeId, int schoolId);
+
+        Task<User?> SendOtpAsync(string email);
+
+        Task<User?> ResetPasswordAsync(string Otp);
     }
 }

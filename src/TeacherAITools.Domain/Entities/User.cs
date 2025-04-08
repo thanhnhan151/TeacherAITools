@@ -15,6 +15,7 @@ namespace TeacherAITools.Domain.Entities
         public Gender Gender { get; set; }
         public string? ImgURL { get; set; } = string.Empty;
         public string? Address { get; set; } = string.Empty;
+        public string? ResetPasswordOtp { get; set; }
 
         // Foreign Key
         public int RoleId { get; set; }

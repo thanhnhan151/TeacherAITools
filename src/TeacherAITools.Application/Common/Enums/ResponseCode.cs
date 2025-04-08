@@ -158,5 +158,14 @@ namespace TeacherAITools.Application.Common.Enums
 
         [Description("Vice manager has already existed!")]
         VICE_MANAGER_HAS_EXISTED = 52,
+
+        [Description("Email does not exist")]
+        EMAIL_NOT_FOUND = 53,
+
+        [Description("Otp is incorrecct")]
+        INCORRECT_RESET_OTP = 54,
+
+        [Description("Confirmed password does not match!")]
+        CONFIRM_PASSWORD_NOT_MATCH = 55,
     }
 }
