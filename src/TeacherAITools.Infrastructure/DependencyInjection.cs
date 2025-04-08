@@ -35,6 +35,7 @@ namespace TeacherAITools.Infrastructure
             services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
             services.AddScoped<IUploadFileService, UploadFileService>();
+            services.AddScoped<IEmailService, EmailService>();
 
             return services;
         }
@@ -72,6 +73,7 @@ namespace TeacherAITools.Infrastructure
             IConfiguration configuration)
         {
             services.Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"));
+            services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
             services.AddDbContext<TeacherAIToolsDbContext>(options =>
             {
                 options.UseNpgsql(configuration.GetConnectionString("DeployConnection"));
