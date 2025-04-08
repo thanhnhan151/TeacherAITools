@@ -13,8 +13,7 @@ namespace TeacherAITools.Infrastructure.Lessons
             builder.HasKey(r => r.RequirementId);
 
             builder.Property(r => r.Description)
-                .IsRequired()
-                .HasMaxLength(100);
+                .IsRequired();
         }
     }
 }

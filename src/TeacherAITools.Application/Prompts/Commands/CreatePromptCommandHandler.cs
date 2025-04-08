@@ -12,21 +12,15 @@ namespace TeacherAITools.Application.Prompts.Commands
     public class CreatePromptCommandHandler(
         IUnitOfWork unitOfWork) : IRequestHandler<CreatePromptCommand, Response<string>>
     {
-        private const string startUp = "1. *Trải nghiệm*:";
+        private const string text = "bước đầu nhận biết và sử dụng đúng các từ chỉ vị trí trong không gian, biết diễn đạt chính xác bằng ngôn ngữ, và vận dụng kiến thức vào các tình huống thực tế trong đời sống hàng ngày như đi đường, lên xuống cầu thang, sắp xếp đồ vật… Bài giảng cần đảm bảo các yêu cầu cần đạt:";
 
-        private const string startUpDetail = "- Mục đích của hoạt động này là tạo tâm thế, giúp học sinh ý thức được nhiệm vụ học tập. Giáo viên không nên thông báo ngay các kiến thức có sẵn mà cần tạo ra các tình huống gợi vấn đề để học sinh huy động kiến thức, kinh nghiệm của bản thân và suy nghĩ để tìm hướng giải quyết.";
+        private const string startUpDetail = "Khởi động (gợi sự tò mò qua tranh ảnh và câu hỏi dẫn dắt)";
 
-        private const string knowLedge = "2. *Hình thành kiến thức mới*:";
+        private const string knowLedgeDetail = "Hình thành kiến thức (giáo viên hướng dẫn nhận biết và sử dụng từ chỉ vị trí thông qua tranh ảnh, đồ vật thật và ví dụ gần gũi)";
 
-        private const string knowLedgeDetail = "- Mục đích của hoạt động này nhằm giúp học sinh phát hiện, chiếm lĩnh được kiến thức và kỹ năng mới. Giáo viên sẽ giúp học sinh huy động kiến thức, chia sẻ và hợp tác trong học tập để xây dựng kiến thức mới.";
+        private const string pracTiceDetail = "Luyện tập (học sinh thực hành cá nhân và theo nhóm, mô tả vị trí, sắp xếp đồ vật theo yêu cầu, tham gia trò chơi như “Làm theo tôi nói – không làm theo tôi làm”)";
 
-        private const string pracTice = "3. *Thực hành, Luyện tập*:";
-
-        private const string pracTiceDetail = "- Mục đích của hoạt động này nhằm giúp học sinh củng cố và hoàn thiện kiến thức, kỹ năng vừa lĩnh hội và huy động, liên kết với kiến thức đã có để áp dụng vào giải quyết vấn đề.";
-
-        private const string apply = "4. *Vận dụng*:";
-
-        private const string applyDetail = "- Mục đích của hoạt động này là giúp học sinh vận dụng các kiến thức và kỹ năng đã học vào giải quyết các vấn đề có tính chất thực tiễn. Bạn có thể đưa ra các câu hỏi hoặc dự án học tập nhỏ để học sinh thực hiện theo hoạt động cá nhân hoặc nhóm. Hoạt động này có thể được tổ chức ngoài giờ học chính khóa. Giáo viên cũng nên khuyến khích học sinh tiếp tục tìm tòi và mở rộng kiến thức sau khi kết thúc bài học.";
+        private const string applyDetail = "và Vận dụng (liên hệ với các tình huống thực tế như đi bên phải khi đi đường, giữ tay vịn khi lên – xuống cầu thang, nhận biết vị trí của bạn trong lớp…).";
 
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
@@ -36,11 +30,12 @@ namespace TeacherAITools.Application.Prompts.Commands
 
             var lesson = lessonQuery
                 .Include(l => l.LessonType)
+                .Include(l => l.Requirement)
                 .Include(l => l.Module)
                         .ThenInclude(l => l.Grade)
                 .FirstOrDefault() ?? throw new ApiException(ResponseCode.LESSON_NOT_FOUND);
 
-            string prompt = $"Soạn nội dung cho bài học: {lesson.Name}, dạng bài: {lesson.LessonType.LessonTypeName}, lớp {lesson.Module.Grade.GradeNumber}, chương: {lesson.Module.Name} theo cấu trúc sau:\n\n{startUp}\n{startUpDetail}\n\n{knowLedge}\n{knowLedgeDetail}\n\n{pracTice}\n{pracTiceDetail}\n\n{apply}\n{applyDetail}";
+            string prompt = $"Soạn nội dung bài giảng: {lesson.Name}, dạng bài: {lesson.LessonType.LessonTypeName}, chương: {lesson.Module.Name}. Bài giảng nhằm giúp học sinh lớp {lesson.Module.Grade.GradeNumber} {text} {lesson.Requirement.Description} Bài giảng triển khai theo tiến trình sư phạm: {startUpDetail}, {knowLedgeDetail}, {pracTiceDetail}, {applyDetail}";
 
             var newPrompt = new Prompt
             {

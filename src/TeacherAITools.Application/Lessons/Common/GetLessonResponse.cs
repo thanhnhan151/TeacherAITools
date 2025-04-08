@@ -6,7 +6,7 @@ namespace TeacherAITools.Application.Lessons.Common
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public int TotalPeriods { get; set; }
-        public bool IsApproved { get; set; }
+        public string Status { get; set; } = string.Empty;
         public bool IsPublic { get; set; }
         public string LessonType { get; set; } = string.Empty;
         public string Requirement { get; set; } = string.Empty;

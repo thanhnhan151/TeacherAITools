@@ -1,4 +1,5 @@
-﻿using TeacherAITools.Domain.Entities.Base.Implementations;
+﻿using TeacherAITools.Domain.Common;
+using TeacherAITools.Domain.Entities.Base.Implementations;
 
 namespace TeacherAITools.Domain.Entities
 {
@@ -9,8 +10,7 @@ namespace TeacherAITools.Domain.Entities
         public string Description { get; set; } = string.Empty;
         public string DisapprovedReason { get; set; } = string.Empty;
         public int TotalPeriods { get; set; }
-        public bool IsApproved { get; set; }
-        public bool IsPublic { get; set; }
+        public LessonStatus Status { get; set; } = LessonStatus.Pending;
 
         // Foreign Key
         public int LessonTypeId { get; set; }
@@ -40,5 +40,7 @@ namespace TeacherAITools.Domain.Entities
         public virtual ICollection<Period> Periods { get; set; } = [];
 
         public virtual ICollection<Prompt> Prompts { get; set; } = [];
+
+        public virtual ICollection<Blog> Blogs { get; set; } = [];
     }
 }
