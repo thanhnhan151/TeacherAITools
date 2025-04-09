@@ -11,6 +11,8 @@ using TeacherAITools.Application.Lessons.Commands.UpdateLesson;
 using TeacherAITools.Application.Lessons.Common;
 using TeacherAITools.Application.Lessons.Queries.GetLessonById;
 using TeacherAITools.Application.Lessons.Queries.GetLessons;
+using TeacherAITools.Application.Lessons.Queries.GetPromptById;
+using TeacherAITools.Application.Prompts.Commnon;
 using TeacherAITools.Domain.Wrappers;
 
 namespace TeacherAITools.Api.Controllers
@@ -52,6 +54,27 @@ namespace TeacherAITools.Api.Controllers
             try
             {
                 return Ok(await _mediator.Send(new GetLessonByIdQuery(id)));
+            }
+            catch (ApiException e)
+            {
+                return NotFound(new
+                {
+                    errorCode = e.ErrorCode,
+                    error = e.Error,
+                    errorMessage = e.ErrorMessage
+                });
+            }
+        }
+
+        [HttpGet("{id}/prompt")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(Response<GetPromptResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetPromptByIdAsync(int id)
+        {
+            try
+            {
+                return Ok(await _mediator.Send(new GetPromptByIdQuery(id)));
             }
             catch (ApiException e)
             {

@@ -9,7 +9,7 @@ namespace TeacherAITools.Application.TeacherLessons.Queries.GetTeacherLessons
         string? SearchTerm,
         string? SortColumn,
         string? SortOrder,
-        int? UserId,
+        int? ModuleId,
         int? LessonId,
         LessonStatus Status,
         int Page,

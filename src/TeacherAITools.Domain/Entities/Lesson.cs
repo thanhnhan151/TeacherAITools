@@ -32,12 +32,14 @@ namespace TeacherAITools.Domain.Entities
         public int ModuleId { get; set; }
         public virtual Module Module { get; set; } = null!;
 
+        public virtual Prompt? Prompt { get; set; }
+
         //Navigation
         public virtual ICollection<Quiz> Quizzes { get; set; } = [];
 
         //public virtual ICollection<Period> Periods { get; set; } = [];
 
-        public virtual ICollection<Prompt> Prompts { get; set; } = [];
+        //public virtual ICollection<Prompt> Prompts { get; set; } = [];
 
         public virtual ICollection<Blog> Blogs { get; set; } = [];
     }

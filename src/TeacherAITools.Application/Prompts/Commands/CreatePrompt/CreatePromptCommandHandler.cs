@@ -15,15 +15,12 @@ namespace TeacherAITools.Application.Prompts.Commands.CreatePrompt
 
         public async Task<Response<string>> Handle(CreatePromptCommand request, CancellationToken cancellationToken)
         {
-            var lessonQuery = await _unitOfWork.Lessons.GetAsync(l => l.LessonId == request.LessonId);
-
-            var lesson = lessonQuery
-                .FirstOrDefault() ?? throw new ApiException(ResponseCode.LESSON_NOT_FOUND);
+            if (await _unitOfWork.Prompts.IsLessonIdPresentAsync(request.LessonId)) throw new ApiException(ResponseCode.ALREADY_EXISTED_LESSON);
 
             var newPrompt = new Prompt
             {
                 Description = request.Description,
-                LessonId = lesson.LessonId
+                LessonId = request.LessonId
             };
 
             var result = await _unitOfWork.Prompts.AddAsync(newPrompt);

@@ -11,7 +11,7 @@ namespace TeacherAITools.Domain.Entities
         public string SchoolSupply { get; set; } = string.Empty;
         public string Practice { get; set; } = string.Empty;
         public string Apply { get; set; } = string.Empty;
-        public LessonStatus Status { get; set; } = LessonStatus.Pending;
+        public LessonStatus Status { get; set; } = LessonStatus.Draft;
         public int RejectedCount { get; set; } = 0;
         public string DisapprovedReason { get; set; } = string.Empty;
 

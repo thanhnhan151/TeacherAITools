@@ -22,7 +22,7 @@ namespace TeacherAITools.Application.TeacherLessons.Queries.GetTeacherLessons
                     request.SearchTerm,
                     request.SortColumn,
                     request.SortOrder,
-                    request.UserId,
+                    request.ModuleId,
                     request.LessonId,
                     request.Status,
                     request.Page,

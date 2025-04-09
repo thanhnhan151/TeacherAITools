@@ -28,12 +28,12 @@ namespace TeacherAITools.Api.Controllers
             {
                 return Ok(await mediator.Send(request));
             }
-            catch (ValidationException e)
+            catch (ApiException e)
             {
                 return BadRequest(new
                 {
                     errorCode = e.ErrorCode,
-                    errors = e.Errors,
+                    error = e.Error,
                     errorMessage = e.ErrorMessage
                 });
             }

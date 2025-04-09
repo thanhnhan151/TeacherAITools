@@ -6,7 +6,6 @@ using System.Net;
 using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.Prompts.Commands.CreatePrompt;
 using TeacherAITools.Application.Prompts.Commnon;
-using TeacherAITools.Application.Prompts.Queries.GetPromptByLessonId;
 using TeacherAITools.Application.Prompts.Queries.GetPrompts;
 using TeacherAITools.Domain.Wrappers;
 
@@ -52,27 +51,6 @@ namespace TeacherAITools.Api.Controllers
             catch (ApiException e)
             {
                 return BadRequest(new
-                {
-                    errorCode = e.ErrorCode,
-                    error = e.Error,
-                    errorMessage = e.ErrorMessage
-                });
-            }
-        }
-
-        [HttpGet("{id}")]
-        [AllowAnonymous]
-        [ProducesResponseType(typeof(Response<GetPromptResponse>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetByIdAsync(int id)
-        {
-            try
-            {
-                return Ok(await mediator.Send(new GetPromptByLessonIdQuery(id)));
-            }
-            catch (ApiException e)
-            {
-                return NotFound(new
                 {
                     errorCode = e.ErrorCode,
                     error = e.Error,

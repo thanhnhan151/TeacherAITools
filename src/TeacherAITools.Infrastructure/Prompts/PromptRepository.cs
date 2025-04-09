@@ -47,5 +47,7 @@ namespace TeacherAITools.Infrastructure.Prompts
             //"dob" => user => user.DoB,
             _ => prompt => prompt.PromptId
         };
+
+        public async Task<bool> IsLessonIdPresentAsync(int lessonId) => await _dbContext.Prompts.AnyAsync(p => p.LessonId == lessonId);
     }
 }
