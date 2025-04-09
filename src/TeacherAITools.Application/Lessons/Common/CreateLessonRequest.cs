@@ -9,7 +9,7 @@ namespace TeacherAITools.Application.Lessons.Common
         public int RequirementId { get; set; }
         public int SchoolSupplyId { get; set; }
         public int NoteId { get; set; }
-        public int UserId { get; set; }
+        //public int UserId { get; set; }
         public int WeekId { get; set; }
         public int ModuleId { get; set; }
     }

@@ -21,7 +21,7 @@ namespace TeacherAITools.Application.Lessons.Queries.GetLessons
                                    .Include(m => m.Requirement)
                                    .Include(m => m.SchoolSupply)
                                    .Include(m => m.Note)
-                                   .Include(m => m.User)
+                                   //.Include(m => m.User)
                                    .Include(m => m.Week)
                                    .Include(m => m.Module)
                                            .ThenInclude(m => m.Grade),
@@ -47,7 +47,7 @@ namespace TeacherAITools.Application.Lessons.Queries.GetLessons
                         Requirement = lesson.Requirement.Description,
                         SchoolSupply = lesson.SchoolSupply.Description,
                         Note = lesson.Note.Description,
-                        User = lesson.User.Username,
+                        //User = lesson.User.Username,
                         Week = lesson.Week.WeekNumber,
                         Module = lesson.Module.Name,
                         GradeNumber = lesson.Module.Grade.GradeNumber,

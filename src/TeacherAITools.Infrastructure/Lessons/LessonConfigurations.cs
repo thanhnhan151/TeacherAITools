@@ -51,10 +51,10 @@ namespace TeacherAITools.Infrastructure.Lessons
                 .HasForeignKey(l => l.ModuleId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            builder.HasOne(l => l.User)
-                .WithMany(l => l.Lessons)
-                .HasForeignKey(l => l.UserId)
-                .OnDelete(DeleteBehavior.SetNull);
+            //builder.HasOne(l => l.User)
+            //    .WithMany(l => l.Lessons)
+            //    .HasForeignKey(l => l.UserId)
+            //    .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

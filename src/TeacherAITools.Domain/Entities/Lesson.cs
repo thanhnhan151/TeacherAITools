@@ -25,8 +25,8 @@ namespace TeacherAITools.Domain.Entities
         public int NoteId { get; set; }
         public virtual Note Note { get; set; } = null!;
 
-        public int UserId { get; set; }
-        public virtual User User { get; set; } = null!;
+        //public int UserId { get; set; }
+        //public virtual User User { get; set; } = null!;
 
         public int WeekId { get; set; }
         public virtual Week Week { get; set; } = null!;

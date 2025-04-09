@@ -16,6 +16,11 @@ namespace TeacherAITools.Infrastructure.Periods
                 .WithMany(p => p.Periods)
                 .HasForeignKey(p => p.LessonId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            builder.HasOne(p => p.User)
+                .WithMany(p => p.Periods)
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

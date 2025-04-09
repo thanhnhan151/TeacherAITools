@@ -12,7 +12,7 @@ namespace TeacherAITools.Application.Lessons.Common
         public string Requirement { get; set; } = string.Empty;
         public string SchoolSupply { get; set; } = string.Empty;
         public string Note { get; set; } = string.Empty;
-        public string User { get; set; } = string.Empty;
+        //public string User { get; set; } = string.Empty;
         public int Week { get; set; }
         public string Module { get; set; } = string.Empty;
         public int GradeNumber { get; set; }
