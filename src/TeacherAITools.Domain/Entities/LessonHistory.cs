@@ -10,7 +10,10 @@
         public DateTime UpdatedAt { get; set; }
 
         // Foreign Key
-        public int PeriodDetailId { get; set; }
-        public virtual PeriodDetail PeriodDetail { get; set; } = null!;
+        //public int PeriodDetailId { get; set; }
+        //public virtual PeriodDetail PeriodDetail { get; set; } = null!;
+
+        public int TeacherLessonId { get; set; }
+        public virtual TeacherLesson TeacherLesson { get; set; } = null!;
     }
 }

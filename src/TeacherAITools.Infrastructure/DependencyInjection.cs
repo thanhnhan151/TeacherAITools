@@ -76,7 +76,7 @@ namespace TeacherAITools.Infrastructure
             services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
             services.AddDbContext<TeacherAIToolsDbContext>(options =>
             {
-                options.UseNpgsql(configuration.GetConnectionString("DeployConnection"));
+                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
                 //options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
             services.AddScoped<IUnitOfWork, UnitOfWork>();

@@ -11,6 +11,7 @@ using TeacherAITools.Infrastructure.Periods;
 using TeacherAITools.Infrastructure.Prompts;
 using TeacherAITools.Infrastructure.Quizzes;
 using TeacherAITools.Infrastructure.Schools;
+using TeacherAITools.Infrastructure.TeacherLessons;
 using TeacherAITools.Infrastructure.Users;
 
 namespace TeacherAITools.Infrastructure.Common.Persistence
@@ -73,6 +74,8 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
 
         public IQuizAnswerRepository QuizAnswers { get; private set; }
 
+        public ITeacherLessonRepository TeacherLessons { get; private set; }
+
         public UnitOfWork(
             TeacherAIToolsDbContext dbContext,
             ILoggerFactory loggerFactory)
@@ -132,6 +135,8 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
             QuizQuestions = new QuizQuestionRepository(_dbContext, _logger);
 
             QuizAnswers = new QuizAnswerRepository(_dbContext, _logger);
+
+            TeacherLessons = new TeacherLessonRepository(_dbContext, _logger);
         }
 
         public async Task CompleteAsync() => await _dbContext.SaveChangesAsync();

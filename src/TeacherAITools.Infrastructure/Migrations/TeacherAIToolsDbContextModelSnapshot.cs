@@ -296,15 +296,6 @@ namespace TeacherAITools.Infrastructure.Migrations
                     b.Property<int>("NoteId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("RequirementId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("SchoolSupplyId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
                     b.Property<int>("TotalPeriods")
                         .HasColumnType("integer");
 
@@ -324,10 +315,6 @@ namespace TeacherAITools.Infrastructure.Migrations
                     b.HasIndex("ModuleId");
 
                     b.HasIndex("NoteId");
-
-                    b.HasIndex("RequirementId");
-
-                    b.HasIndex("SchoolSupplyId");
 
                     b.HasIndex("WeekId");
 
@@ -350,9 +337,6 @@ namespace TeacherAITools.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("PeriodDetailId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Practice")
                         .IsRequired()
                         .HasColumnType("text");
@@ -361,12 +345,15 @@ namespace TeacherAITools.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("TeacherLessonId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PeriodDetailId");
+                    b.HasIndex("TeacherLessonId");
 
                     b.ToTable("LessonHistory", (string)null);
                 });
@@ -528,69 +515,6 @@ namespace TeacherAITools.Infrastructure.Migrations
                     b.ToTable("NotificationType", (string)null);
                 });
 
-            modelBuilder.Entity("TeacherAITools.Domain.Entities.Period", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("LessonId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Number")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LessonId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Period", (string)null);
-                });
-
-            modelBuilder.Entity("TeacherAITools.Domain.Entities.PeriodDetail", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Apply")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Knowledge")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("PeriodId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Practice")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("StartUp")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PeriodId");
-
-                    b.ToTable("PeriodDetail", (string)null);
-                });
-
             modelBuilder.Entity("TeacherAITools.Domain.Entities.Prompt", b =>
                 {
                     b.Property<int>("PromptId")
@@ -609,14 +533,9 @@ namespace TeacherAITools.Infrastructure.Migrations
                     b.Property<int>("LessonId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
                     b.HasKey("PromptId");
 
                     b.HasIndex("LessonId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Prompt", (string)null);
                 });
@@ -693,23 +612,6 @@ namespace TeacherAITools.Infrastructure.Migrations
                     b.ToTable("QuizQuestion", (string)null);
                 });
 
-            modelBuilder.Entity("TeacherAITools.Domain.Entities.Requirement", b =>
-                {
-                    b.Property<int>("RequirementId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RequirementId"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("RequirementId");
-
-                    b.ToTable("Requirement", (string)null);
-                });
-
             modelBuilder.Entity("TeacherAITools.Domain.Entities.Role", b =>
                 {
                     b.Property<int>("RoleId")
@@ -768,24 +670,6 @@ namespace TeacherAITools.Infrastructure.Migrations
                     b.ToTable("School", (string)null);
                 });
 
-            modelBuilder.Entity("TeacherAITools.Domain.Entities.SchoolSupply", b =>
-                {
-                    b.Property<int>("SchoolSupplyId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SchoolSupplyId"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("SchoolSupplyId");
-
-                    b.ToTable("SchoolSupply", (string)null);
-                });
-
             modelBuilder.Entity("TeacherAITools.Domain.Entities.SchoolYear", b =>
                 {
                     b.Property<int>("SchoolYearId")
@@ -802,6 +686,63 @@ namespace TeacherAITools.Infrastructure.Migrations
                     b.HasKey("SchoolYearId");
 
                     b.ToTable("SchoolYear", (string)null);
+                });
+
+            modelBuilder.Entity("TeacherAITools.Domain.Entities.TeacherLesson", b =>
+                {
+                    b.Property<int>("TeacherLessonId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TeacherLessonId"));
+
+                    b.Property<string>("Apply")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("DisapprovedReason")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Goal")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Knowledge")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Practice")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("PromptId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("RejectedCount")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("SchoolSupply")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("StartUp")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("TeacherLessonId");
+
+                    b.HasIndex("PromptId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("TeacherLesson", (string)null);
                 });
 
             modelBuilder.Entity("TeacherAITools.Domain.Entities.User", b =>
@@ -1017,18 +958,6 @@ namespace TeacherAITools.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
-                    b.HasOne("TeacherAITools.Domain.Entities.Requirement", "Requirement")
-                        .WithMany("Lessons")
-                        .HasForeignKey("RequirementId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
-
-                    b.HasOne("TeacherAITools.Domain.Entities.SchoolSupply", "SchoolSupply")
-                        .WithMany("Lessons")
-                        .HasForeignKey("SchoolSupplyId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
-
                     b.HasOne("TeacherAITools.Domain.Entities.Week", "Week")
                         .WithMany("Lessons")
                         .HasForeignKey("WeekId")
@@ -1041,22 +970,18 @@ namespace TeacherAITools.Infrastructure.Migrations
 
                     b.Navigation("Note");
 
-                    b.Navigation("Requirement");
-
-                    b.Navigation("SchoolSupply");
-
                     b.Navigation("Week");
                 });
 
             modelBuilder.Entity("TeacherAITools.Domain.Entities.LessonHistory", b =>
                 {
-                    b.HasOne("TeacherAITools.Domain.Entities.PeriodDetail", "PeriodDetail")
+                    b.HasOne("TeacherAITools.Domain.Entities.TeacherLesson", "TeacherLesson")
                         .WithMany("LessonHistories")
-                        .HasForeignKey("PeriodDetailId")
+                        .HasForeignKey("TeacherLessonId")
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
-                    b.Navigation("PeriodDetail");
+                    b.Navigation("TeacherLesson");
                 });
 
             modelBuilder.Entity("TeacherAITools.Domain.Entities.Module", b =>
@@ -1105,35 +1030,6 @@ namespace TeacherAITools.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TeacherAITools.Domain.Entities.Period", b =>
-                {
-                    b.HasOne("TeacherAITools.Domain.Entities.Lesson", "Lesson")
-                        .WithMany("Periods")
-                        .HasForeignKey("LessonId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
-
-                    b.HasOne("TeacherAITools.Domain.Entities.User", "User")
-                        .WithMany("Periods")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Lesson");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("TeacherAITools.Domain.Entities.PeriodDetail", b =>
-                {
-                    b.HasOne("TeacherAITools.Domain.Entities.Period", "Period")
-                        .WithMany("PeriodDetails")
-                        .HasForeignKey("PeriodId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
-
-                    b.Navigation("Period");
-                });
-
             modelBuilder.Entity("TeacherAITools.Domain.Entities.Prompt", b =>
                 {
                     b.HasOne("TeacherAITools.Domain.Entities.Lesson", "Lesson")
@@ -1142,15 +1038,7 @@ namespace TeacherAITools.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
-                    b.HasOne("TeacherAITools.Domain.Entities.User", "User")
-                        .WithMany("Prompts")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
-
                     b.Navigation("Lesson");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TeacherAITools.Domain.Entities.Quiz", b =>
@@ -1193,6 +1081,23 @@ namespace TeacherAITools.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Ward");
+                });
+
+            modelBuilder.Entity("TeacherAITools.Domain.Entities.TeacherLesson", b =>
+                {
+                    b.HasOne("TeacherAITools.Domain.Entities.Prompt", "Prompt")
+                        .WithMany("TeacherLessons")
+                        .HasForeignKey("PromptId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("TeacherAITools.Domain.Entities.User", "User")
+                        .WithMany("TeacherLessons")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Prompt");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TeacherAITools.Domain.Entities.User", b =>
@@ -1286,8 +1191,6 @@ namespace TeacherAITools.Infrastructure.Migrations
                 {
                     b.Navigation("Blogs");
 
-                    b.Navigation("Periods");
-
                     b.Navigation("Prompts");
 
                     b.Navigation("Quizzes");
@@ -1313,14 +1216,9 @@ namespace TeacherAITools.Infrastructure.Migrations
                     b.Navigation("Notifications");
                 });
 
-            modelBuilder.Entity("TeacherAITools.Domain.Entities.Period", b =>
+            modelBuilder.Entity("TeacherAITools.Domain.Entities.Prompt", b =>
                 {
-                    b.Navigation("PeriodDetails");
-                });
-
-            modelBuilder.Entity("TeacherAITools.Domain.Entities.PeriodDetail", b =>
-                {
-                    b.Navigation("LessonHistories");
+                    b.Navigation("TeacherLessons");
                 });
 
             modelBuilder.Entity("TeacherAITools.Domain.Entities.Quiz", b =>
@@ -1333,11 +1231,6 @@ namespace TeacherAITools.Infrastructure.Migrations
                     b.Navigation("QuizAnswers");
                 });
 
-            modelBuilder.Entity("TeacherAITools.Domain.Entities.Requirement", b =>
-                {
-                    b.Navigation("Lessons");
-                });
-
             modelBuilder.Entity("TeacherAITools.Domain.Entities.Role", b =>
                 {
                     b.Navigation("Users");
@@ -1348,14 +1241,14 @@ namespace TeacherAITools.Infrastructure.Migrations
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("TeacherAITools.Domain.Entities.SchoolSupply", b =>
-                {
-                    b.Navigation("Lessons");
-                });
-
             modelBuilder.Entity("TeacherAITools.Domain.Entities.SchoolYear", b =>
                 {
                     b.Navigation("Curriculums");
+                });
+
+            modelBuilder.Entity("TeacherAITools.Domain.Entities.TeacherLesson", b =>
+                {
+                    b.Navigation("LessonHistories");
                 });
 
             modelBuilder.Entity("TeacherAITools.Domain.Entities.User", b =>
@@ -1364,9 +1257,7 @@ namespace TeacherAITools.Infrastructure.Migrations
 
                     b.Navigation("Notifications");
 
-                    b.Navigation("Periods");
-
-                    b.Navigation("Prompts");
+                    b.Navigation("TeacherLessons");
 
                     b.Navigation("Teachers");
                 });

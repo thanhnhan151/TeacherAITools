@@ -7,10 +7,10 @@
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow.AddHours(7);
 
         // Foreign Key
-        public int UserId { get; set; }
-        public virtual User User { get; set; } = null!;
-
         public int LessonId { get; set; }
         public virtual Lesson Lesson { get; set; } = null!;
+
+        // Navigation
+        public virtual ICollection<TeacherLesson> TeacherLessons { get; set; } = [];
     }
 }

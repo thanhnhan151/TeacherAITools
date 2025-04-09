@@ -54,6 +54,8 @@
 
         IQuizAnswerRepository QuizAnswers { get; }
 
+        ITeacherLessonRepository TeacherLessons { get; }
+
         Task CompleteAsync();
 
         void Complete();

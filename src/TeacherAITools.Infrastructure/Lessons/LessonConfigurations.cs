@@ -31,15 +31,15 @@ namespace TeacherAITools.Infrastructure.Lessons
                 .HasForeignKey(l => l.WeekId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            builder.HasOne(l => l.Requirement)
-                .WithMany(l => l.Lessons)
-                .HasForeignKey(l => l.RequirementId)
-                .OnDelete(DeleteBehavior.SetNull);
+            //builder.HasOne(l => l.Requirement)
+            //    .WithMany(l => l.Lessons)
+            //    .HasForeignKey(l => l.RequirementId)
+            //    .OnDelete(DeleteBehavior.SetNull);
 
-            builder.HasOne(l => l.SchoolSupply)
-                .WithMany(l => l.Lessons)
-                .HasForeignKey(l => l.SchoolSupplyId)
-                .OnDelete(DeleteBehavior.SetNull);
+            //builder.HasOne(l => l.SchoolSupply)
+            //    .WithMany(l => l.Lessons)
+            //    .HasForeignKey(l => l.SchoolSupplyId)
+            //    .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasOne(l => l.Note)
                 .WithMany(l => l.Lessons)

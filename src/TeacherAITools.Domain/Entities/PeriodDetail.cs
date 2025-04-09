@@ -9,10 +9,10 @@
         public string Apply { get; set; } = string.Empty;
 
         // Foreign Key
-        public int PeriodId { get; set; }
-        public virtual Period Period { get; set; } = null!;
+        //public int PeriodId { get; set; }
+        //public virtual Period Period { get; set; } = null!;
 
         // Navigation
-        public virtual ICollection<LessonHistory> LessonHistories { get; set; } = [];
+        //public virtual ICollection<LessonHistory> LessonHistories { get; set; } = [];
     }
 }
