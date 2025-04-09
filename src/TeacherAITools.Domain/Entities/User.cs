@@ -34,10 +34,11 @@ namespace TeacherAITools.Domain.Entities
         public virtual Grade Grade { get; set; } = null!;
 
         // Navigation
-        public virtual ICollection<Lesson> Lessons { get; set; } = [];
+        //public virtual ICollection<Lesson> Lessons { get; set; } = [];
         public virtual ICollection<User> Teachers { get; set; } = [];
         public virtual ICollection<Notification> Notifications { get; set; } = [];
         public virtual ICollection<Comment> Comments { get; set; } = [];
         public virtual ICollection<Prompt> Prompts { get; set; } = [];
+        public virtual ICollection<Period> Periods { get; set; } = [];
     }
 }

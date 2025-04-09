@@ -15,39 +15,46 @@ namespace TeacherAITools.Application.Lessons.Commands.CreateLesson
 
         public async Task<Response<GetLessonResponse>> Handle(CreateLessonCommand request, CancellationToken cancellationToken)
         {
-            if(!_unitOfWork.LessonTypes.Any(
-                x => x.LessonTypeId == request.createLessonRequest.LessonTypeId)){
-                    throw new ApiException(ResponseCode.ID_LESSON_TYPE_DONT_EXIST);
+            if (!_unitOfWork.LessonTypes.Any(
+                x => x.LessonTypeId == request.createLessonRequest.LessonTypeId))
+            {
+                throw new ApiException(ResponseCode.ID_LESSON_TYPE_DONT_EXIST);
             }
 
-            if(!_unitOfWork.Requirements.Any(
-                x => x.RequirementId == request.createLessonRequest.RequirementId)){
-                    throw new ApiException(ResponseCode.ID_REQUIREMENT_DONT_EXIST);
+            if (!_unitOfWork.Requirements.Any(
+                x => x.RequirementId == request.createLessonRequest.RequirementId))
+            {
+                throw new ApiException(ResponseCode.ID_REQUIREMENT_DONT_EXIST);
             }
 
-            if(!_unitOfWork.Notes.Any(
-                x => x.NoteId == request.createLessonRequest.NoteId)){
-                    throw new ApiException(ResponseCode.ID_NOTE_DONT_EXIST);
+            if (!_unitOfWork.Notes.Any(
+                x => x.NoteId == request.createLessonRequest.NoteId))
+            {
+                throw new ApiException(ResponseCode.ID_NOTE_DONT_EXIST);
             }
 
-            if(!_unitOfWork.SchoolSupplies.Any(
-                x => x.SchoolSupplyId == request.createLessonRequest.SchoolSupplyId)){
-                    throw new ApiException(ResponseCode.ID_WEEK_DONT_EXIST);
+            if (!_unitOfWork.SchoolSupplies.Any(
+                x => x.SchoolSupplyId == request.createLessonRequest.SchoolSupplyId))
+            {
+                throw new ApiException(ResponseCode.ID_WEEK_DONT_EXIST);
             }
 
-            if(!_unitOfWork.SchoolSupplies.Any(
-                x => x.SchoolSupplyId == request.createLessonRequest.SchoolSupplyId)){
-                    throw new ApiException(ResponseCode.ID_WEEK_DONT_EXIST);
+            if (!_unitOfWork.SchoolSupplies.Any(
+                x => x.SchoolSupplyId == request.createLessonRequest.SchoolSupplyId))
+            {
+                throw new ApiException(ResponseCode.ID_WEEK_DONT_EXIST);
             }
 
-            if(!_unitOfWork.Users.Any(
-                x => x.UserId == request.createLessonRequest.UserId)){
-                    throw new ApiException(ResponseCode.USER_NOT_FOUND);
-            }
+            //if (!_unitOfWork.Users.Any(
+            //    x => x.UserId == request.createLessonRequest.UserId))
+            //{
+            //    throw new ApiException(ResponseCode.USER_NOT_FOUND);
+            //}
 
-            if(!_unitOfWork.Modules.Any(
-                x => x.ModuleId == request.createLessonRequest.ModuleId)){
-                    throw new ApiException(ResponseCode.MODULE_NOT_FOUND);
+            if (!_unitOfWork.Modules.Any(
+                x => x.ModuleId == request.createLessonRequest.ModuleId))
+            {
+                throw new ApiException(ResponseCode.MODULE_NOT_FOUND);
             }
 
             var lessonId = _unitOfWork.Lessons.GetLastIdLesson() + 1;
@@ -62,7 +69,7 @@ namespace TeacherAITools.Application.Lessons.Commands.CreateLesson
                 RequirementId = request.createLessonRequest.RequirementId,
                 SchoolSupplyId = request.createLessonRequest.SchoolSupplyId,
                 NoteId = request.createLessonRequest.NoteId,
-                UserId = request.createLessonRequest.UserId,
+                //UserId = request.createLessonRequest.UserId,
                 WeekId = request.createLessonRequest.WeekId,
                 ModuleId = request.createLessonRequest.ModuleId
             };
