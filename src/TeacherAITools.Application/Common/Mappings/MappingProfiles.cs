@@ -123,14 +123,14 @@ namespace TeacherAITools.Application.Common.Mappings
             CreateMap<TeacherLesson, GetTeacherLessonResponse>()
                 .ForMember(c => c.Status, c => c.MapFrom(c => c.Status.GetDescription()))
                 .ForMember(c => c.Fullname, c => c.MapFrom(c => c.User.Fullname))
-                .ForMember(c => c.LessonName, c => c.MapFrom(c => c.Prompt.Lesson.Name))
-                .ForMember(c => c.LessonType, c => c.MapFrom(c => c.Prompt.Lesson.LessonType.LessonTypeName));
+                .ForMember(c => c.Lesson, c => c.MapFrom(c => c.Prompt.Lesson.Name))
+                .ForMember(c => c.Module, c => c.MapFrom(c => c.Prompt.Lesson.Module.Name));
             CreateMap<TeacherLesson, GetDetailTeacherLessonResponse>()
                 .ForMember(c => c.Status, c => c.MapFrom(c => c.Status.GetDescription()))
                 .ForMember(c => c.Fullname, c => c.MapFrom(c => c.User.Fullname))
-                .ForMember(c => c.LessonName, c => c.MapFrom(c => c.Prompt.Lesson.Name))
+                .ForMember(c => c.Lesson, c => c.MapFrom(c => c.Prompt.Lesson.Name))
                 .ForMember(c => c.TotalPeriods, c => c.MapFrom(c => c.Prompt.Lesson.TotalPeriods))
-                .ForMember(c => c.LessonType, c => c.MapFrom(c => c.Prompt.Lesson.LessonType.LessonTypeName));
+                .ForMember(c => c.Module, c => c.MapFrom(c => c.Prompt.Lesson.Module.Name));
             CreateMap<PaginatedList<TeacherLesson>, PaginatedList<GetTeacherLessonResponse>>();
             #endregion
         }

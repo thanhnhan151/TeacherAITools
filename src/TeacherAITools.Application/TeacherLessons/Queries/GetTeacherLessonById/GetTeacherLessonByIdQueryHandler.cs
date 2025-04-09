@@ -24,7 +24,7 @@ namespace TeacherAITools.Application.TeacherLessons.Queries.GetTeacherLessonById
             var teacherLesson = teacherLessonQuery
                 .Include(u => u.Prompt)
                         .ThenInclude(w => w.Lesson)
-                                    .ThenInclude(w => w.LessonType)
+                                    .ThenInclude(w => w.Module)
                 .Include(u => u.User)
                 .FirstOrDefault() ?? throw new ApiException(ResponseCode.LESSON_NOT_FOUND);
 

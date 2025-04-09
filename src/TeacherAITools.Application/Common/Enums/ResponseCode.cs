@@ -167,5 +167,11 @@ namespace TeacherAITools.Application.Common.Enums
 
         [Description("Confirmed password does not match!")]
         CONFIRM_PASSWORD_NOT_MATCH = 55,
+
+        [Description("You have already generated content for this lesson!")]
+        ALREADY_GENERATED_LESSON = 56,
+
+        [Description("Lesson has already existed!")]
+        ALREADY_EXISTED_LESSON = 57,
     }
 }

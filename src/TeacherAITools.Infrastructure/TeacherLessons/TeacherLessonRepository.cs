@@ -11,16 +11,19 @@ namespace TeacherAITools.Infrastructure.TeacherLessons
 {
     public class TeacherLessonRepository(TeacherAIToolsDbContext dbContext, ILogger logger) : Repository<TeacherLesson>(dbContext, logger), ITeacherLessonRepository
     {
-        public async Task<PaginatedList<TeacherLesson>> PaginatedListAsync(string? searchTerm, string? sortColumn, string? sortOrder, int? userId, int? lessonId, LessonStatus status, int page, int pageSize)
+        public async Task<PaginatedList<TeacherLesson>> PaginatedListAsync(string? searchTerm, string? sortColumn, string? sortOrder, int? moduleId, int? lessonId, LessonStatus status, int page, int pageSize)
         {
             IQueryable<TeacherLesson> teacherLessonsQuery = _dbContext.TeacherLessons
                 .Include(u => u.Prompt)
                         .ThenInclude(w => w.Lesson)
-                                    .ThenInclude(w => w.LessonType)
+                                    .ThenInclude(w => w.Module)
                 .Include(u => u.User);
 
             switch (status)
             {
+                case LessonStatus.Draft:
+                    teacherLessonsQuery = teacherLessonsQuery.Where(u => u.Status == LessonStatus.Draft);
+                    break;
                 case LessonStatus.Pending:
                     teacherLessonsQuery = teacherLessonsQuery.Where(u => u.Status == LessonStatus.Pending);
                     break;
@@ -42,9 +45,9 @@ namespace TeacherAITools.Infrastructure.TeacherLessons
                     c.Prompt.Lesson.Name.Contains(searchTerm));
             }
 
-            if (userId != null)
+            if (moduleId != null)
             {
-                teacherLessonsQuery = teacherLessonsQuery.Where(c => c.UserId == userId);
+                teacherLessonsQuery = teacherLessonsQuery.Where(c => c.Prompt.Lesson.ModuleId == moduleId);
             }
 
             if (lessonId != null)
@@ -73,5 +76,7 @@ namespace TeacherAITools.Infrastructure.TeacherLessons
             //"dob" => user => user.DoB,
             _ => lesson => lesson.TeacherLessonId
         };
+
+        public async Task<bool> IsBelongedToTeacherAsync(int userId, int promptId) => await _dbContext.TeacherLessons.AnyAsync(t => t.UserId == userId && t.PromptId == promptId);
     }
 }

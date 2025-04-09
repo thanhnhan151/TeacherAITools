@@ -5,12 +5,14 @@ namespace TeacherAITools.Domain.Common
     public enum LessonStatus
     {
         [Description("Pending")]
-        Pending = 0,
+        Draft = 1,
+        [Description("Pending")]
+        Pending,
         [Description("Approved")]
-        Approved = 1,
+        Approved,
         [Description("Rejected")]
-        Rejected = 2,
+        Rejected,
         [Description("Cancelled")]
-        Cancelled = 3,
+        Cancelled,
     }
 }

@@ -11,8 +11,8 @@
         public string Apply { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
         public string Fullname { get; set; } = string.Empty;
-        public string LessonName { get; set; } = string.Empty;
-        public string LessonType { get; set; } = string.Empty;
+        public string Lesson { get; set; } = string.Empty;
+        public string Module { get; set; } = string.Empty;
         public int TotalPeriods { get; set; }
     }
 }
