@@ -20,11 +20,11 @@ namespace TeacherAITools.Application.Lessons.Commands.UpdateLesson
                 throw new ApiException(ResponseCode.ID_LESSON_TYPE_DONT_EXIST);
             }
 
-            if (!_unitOfWork.Requirements.Any(
-                x => x.RequirementId == request.updateLessonRequest.RequirementId))
-            {
-                throw new ApiException(ResponseCode.ID_REQUIREMENT_DONT_EXIST);
-            }
+            //if (!_unitOfWork.Requirements.Any(
+            //    x => x.RequirementId == request.updateLessonRequest.RequirementId))
+            //{
+            //    throw new ApiException(ResponseCode.ID_REQUIREMENT_DONT_EXIST);
+            //}
 
             if (!_unitOfWork.Notes.Any(
                 x => x.NoteId == request.updateLessonRequest.NoteId))
@@ -32,17 +32,17 @@ namespace TeacherAITools.Application.Lessons.Commands.UpdateLesson
                 throw new ApiException(ResponseCode.ID_NOTE_DONT_EXIST);
             }
 
-            if (!_unitOfWork.SchoolSupplies.Any(
-                x => x.SchoolSupplyId == request.updateLessonRequest.SchoolSupplyId))
-            {
-                throw new ApiException(ResponseCode.ID_WEEK_DONT_EXIST);
-            }
+            //if (!_unitOfWork.SchoolSupplies.Any(
+            //    x => x.SchoolSupplyId == request.updateLessonRequest.SchoolSupplyId))
+            //{
+            //    throw new ApiException(ResponseCode.ID_WEEK_DONT_EXIST);
+            //}
 
-            if (!_unitOfWork.SchoolSupplies.Any(
-                x => x.SchoolSupplyId == request.updateLessonRequest.SchoolSupplyId))
-            {
-                throw new ApiException(ResponseCode.ID_WEEK_DONT_EXIST);
-            }
+            //if (!_unitOfWork.SchoolSupplies.Any(
+            //    x => x.SchoolSupplyId == request.updateLessonRequest.SchoolSupplyId))
+            //{
+            //    throw new ApiException(ResponseCode.ID_WEEK_DONT_EXIST);
+            //}
 
             //if (!_unitOfWork.Users.Any(
             //    x => x.UserId == request.updateLessonRequest.UserId))
@@ -64,8 +64,8 @@ namespace TeacherAITools.Application.Lessons.Commands.UpdateLesson
             lesson.Description = request.updateLessonRequest.Description;
             lesson.TotalPeriods = request.updateLessonRequest.TotalPeriods;
             lesson.LessonTypeId = request.updateLessonRequest.LessonTypeId;
-            lesson.RequirementId = request.updateLessonRequest.RequirementId;
-            lesson.SchoolSupplyId = request.updateLessonRequest.SchoolSupplyId;
+            //lesson.RequirementId = request.updateLessonRequest.RequirementId;
+            //lesson.SchoolSupplyId = request.updateLessonRequest.SchoolSupplyId;
             lesson.NoteId = request.updateLessonRequest.NoteId;
             //lesson.UserId = request.updateLessonRequest.UserId;
             lesson.WeekId = request.updateLessonRequest.WeekId;

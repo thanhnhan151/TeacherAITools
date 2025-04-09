@@ -9,13 +9,13 @@ namespace TeacherAITools.Domain.Entities
         public LessonStatus Status { get; set; } = LessonStatus.Pending;
 
         // Foreign Key
-        public int LessonId { get; set; }
-        public virtual Lesson Lesson { get; set; } = null!;
+        //public int LessonId { get; set; }
+        //public virtual Lesson Lesson { get; set; } = null!;
 
-        public int? UserId { get; set; }
-        public virtual User User { get; set; } = null!;
+        //public int? UserId { get; set; }
+        //public virtual User User { get; set; } = null!;
 
         // Navigation
-        public virtual ICollection<PeriodDetail> PeriodDetails { get; set; } = [];
+        //public virtual ICollection<PeriodDetail> PeriodDetails { get; set; } = [];
     }
 }

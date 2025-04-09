@@ -16,6 +16,7 @@ using TeacherAITools.Application.Roles.Common;
 using TeacherAITools.Application.Schools.Common;
 using TeacherAITools.Application.SchoolSupplies.Common;
 using TeacherAITools.Application.SchoolYears.Common;
+using TeacherAITools.Application.TeacherLessons.Common;
 using TeacherAITools.Application.Users.Common;
 using TeacherAITools.Application.Weeks.Common;
 using TeacherAITools.Domain.Entities;
@@ -114,11 +115,23 @@ namespace TeacherAITools.Application.Common.Mappings
             #endregion
 
             #region Prompt
-            CreateMap<Prompt, GetPromptResponse>()
-                .ForMember(p => p.CreatedAt, p => p.MapFrom(p => p.CreatedAt.GetFormatDateTime()))
-                .ForMember(p => p.Username, p => p.MapFrom(p => p.User.Username))
-                .ForMember(p => p.LessonName, p => p.MapFrom(p => p.Lesson.Name));
+            CreateMap<Prompt, GetPromptResponse>();
             CreateMap<PaginatedList<Prompt>, PaginatedList<GetPromptResponse>>();
+            #endregion
+
+            #region TeacherLesson
+            CreateMap<TeacherLesson, GetTeacherLessonResponse>()
+                .ForMember(c => c.Status, c => c.MapFrom(c => c.Status.GetDescription()))
+                .ForMember(c => c.Fullname, c => c.MapFrom(c => c.User.Fullname))
+                .ForMember(c => c.LessonName, c => c.MapFrom(c => c.Prompt.Lesson.Name))
+                .ForMember(c => c.LessonType, c => c.MapFrom(c => c.Prompt.Lesson.LessonType.LessonTypeName));
+            CreateMap<TeacherLesson, GetDetailTeacherLessonResponse>()
+                .ForMember(c => c.Status, c => c.MapFrom(c => c.Status.GetDescription()))
+                .ForMember(c => c.Fullname, c => c.MapFrom(c => c.User.Fullname))
+                .ForMember(c => c.LessonName, c => c.MapFrom(c => c.Prompt.Lesson.Name))
+                .ForMember(c => c.TotalPeriods, c => c.MapFrom(c => c.Prompt.Lesson.TotalPeriods))
+                .ForMember(c => c.LessonType, c => c.MapFrom(c => c.Prompt.Lesson.LessonType.LessonTypeName));
+            CreateMap<PaginatedList<TeacherLesson>, PaginatedList<GetTeacherLessonResponse>>();
             #endregion
         }
     }

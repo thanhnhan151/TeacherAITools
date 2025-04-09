@@ -12,9 +12,14 @@ namespace TeacherAITools.Infrastructure.Periods
 
             builder.HasKey(l => l.Id);
 
-            builder.HasOne(l => l.PeriodDetail)
+            //builder.HasOne(l => l.PeriodDetail)
+            //    .WithMany(l => l.LessonHistories)
+            //    .HasForeignKey(l => l.PeriodDetailId)
+            //    .OnDelete(DeleteBehavior.SetNull);
+
+            builder.HasOne(l => l.TeacherLesson)
                 .WithMany(l => l.LessonHistories)
-                .HasForeignKey(l => l.PeriodDetailId)
+                .HasForeignKey(l => l.TeacherLessonId)
                 .OnDelete(DeleteBehavior.SetNull);
         }
     }

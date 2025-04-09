@@ -34,14 +34,14 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
         public DbSet<Lesson> Lessons { get; set; }
         public DbSet<LessonType> LessonTypes { get; set; }
         public DbSet<Week> Weeks { get; set; }
-        public DbSet<Requirement> Requirements { get; set; }
-        public DbSet<SchoolSupply> SchoolSupplies { get; set; }
+        //public DbSet<Requirement> Requirements { get; set; }
+        //public DbSet<SchoolSupply> SchoolSupplies { get; set; }
         public DbSet<Note> Notes { get; set; }
         public DbSet<Quiz> Quizzes { get; set; }
         public DbSet<QuizQuestion> QuizQuestions { get; set; }
         public DbSet<QuizAnswer> QuizAnswers { get; set; }
-        public DbSet<Period> Periods { get; set; }
-        public DbSet<PeriodDetail> PeriodDetails { get; set; }
+        //public DbSet<Period> Periods { get; set; }
+        //public DbSet<PeriodDetail> PeriodDetails { get; set; }
         public DbSet<LessonHistory> LessonHistories { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<NotificationType> NotificationTypes { get; set; }
@@ -53,6 +53,7 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
         public DbSet<City> Cities { get; set; }
         public DbSet<District> Districts { get; set; }
         public DbSet<Ward> Wards { get; set; }
+        public DbSet<TeacherLesson> TeacherLessons { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

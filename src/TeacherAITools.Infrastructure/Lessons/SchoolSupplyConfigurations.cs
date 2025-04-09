@@ -1,20 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TeacherAITools.Domain.Entities;
-
-namespace TeacherAITools.Infrastructure.Lessons
+﻿namespace TeacherAITools.Infrastructure.Lessons
 {
-    public class SchoolSupplyConfigurations : IEntityTypeConfiguration<SchoolSupply>
-    {
-        public void Configure(EntityTypeBuilder<SchoolSupply> builder)
-        {
-            builder.ToTable("SchoolSupply");
+    //public class SchoolSupplyConfigurations : IEntityTypeConfiguration<SchoolSupply>
+    //{
+    //    public void Configure(EntityTypeBuilder<SchoolSupply> builder)
+    //    {
+    //        builder.ToTable("SchoolSupply");
 
-            builder.HasKey(t => t.SchoolSupplyId);
+    //        builder.HasKey(t => t.SchoolSupplyId);
 
-            builder.Property(t => t.Description)
-                .IsRequired()
-                .HasMaxLength(100);
-        }
-    }
+    //        builder.Property(t => t.Description)
+    //            .IsRequired()
+    //            .HasMaxLength(100);
+    //    }
+    //}
 }

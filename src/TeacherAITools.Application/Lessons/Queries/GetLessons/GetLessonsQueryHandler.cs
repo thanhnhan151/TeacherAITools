@@ -18,8 +18,8 @@ namespace TeacherAITools.Application.Lessons.Queries.GetLessons
                 page: request.PageNumber,
                 pageSize: request.PageSize,
                 includeFunc: m => m.Include(m => m.LessonType)
-                                   .Include(m => m.Requirement)
-                                   .Include(m => m.SchoolSupply)
+                                   //.Include(m => m.Requirement)
+                                   //.Include(m => m.SchoolSupply)
                                    .Include(m => m.Note)
                                    //.Include(m => m.User)
                                    .Include(m => m.Week)
@@ -42,10 +42,9 @@ namespace TeacherAITools.Application.Lessons.Queries.GetLessons
                         Name = lesson.Name,
                         Description = lesson.Description,
                         TotalPeriods = lesson.TotalPeriods,
-                        Status = lesson.Status.GetDescription(),
                         LessonType = lesson.LessonType.LessonTypeName,
-                        Requirement = lesson.Requirement.Description,
-                        SchoolSupply = lesson.SchoolSupply.Description,
+                        //Requirement = lesson.Requirement.Description,
+                        //SchoolSupply = lesson.SchoolSupply.Description,
                         Note = lesson.Note.Description,
                         //User = lesson.User.Username,
                         Week = lesson.Week.WeekNumber,
