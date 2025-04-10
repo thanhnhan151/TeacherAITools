@@ -176,5 +176,8 @@ namespace TeacherAITools.Application.Common.Enums
 
         [Description("Prompt not found!")]
         PROMPT_NOT_FOUND = 58,
+
+        [Description("Lesson has already existed!")]
+        TEACHER_LESSON_DONT_EXIST = 59,
     }
 }

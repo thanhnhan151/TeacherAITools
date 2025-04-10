@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using TeacherAITools.Application.Common.Exceptions;
+using TeacherAITools.Application.Lessons.Commands.UpdateStatusTeacherLesson;
 using TeacherAITools.Application.TeacherLessons.Commands.CreateTeacherLesson;
 using TeacherAITools.Application.TeacherLessons.Common;
 using TeacherAITools.Application.TeacherLessons.Queries.GetTeacherLessonById;
@@ -69,6 +70,27 @@ namespace TeacherAITools.Api.Controllers
             try
             {
                 return Ok(await mediator.Send(new GetTeacherLessonByIdQuery(id)));
+            }
+            catch (ApiException e)
+            {
+                return NotFound(new
+                {
+                    errorCode = e.ErrorCode,
+                    error = e.Error,
+                    errorMessage = e.ErrorMessage
+                });
+            }
+        }
+
+        [HttpPut("{id}")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(Response<GetDetailTeacherLessonResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> UpdateStatusAsync(int id, [FromBody] UpdateStatusTeacherLessonRequest request)
+        {
+            try
+            {
+                return Ok(await mediator.Send(new UpdateStatusTeacherLessonCommand(id, request)));
             }
             catch (ApiException e)
             {
