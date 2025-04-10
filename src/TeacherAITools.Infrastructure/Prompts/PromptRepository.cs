@@ -10,7 +10,7 @@ namespace TeacherAITools.Infrastructure.Prompts
 {
     public class PromptRepository(TeacherAIToolsDbContext dbContext, ILogger logger) : Repository<Prompt>(dbContext, logger), IPromptRepository
     {
-        public async Task<PaginatedList<Prompt>> PaginatedListAsync(string? searchTerm, string? sortColumn, string? sortOrder, int? lessonId, int page, int pageSize)
+        public async Task<PaginatedList<Prompt>> PaginatedListAsync(string? searchTerm, string? sortColumn, string? sortOrder, int page, int pageSize)
         {
             IQueryable<Prompt> promptsQuery = _dbContext.Prompts
                 .Include(p => p.Lesson);
@@ -19,11 +19,6 @@ namespace TeacherAITools.Infrastructure.Prompts
             {
                 promptsQuery = promptsQuery.Where(c =>
                     c.Description.Contains(searchTerm));
-            }
-
-            if (lessonId != null)
-            {
-                promptsQuery = promptsQuery.Where(c => c.LessonId == lessonId);
             }
 
             if (sortOrder?.ToLower() == "asc")

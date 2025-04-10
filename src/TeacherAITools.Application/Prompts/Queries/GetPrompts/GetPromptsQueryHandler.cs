@@ -22,7 +22,6 @@ namespace TeacherAITools.Application.Prompts.Queries.GetPrompts
                     request.SearchTerm,
                     request.SortColumn,
                     request.SortOrder,
-                    request.LessonId,
                     request.Page,
                     request.PageSize
                 )),
