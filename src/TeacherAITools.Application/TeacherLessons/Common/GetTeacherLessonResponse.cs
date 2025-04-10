@@ -9,5 +9,6 @@
         public int Grade { get; set; }
         public string Status { get; set; } = string.Empty;
         public string CreatedAt { get; set; } = string.Empty;
+        public string DisapprovedReason { get; set; } = string.Empty;
     }
 }
