@@ -20,9 +20,23 @@ namespace TeacherAITools.Application.Lessons.Commands.UpdateStatusTeacherLesson
 
             teacherLesson.Status = request.updateStatusTeacherLessonRequest.Status;
 
-            if(request.updateStatusTeacherLessonRequest.Status == Domain.Common.LessonStatus.Rejected 
-            && string.IsNullOrEmpty(request.updateStatusTeacherLessonRequest.DisapprovedReason) ){
-                teacherLesson.DisapprovedReason = request.updateStatusTeacherLessonRequest.DisapprovedReason;
+            switch (request.updateStatusTeacherLessonRequest.Status)
+            {
+                case Domain.Common.LessonStatus.Rejected:
+                    if (string.IsNullOrEmpty(request.updateStatusTeacherLessonRequest.DisapprovedReason))
+                    {
+                        throw new ApiException(ResponseCode.MUST_HAVE_DISAPPROVED_REASON);
+                    }
+
+                    teacherLesson.DisapprovedReason = request.updateStatusTeacherLessonRequest.DisapprovedReason;
+                    break;
+                case Domain.Common.LessonStatus.Draft:
+                    teacherLesson.DisapprovedReason = string.Empty;
+                    break;
+                case Domain.Common.LessonStatus.Pending:
+                case Domain.Common.LessonStatus.Approved:
+                case Domain.Common.LessonStatus.Cancelled:
+                    break;
             }
 
             await _unitOfWork.TeacherLessons.UpdateAsync(teacherLesson);
