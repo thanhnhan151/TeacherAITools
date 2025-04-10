@@ -24,9 +24,9 @@ namespace TeacherAITools.Infrastructure.Blogs
                 .HasForeignKey(c => c.CategoryId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            builder.HasOne(c => c.Lesson)
+            builder.HasOne(c => c.TeacherLesson)
                 .WithMany(c => c.Blogs)
-                .HasForeignKey(c => c.LessonId)
+                .HasForeignKey(c => c.TeacherLessonId)
                 .OnDelete(DeleteBehavior.SetNull);
         }
     }

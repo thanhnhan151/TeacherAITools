@@ -24,5 +24,7 @@ namespace TeacherAITools.Domain.Entities
 
         // Navigation
         public virtual ICollection<LessonHistory> LessonHistories { get; set; } = [];
+
+        public virtual ICollection<Blog> Blogs { get; set; } = [];
     }
 }

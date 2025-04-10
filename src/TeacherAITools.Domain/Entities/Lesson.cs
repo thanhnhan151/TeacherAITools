@@ -7,7 +7,7 @@ namespace TeacherAITools.Domain.Entities
         public int LessonId { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public string DisapprovedReason { get; set; } = string.Empty;
+        //public string DisapprovedReason { get; set; } = string.Empty;
         public int TotalPeriods { get; set; }
 
         // Foreign Key
@@ -41,6 +41,6 @@ namespace TeacherAITools.Domain.Entities
 
         //public virtual ICollection<Prompt> Prompts { get; set; } = [];
 
-        public virtual ICollection<Blog> Blogs { get; set; } = [];
+        //public virtual ICollection<Blog> Blogs { get; set; } = [];
     }
 }
