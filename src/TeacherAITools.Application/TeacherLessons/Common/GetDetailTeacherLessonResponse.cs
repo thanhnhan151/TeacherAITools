@@ -14,5 +14,6 @@
         public string Lesson { get; set; } = string.Empty;
         public string Module { get; set; } = string.Empty;
         public int TotalPeriods { get; set; }
+        public string CreatedAt { get; set; } = string.Empty;
     }
 }

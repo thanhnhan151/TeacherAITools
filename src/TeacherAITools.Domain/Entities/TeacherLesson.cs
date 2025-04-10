@@ -14,6 +14,7 @@ namespace TeacherAITools.Domain.Entities
         public LessonStatus Status { get; set; } = LessonStatus.Draft;
         public int RejectedCount { get; set; } = 0;
         public string DisapprovedReason { get; set; } = string.Empty;
+        public DateTime CreatedAt { get; set; }
 
         // Foreign keys
         public int? PromptId { get; set; }
