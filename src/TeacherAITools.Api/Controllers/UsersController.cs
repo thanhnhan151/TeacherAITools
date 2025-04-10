@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using TeacherAITools.Application.Common.Exceptions;
+using TeacherAITools.Application.Users.Commands.ChangePassword;
 using TeacherAITools.Application.Users.Commands.CreateUser;
 using TeacherAITools.Application.Users.Commands.DisableUser;
 using TeacherAITools.Application.Users.Commands.UpdateUser;
@@ -93,6 +94,27 @@ namespace TeacherAITools.Api.Controllers
             try
             {
                 return Ok(await mediator.Send(new UpdateUserCommand(id, request)));
+            }
+            catch (ValidationException e)
+            {
+                return NotFound(new
+                {
+                    errorCode = e.ErrorCode,
+                    errors = e.Errors,
+                    errorMessage = e.ErrorMessage
+                });
+            }
+        }
+
+        [HttpPut]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(Response<string>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> UpdatePasswordAsync([FromBody] ChangePasswordCommand request)
+        {
+            try
+            {
+                return Ok(await mediator.Send(request));
             }
             catch (ValidationException e)
             {

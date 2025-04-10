@@ -7,6 +7,7 @@ using TeacherAITools.Application.Common.Mappings;
 using TeacherAITools.Application.Schools.Commands.CreateSchool;
 using TeacherAITools.Application.Schools.Commands.UpdateSchool;
 using TeacherAITools.Application.Schools.Common;
+using TeacherAITools.Application.Users.Commands.ChangePassword;
 using TeacherAITools.Application.Users.Commands.CreateUser;
 using TeacherAITools.Application.Users.Commands.UpdateUser;
 using TeacherAITools.Application.Users.Common;
@@ -34,6 +35,7 @@ namespace TeacherAITools.Application
             services.AddScoped<IValidator<UpdateSchoolRequest>, UpdateSchoolCommandValidator>();
             services.AddScoped<IValidator<CreateBlogCommand>, CreateBlogCommandValidator>();
             services.AddScoped<IValidator<UpdateBlogRequest>, UpdateBlogCommandValidator>();
+            services.AddScoped<IValidator<ChangePasswordCommand>, ChangePasswordCommandValidator>();
             #endregion
 
             services.AddValidatorsFromAssemblyContaining(typeof(DependencyInjection));
