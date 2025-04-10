@@ -12,6 +12,7 @@ namespace TeacherAITools.Application.TeacherLessons.Queries.GetTeacherLessons
         int? ModuleId,
         int? LessonId,
         int? UserId,
+        int? GradeId,
         LessonStatus Status,
         int Page,
         int PageSize) : IRequest<Response<PaginatedList<GetTeacherLessonResponse>>>;

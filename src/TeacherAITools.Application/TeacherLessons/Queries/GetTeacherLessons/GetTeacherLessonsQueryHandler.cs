@@ -25,6 +25,7 @@ namespace TeacherAITools.Application.TeacherLessons.Queries.GetTeacherLessons
                     request.ModuleId,
                     request.LessonId,
                     request.UserId,
+                    request.GradeId,
                     request.Status,
                     request.Page,
                     request.PageSize
