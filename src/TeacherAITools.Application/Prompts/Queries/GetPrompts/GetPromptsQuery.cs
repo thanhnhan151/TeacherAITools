@@ -8,7 +8,6 @@ namespace TeacherAITools.Application.Prompts.Queries.GetPrompts
         string? SearchTerm,
         string? SortColumn,
         string? SortOrder,
-        int? LessonId,
         int Page,
         int PageSize) : IRequest<Response<PaginatedList<GetPromptResponse>>>;
 }
