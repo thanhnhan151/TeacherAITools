@@ -11,7 +11,7 @@ namespace TeacherAITools.Infrastructure.TeacherLessons
 {
     public class TeacherLessonRepository(TeacherAIToolsDbContext dbContext, ILogger logger) : Repository<TeacherLesson>(dbContext, logger), ITeacherLessonRepository
     {
-        public async Task<PaginatedList<TeacherLesson>> PaginatedListAsync(string? searchTerm, string? sortColumn, string? sortOrder, int? moduleId, int? lessonId, int? userId, LessonStatus status, int page, int pageSize)
+        public async Task<PaginatedList<TeacherLesson>> PaginatedListAsync(string? searchTerm, string? sortColumn, string? sortOrder, int? moduleId, int? lessonId, int? userId, int? gradeId, LessonStatus status, int page, int pageSize)
         {
             IQueryable<TeacherLesson> teacherLessonsQuery = _dbContext.TeacherLessons
                 .Include(u => u.Prompt)
@@ -58,6 +58,11 @@ namespace TeacherAITools.Infrastructure.TeacherLessons
             if (userId != null)
             {
                 teacherLessonsQuery = teacherLessonsQuery.Where(c => c.UserId == userId);
+            }
+
+            if (gradeId != null)
+            {
+                teacherLessonsQuery = teacherLessonsQuery.Where(c => c.Prompt.Lesson.Module.GradeId == gradeId);
             }
 
             if (sortOrder?.ToLower() == "asc")

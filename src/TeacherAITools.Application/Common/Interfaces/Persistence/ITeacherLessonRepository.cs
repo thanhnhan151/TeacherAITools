@@ -14,6 +14,7 @@ namespace TeacherAITools.Application.Common.Interfaces.Persistence
             , int? moduleId
             , int? lessonId
             , int? userId
+            , int? gradeId
             , LessonStatus status
             , int page
             , int pageSize);

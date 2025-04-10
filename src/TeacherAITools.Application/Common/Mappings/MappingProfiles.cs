@@ -132,14 +132,16 @@ namespace TeacherAITools.Application.Common.Mappings
                 .ForMember(c => c.Fullname, c => c.MapFrom(c => c.User.Fullname))
                 .ForMember(c => c.CreatedAt, c => c.MapFrom(c => c.CreatedAt.GetFormatDateTime()))
                 .ForMember(c => c.Lesson, c => c.MapFrom(c => c.Prompt.Lesson.Name))
-                .ForMember(c => c.Module, c => c.MapFrom(c => c.Prompt.Lesson.Module.Name));
+                .ForMember(c => c.Module, c => c.MapFrom(c => c.Prompt.Lesson.Module.Name))
+                .ForMember(c => c.Grade, c => c.MapFrom(c => c.Prompt.Lesson.Module.GradeId));
             CreateMap<TeacherLesson, GetDetailTeacherLessonResponse>()
                 .ForMember(c => c.Status, c => c.MapFrom(c => c.Status.GetDescription()))
                 .ForMember(c => c.Fullname, c => c.MapFrom(c => c.User.Fullname))
                 .ForMember(c => c.Lesson, c => c.MapFrom(c => c.Prompt.Lesson.Name))
                 .ForMember(c => c.CreatedAt, c => c.MapFrom(c => c.CreatedAt.GetFormatDateTime()))
                 .ForMember(c => c.TotalPeriods, c => c.MapFrom(c => c.Prompt.Lesson.TotalPeriods))
-                .ForMember(c => c.Module, c => c.MapFrom(c => c.Prompt.Lesson.Module.Name));
+                .ForMember(c => c.Module, c => c.MapFrom(c => c.Prompt.Lesson.Module.Name))
+                .ForMember(c => c.Grade, c => c.MapFrom(c => c.Prompt.Lesson.Module.GradeId));
             CreateMap<TeacherLesson, GetUserLessonsResponse>()
                 .ForMember(p => p.Lesson, p => p.MapFrom(p => p.Prompt.Lesson.Name));
             CreateMap<PaginatedList<TeacherLesson>, PaginatedList<GetTeacherLessonResponse>>();
