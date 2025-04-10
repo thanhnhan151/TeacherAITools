@@ -36,7 +36,8 @@ namespace TeacherAITools.Application.Blogs.Commands.CreateBlog
                 Title = request.Title,
                 Body = request.Body,
                 PublicationDate = _dateTimeProvider.UtcNow,
-                CategoryId = request.CategoryId
+                CategoryId = request.CategoryId,
+                TeacherLessonId = request.TeacherLessonId
             };
 
             var res = await _unitOfWork.Blogs.AddAsync(newBlog);

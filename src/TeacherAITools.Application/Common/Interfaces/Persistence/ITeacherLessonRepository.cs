@@ -13,6 +13,7 @@ namespace TeacherAITools.Application.Common.Interfaces.Persistence
             , string? sortOrder
             , int? moduleId
             , int? lessonId
+            , int? userId
             , LessonStatus status
             , int page
             , int pageSize);

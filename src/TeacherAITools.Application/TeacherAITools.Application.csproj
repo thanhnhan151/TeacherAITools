@@ -23,8 +23,6 @@
 	<ItemGroup>
 		<Folder Include="Quizzes\Commands\DisableQuiz\" />
 		<Folder Include="Quizzes\Commands\UpdateQuiz\" />
-		<Folder Include="TeacherLessons\Commands\UpdateTeacherLesson\" />
-		<Folder Include="TeacherLessons\Queries\GetTeacherLessonsByUserId\" />
 	</ItemGroup>
 
 </Project>
