@@ -3,6 +3,7 @@ using TeacherAITools.Application.Common.Enums;
 using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.Common.Extensions;
 using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
+using TeacherAITools.Application.Common.Interfaces.Services;
 using TeacherAITools.Application.TeacherLessons.Common;
 using TeacherAITools.Domain.Entities;
 using TeacherAITools.Domain.Wrappers;
@@ -10,9 +11,11 @@ using TeacherAITools.Domain.Wrappers;
 namespace TeacherAITools.Application.TeacherLessons.Commands.CreateTeacherLesson
 {
     public class CreateTeacherLessonCommandHandler(
-        IUnitOfWork unitOfWork) : IRequestHandler<CreateTeacherLessonCommand, Response<GetTeacherLessonResponse>>
+        IUnitOfWork unitOfWork,
+        IDateTimeProvider dateTimeProvider) : IRequestHandler<CreateTeacherLessonCommand, Response<GetTeacherLessonResponse>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
 
         public async Task<Response<GetTeacherLessonResponse>> Handle(CreateTeacherLessonCommand request, CancellationToken cancellationToken)
         {
@@ -27,7 +30,8 @@ namespace TeacherAITools.Application.TeacherLessons.Commands.CreateTeacherLesson
                 Goal = request.Goal,
                 SchoolSupply = request.SchoolSupply,
                 UserId = request.UserId,
-                PromptId = request.PromptId
+                PromptId = request.PromptId,
+                CreatedAt = _dateTimeProvider.UtcNow
             };
 
             await _unitOfWork.TeacherLessons.AddAsync(teacherLesson);
