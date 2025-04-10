@@ -1,4 +1,5 @@
 ﻿using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
+using TeacherAITools.Domain.Common;
 using TeacherAITools.Domain.Entities;
 using TeacherAITools.Domain.Wrappers;
 
@@ -12,6 +13,7 @@ namespace TeacherAITools.Application.Common.Interfaces.Persistence
             , string? sortOrder
             , int? categoryId
             , bool isActive
+            , LessonStatus status
             , int page
             , int pageSize);
     }

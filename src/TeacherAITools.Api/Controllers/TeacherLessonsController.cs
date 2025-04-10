@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using TeacherAITools.Application.Common.Exceptions;
+using TeacherAITools.Application.Lessons.Commands.UpdateStatusTeacherLesson;
 using TeacherAITools.Application.TeacherLessons.Commands.CreateTeacherLesson;
 using TeacherAITools.Application.TeacherLessons.Common;
 using TeacherAITools.Application.TeacherLessons.Queries.GetTeacherLessonById;
@@ -69,6 +70,116 @@ namespace TeacherAITools.Api.Controllers
             try
             {
                 return Ok(await mediator.Send(new GetTeacherLessonByIdQuery(id)));
+            }
+            catch (ApiException e)
+            {
+                return NotFound(new
+                {
+                    errorCode = e.ErrorCode,
+                    error = e.Error,
+                    errorMessage = e.ErrorMessage
+                });
+            }
+        }
+
+        [HttpPut("{id}/draft")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(Response<GetDetailTeacherLessonResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> DraftTeacherLessonAsync(int id)
+        {
+            try
+            {
+                var request = new UpdateStatusTeacherLessonRequest{Status = Domain.Common.LessonStatus.Draft};
+                return Ok(await mediator.Send(new UpdateStatusTeacherLessonCommand(id, request)));
+            }
+            catch (ApiException e)
+            {
+                return NotFound(new
+                {
+                    errorCode = e.ErrorCode,
+                    error = e.Error,
+                    errorMessage = e.ErrorMessage
+                });
+            }
+        }
+
+        [HttpPut("{id}/cancel")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(Response<GetDetailTeacherLessonResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> CancelTeacherLessonAsync(int id)
+        {
+            try
+            {
+                var request = new UpdateStatusTeacherLessonRequest{Status = Domain.Common.LessonStatus.Cancelled};
+                return Ok(await mediator.Send(new UpdateStatusTeacherLessonCommand(id, request)));
+            }
+            catch (ApiException e)
+            {
+                return NotFound(new
+                {
+                    errorCode = e.ErrorCode,
+                    error = e.Error,
+                    errorMessage = e.ErrorMessage
+                });
+            }
+        }
+
+        [HttpPut("{id}/pending")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(Response<GetDetailTeacherLessonResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> PendingTeacherLessonAsync(int id)
+        {
+            try
+            {
+                var request = new UpdateStatusTeacherLessonRequest{Status = Domain.Common.LessonStatus.Pending};
+                return Ok(await mediator.Send(new UpdateStatusTeacherLessonCommand(id, request)));
+            }
+            catch (ApiException e)
+            {
+                return NotFound(new
+                {
+                    errorCode = e.ErrorCode,
+                    error = e.Error,
+                    errorMessage = e.ErrorMessage
+                });
+            }
+        }
+
+        [HttpPut("{id}/reject")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(Response<GetDetailTeacherLessonResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> RejectTeacherLessonAsync(int id)
+        {
+            try
+            {
+                var request = new UpdateStatusTeacherLessonRequest{Status = Domain.Common.LessonStatus.Rejected};
+                return Ok(await mediator.Send(new UpdateStatusTeacherLessonCommand(id, request)));
+            }
+            catch (ApiException e)
+            {
+                return NotFound(new
+                {
+                    errorCode = e.ErrorCode,
+                    error = e.Error,
+                    errorMessage = e.ErrorMessage
+                });
+            }
+        }
+
+        [HttpPut("{id}/approve")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(Response<GetDetailTeacherLessonResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> ApproveTeacherLessonAsync(int id)
+        {
+            try
+            {
+                var request = new UpdateStatusTeacherLessonRequest{Status = Domain.Common.LessonStatus.Approved};
+                return Ok(await mediator.Send(new UpdateStatusTeacherLessonCommand(id, request)));
             }
             catch (ApiException e)
             {

@@ -4,6 +4,7 @@ using TeacherAITools.Application.Blogs.Common;
 using TeacherAITools.Application.Common.Enums;
 using TeacherAITools.Application.Common.Extensions;
 using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
+using TeacherAITools.Domain.Common;
 using TeacherAITools.Domain.Wrappers;
 
 namespace TeacherAITools.Application.Blogs.Queries.GetBlogs
@@ -24,6 +25,7 @@ namespace TeacherAITools.Application.Blogs.Queries.GetBlogs
                     request.SortOrder,
                     request.CategoryId,
                     request.IsActive,
+                    (LessonStatus)request.Status,
                     request.Page,
                     request.PageSize
                 )),
