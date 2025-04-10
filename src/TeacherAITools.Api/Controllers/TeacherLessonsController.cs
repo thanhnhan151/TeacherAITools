@@ -174,11 +174,11 @@ namespace TeacherAITools.Api.Controllers
         [AllowAnonymous]
         [ProducesResponseType(typeof(Response<GetDetailTeacherLessonResponse>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> RejectTeacherLessonAsync(int id)
+        public async Task<IActionResult> RejectTeacherLessonAsync(int id, [FromBody] string disapprovedReason)
         {
             try
             {
-                var request = new UpdateStatusTeacherLessonRequest { Status = Domain.Common.LessonStatus.Rejected };
+                var request = new UpdateStatusTeacherLessonRequest { Status = Domain.Common.LessonStatus.Rejected, DisapprovedReason = disapprovedReason };
                 return Ok(await mediator.Send(new UpdateStatusTeacherLessonCommand(id, request)));
             }
             catch (ApiException e)
