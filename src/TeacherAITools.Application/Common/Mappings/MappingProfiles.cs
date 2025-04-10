@@ -51,6 +51,13 @@ namespace TeacherAITools.Application.Common.Mappings
                 .ForMember(u => u.Gender, u => u.MapFrom(u => u.Gender.GetDescription()))
                 .ForMember(m => m.DateOfBirth, m => m.MapFrom(m => m.DateOfBirth.GetFormatDate()))
                 .ForMember(m => m.Address, m => m.MapFrom(m => $"{m.Address}, phường {m.Ward.WardName}, quận {m.Ward.District.DistrictName}, TP. {m.Ward.District.City.CityName}"));
+            CreateMap<User, GetUserUpdateResponse>()
+                .ForMember(u => u.School, u => u.MapFrom(u => u.School.Name))
+                .ForMember(u => u.Manager, u => u.MapFrom(u => u.ManagerId != null ? u.Manager.Fullname : "N/A"))
+                .ForMember(u => u.Role, u => u.MapFrom(u => u.Role.RoleName))
+                .ForMember(u => u.Grade, u => u.MapFrom(u => $"Lớp {u.Grade.GradeNumber}"))
+                .ForMember(u => u.Gender, u => u.MapFrom(u => u.Gender.GetDescription()))
+                .ForMember(m => m.DateOfBirth, m => m.MapFrom(m => m.DateOfBirth.GetFormatDate()));
             CreateMap<PaginatedList<User>, PaginatedList<GetUserResponse>>();
             #endregion
 
@@ -133,6 +140,8 @@ namespace TeacherAITools.Application.Common.Mappings
                 .ForMember(c => c.CreatedAt, c => c.MapFrom(c => c.CreatedAt.GetFormatDateTime()))
                 .ForMember(c => c.TotalPeriods, c => c.MapFrom(c => c.Prompt.Lesson.TotalPeriods))
                 .ForMember(c => c.Module, c => c.MapFrom(c => c.Prompt.Lesson.Module.Name));
+            CreateMap<TeacherLesson, GetUserLessonsResponse>()
+                .ForMember(p => p.Lesson, p => p.MapFrom(p => p.Prompt.Lesson.Name));
             CreateMap<PaginatedList<TeacherLesson>, PaginatedList<GetTeacherLessonResponse>>();
             #endregion
         }

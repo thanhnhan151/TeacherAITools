@@ -3,10 +3,11 @@ using TeacherAITools.Application.Common.Enums;
 using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.Common.Extensions;
 using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
+using TeacherAITools.Application.Lessons.Commands.UpdateStatusTeacherLesson;
 using TeacherAITools.Application.TeacherLessons.Common;
 using TeacherAITools.Domain.Wrappers;
 
-namespace TeacherAITools.Application.Lessons.Commands.UpdateStatusTeacherLesson
+namespace TeacherAITools.Application.TeacherLessons.Commands.UpdateStatusTeacherLesson
 {
     public class UpdateStatusTeacherLessonCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<UpdateStatusTeacherLessonCommand, Response<GetDetailTeacherLessonResponse>>
     {
@@ -35,7 +36,7 @@ namespace TeacherAITools.Application.Lessons.Commands.UpdateStatusTeacherLesson
                     break;
                 case Domain.Common.LessonStatus.Pending:
                 case Domain.Common.LessonStatus.Approved:
-                case Domain.Common.LessonStatus.Cancelled:
+                    //case Domain.Common.LessonStatus.Cancelled:
                     break;
             }
 
