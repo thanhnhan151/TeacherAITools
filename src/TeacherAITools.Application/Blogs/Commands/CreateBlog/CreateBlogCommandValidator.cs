@@ -12,19 +12,33 @@ namespace TeacherAITools.Application.Blogs.Commands.CreateBlog
             _unitOfWork = unitOfWork;
 
             RuleFor(b => b.Title)
+                .MaximumLength(150).WithMessage("Title can not have over 150 characters")
                 .NotEmpty().WithMessage("Title is required!");
 
             RuleFor(b => b.Body)
                 .NotEmpty().WithMessage("Body is required");
 
             RuleFor(b => b.CategoryId)
-                .MustAsync(async (categoryId, cancellation) => await AlreadyExistId(categoryId))
+                .MustAsync(async (categoryId, cancellation) => await AlreadyExistCategoryId(categoryId))
+                .WithMessage("Category does not exist!");
+
+            RuleFor(b => b.TeacherLessonId)
+                .MustAsync(async (teacherLessonId, cancellation) => await AlreadyExistLessonId(teacherLessonId))
                 .WithMessage("Category does not exist!");
         }
 
-        private async Task<bool> AlreadyExistId(int categoryId)
+        private async Task<bool> AlreadyExistCategoryId(int categoryId)
         {
             var category = await _unitOfWork.Categories.GetByIdAsync(categoryId);
+
+            if (category is null) return false;
+
+            return true;
+        }
+
+        private async Task<bool> AlreadyExistLessonId(int teacherLessonId)
+        {
+            var category = await _unitOfWork.TeacherLessons.GetByIdAsync(teacherLessonId);
 
             if (category is null) return false;
 

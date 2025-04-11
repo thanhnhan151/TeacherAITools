@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 using TeacherAITools.Application.Common.Interfaces.Persistence;
-using TeacherAITools.Domain.Common;
 using TeacherAITools.Domain.Entities;
 using TeacherAITools.Domain.Wrappers;
 using TeacherAITools.Infrastructure.Common.Persistence;
@@ -11,14 +10,12 @@ namespace TeacherAITools.Infrastructure.Blogs
 {
     public class BlogRepository(TeacherAIToolsDbContext dbContext, ILogger logger) : Repository<Blog>(dbContext, logger), IBlogRepository
     {
-        public async Task<PaginatedList<Blog>> PaginatedListAsync(string? searchTerm, string? sortColumn, string? sortOrder, int? categoryId, bool isActive, LessonStatus status, int page, int pageSize)
+        public async Task<PaginatedList<Blog>> PaginatedListAsync(string? searchTerm, string? sortColumn, string? sortOrder, int? categoryId, bool isActive, int page, int pageSize)
         {
             IQueryable<Blog> blogsQuery = _dbContext.Blogs
                 .Include(u => u.Category).Include(u => u.TeacherLesson);
 
             if (isActive) blogsQuery = blogsQuery.Where(u => u.IsActive);
-
-            if (Enum.IsDefined(typeof(LessonType), status)) blogsQuery = blogsQuery.Where(u => u.TeacherLesson.Status == status);
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
