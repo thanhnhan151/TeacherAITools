@@ -6,7 +6,6 @@ using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
 using TeacherAITools.Application.Common.Interfaces.Services;
 using TeacherAITools.Application.Common.Models.Requests;
 using TeacherAITools.Application.Users.Common;
-using TeacherAITools.Domain.Common;
 using TeacherAITools.Domain.Entities;
 using TeacherAITools.Domain.Wrappers;
 
@@ -55,13 +54,14 @@ namespace TeacherAITools.Application.Users.Commands.CreateUser
                 RoleId = request.RoleId,
                 SchoolId = request.SchoolId,
                 GradeId = request.GradeId,
-                IsActive = false
+                IsActive = false,
+                ManagerId = null
             };
 
-            if (newUser.RoleId != (int)AvailableRole.SubjectSpecialistManager)
-            {
-                newUser.ManagerId = await _unitOfWork.Users.GetSchoolManagerAsync(request.GradeId, request.SchoolId);
-            }
+            //if (newUser.RoleId != (int)AvailableRole.SubjectSpecialistManager)
+            //{
+            //    newUser.ManagerId = await _unitOfWork.Users.GetSchoolManagerAsync(request.GradeId, request.SchoolId);
+            //}
 
             var mailRequest = new MailRequest
             {
