@@ -75,6 +75,8 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
         public IQuizAnswerRepository QuizAnswers { get; private set; }
 
         public ITeacherLessonRepository TeacherLessons { get; private set; }
+        
+        public ILessonHistoryRepository LessonHistories { get; private set; }
 
         public UnitOfWork(
             TeacherAIToolsDbContext dbContext,
@@ -137,6 +139,8 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
             QuizAnswers = new QuizAnswerRepository(_dbContext, _logger);
 
             TeacherLessons = new TeacherLessonRepository(_dbContext, _logger);
+
+            LessonHistories = new LessonHistoryRepository(_dbContext, _logger);
         }
 
         public async Task CompleteAsync() => await _dbContext.SaveChangesAsync();
