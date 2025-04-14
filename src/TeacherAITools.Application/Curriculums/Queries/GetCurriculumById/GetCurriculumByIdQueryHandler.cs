@@ -22,7 +22,14 @@ namespace TeacherAITools.Application.Curriculums.Queries.GetCurriculumById
         {
             var curriculumQuery = await _unitOfWork.Curriculums.GetAsync(curriculum => curriculum.CurriculumId == request.id);
 
-            var curriculum = curriculumQuery/*.Include(c => c.Grade)*/.Include(c => c.SchoolYear).FirstOrDefault() ?? throw new ApiException(ResponseCode.CURRICULUM_NOT_FOUND);
+            var curriculum = curriculumQuery
+                .Include(c => c.SchoolYear)
+                .Include(c => c.CurriculumActivities)
+                .Include(c => c.CurriculumDetails)
+                        .ThenInclude(c => c.CurriculumSubSection)
+                                    .ThenInclude(c => c.CurriculumSection)
+                                                .ThenInclude(c => c.CurriculumTopic)
+                .FirstOrDefault() ?? throw new ApiException(ResponseCode.CURRICULUM_NOT_FOUND);
 
             var response = new GetCurriculumResponse
             {

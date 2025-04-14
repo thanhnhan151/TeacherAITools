@@ -54,6 +54,11 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
         public DbSet<District> Districts { get; set; }
         public DbSet<Ward> Wards { get; set; }
         public DbSet<TeacherLesson> TeacherLessons { get; set; }
+        public DbSet<CurriculumActivity> CurriculumActivities { get; set; }
+        public DbSet<CurriculumTopic> CurriculumTopics { get; set; }
+        public DbSet<CurriculumSection> CurriculumSections { get; set; }
+        public DbSet<CurriculumSubSection> CurriculumSubSections { get; set; }
+        public DbSet<CurriculumDetail> CurriculumDetails { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

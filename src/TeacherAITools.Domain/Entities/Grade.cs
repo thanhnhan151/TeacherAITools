@@ -7,5 +7,6 @@
 
         public virtual ICollection<Module> Modules { get; set; } = [];
         public virtual ICollection<User> Users { get; set; } = [];
+        public virtual ICollection<Curriculum> Curriculums { get; set; } = [];
     }
 }

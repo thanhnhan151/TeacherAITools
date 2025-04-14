@@ -4,6 +4,7 @@ using TeacherAITools.Application.Categories.Common;
 using TeacherAITools.Application.Cities.Common;
 using TeacherAITools.Application.Comments.Common;
 using TeacherAITools.Application.Common.Extensions;
+using TeacherAITools.Application.Curriculums.Common;
 using TeacherAITools.Application.Districts.Common;
 using TeacherAITools.Application.Grades.Common;
 using TeacherAITools.Application.LessonTypes.Common;
@@ -145,6 +146,13 @@ namespace TeacherAITools.Application.Common.Mappings
             CreateMap<TeacherLesson, GetUserLessonsResponse>()
                 .ForMember(p => p.Lesson, p => p.MapFrom(p => p.Prompt.Lesson.Name));
             CreateMap<PaginatedList<TeacherLesson>, PaginatedList<GetTeacherLessonResponse>>();
+            #endregion
+
+            #region Curriculum
+            CreateMap<Curriculum, GetDetailCurriculumResponse>()
+                .ForMember(c => c.Name, c => c.MapFrom(c => $"{c.Name} {c.GradeId}"));
+            CreateMap<CurriculumDetail, DetailItem>();
+            CreateMap<CurriculumActivity, ActivityItem>();
             #endregion
         }
     }
