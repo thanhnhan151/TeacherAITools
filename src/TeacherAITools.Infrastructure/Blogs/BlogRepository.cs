@@ -13,7 +13,7 @@ namespace TeacherAITools.Infrastructure.Blogs
         public async Task<PaginatedList<Blog>> PaginatedListAsync(string? searchTerm, string? sortColumn, string? sortOrder, int? categoryId, bool isActive, int page, int pageSize)
         {
             IQueryable<Blog> blogsQuery = _dbContext.Blogs
-                .Include(u => u.Category).Include(u => u.TeacherLesson);
+                .Include(u => u.Category).Include(u => u.LessonPlan);
 
             if (isActive) blogsQuery = blogsQuery.Where(u => u.IsActive);
 

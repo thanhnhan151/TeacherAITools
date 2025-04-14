@@ -14,8 +14,8 @@ namespace TeacherAITools.Domain.Entities
         public int CategoryId { get; set; }
         public virtual Category Category { get; set; } = null!;
 
-        public int? TeacherLessonId { get; set; }
-        public virtual TeacherLesson TeacherLesson { get; set; } = null!;
+        public int? LessonPlanId { get; set; }
+        public virtual TeacherLesson LessonPlan { get; set; } = null!;
 
         // Navigation
         public virtual ICollection<Comment> Comments { get; set; } = [];

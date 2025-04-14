@@ -19,7 +19,7 @@ namespace TeacherAITools.Application.TeacherLessons.Queries.GetTeacherLessonById
 
         public async Task<Response<GetDetailTeacherLessonResponse>> Handle(GetTeacherLessonByIdQuery request, CancellationToken cancellationToken)
         {
-            var teacherLessonQuery = await _unitOfWork.TeacherLessons.GetAsync(user => user.TeacherLessonId == request.Id);
+            var teacherLessonQuery = await _unitOfWork.TeacherLessons.GetAsync(user => user.LessonPlanId == request.Id);
 
             var teacherLesson = teacherLessonQuery
                 .Include(u => u.Prompt)

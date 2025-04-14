@@ -8,17 +8,17 @@ namespace TeacherAITools.Infrastructure.TeacherLessons
     {
         public void Configure(EntityTypeBuilder<TeacherLesson> builder)
         {
-            builder.ToTable("TeacherLesson");
+            builder.ToTable("LessonPlan");
 
-            builder.HasKey(u => u.TeacherLessonId);
+            builder.HasKey(u => u.LessonPlanId);
 
             builder.HasOne(u => u.User)
-                .WithMany(u => u.TeacherLessons)
+                .WithMany(u => u.LessonPlans)
                 .HasForeignKey(u => u.UserId)
                 .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasOne(u => u.Prompt)
-                .WithMany(u => u.TeacherLessons)
+                .WithMany(u => u.LessonPlans)
                 .HasForeignKey(u => u.PromptId)
                 .OnDelete(DeleteBehavior.SetNull);
         }

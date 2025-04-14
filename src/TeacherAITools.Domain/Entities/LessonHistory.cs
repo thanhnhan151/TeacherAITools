@@ -15,7 +15,7 @@
         //public int PeriodDetailId { get; set; }
         //public virtual PeriodDetail PeriodDetail { get; set; } = null!;
 
-        public int TeacherLessonId { get; set; }
-        public virtual TeacherLesson TeacherLesson { get; set; } = null!;
+        public int LessonPlanId { get; set; }
+        public virtual TeacherLesson LessonPlan { get; set; } = null!;
     }
 }

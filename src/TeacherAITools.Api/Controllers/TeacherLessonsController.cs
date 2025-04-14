@@ -15,7 +15,7 @@ using TeacherAITools.Domain.Wrappers;
 
 namespace TeacherAITools.Api.Controllers
 {
-    [Route("api/v{version:apiVersion}/teacher-lessons")]
+    [Route("api/v{version:apiVersion}/lesson-plans")]
     [ApiVersion(1)]
     public class TeacherLessonsController(
         IMediator mediator,

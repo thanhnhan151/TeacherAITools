@@ -39,6 +39,6 @@ namespace TeacherAITools.Domain.Entities
         public virtual ICollection<Notification> Notifications { get; set; } = [];
         public virtual ICollection<Comment> Comments { get; set; } = [];
         //public virtual ICollection<Period> Periods { get; set; } = [];
-        public virtual ICollection<TeacherLesson> TeacherLessons { get; set; } = [];
+        public virtual ICollection<TeacherLesson> LessonPlans { get; set; } = [];
     }
 }

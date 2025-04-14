@@ -11,6 +11,6 @@
         public virtual Lesson Lesson { get; set; } = null!;
 
         // Navigation
-        public virtual ICollection<TeacherLesson> TeacherLessons { get; set; } = [];
+        public virtual ICollection<TeacherLesson> LessonPlans { get; set; } = [];
     }
 }
