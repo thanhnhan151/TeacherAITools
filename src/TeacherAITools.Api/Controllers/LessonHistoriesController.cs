@@ -9,7 +9,6 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TeacherAITools.Application.Common.Exceptions;
-using TeacherAITools.Application.LessonHistories.Commands.CreateLessonHistory;
 using TeacherAITools.Application.LessonHistories.Common;
 using TeacherAITools.Application.LessonHistories.Queries.GetLessonHistories;
 
@@ -21,27 +20,6 @@ namespace TeacherAITools.Api.Controllers
     {
         private readonly IMediator _mediator = mediator;
         private readonly ILogger<LessonsController> _logger = logger;
-
-        [HttpPost]
-        [AllowAnonymous]
-        [ProducesResponseType(typeof(Response<GetLessonHistoryResponse>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> CreateAsync([FromBody] CreateLessonHistoryRequest request)
-        {
-            try
-            {
-                return Ok(await _mediator.Send(new CreateLessonHistoryCommand(request)));
-            }
-            catch (ApiException e)
-            {
-                return BadRequest(new
-                {
-                    errorCode = e.ErrorCode,
-                    error = e.Error,
-                    errorMessage = e.ErrorMessage
-                });
-            }
-        }
 
         [HttpGet]
         [AllowAnonymous]
