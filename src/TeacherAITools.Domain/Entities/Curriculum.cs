@@ -12,7 +12,12 @@ namespace TeacherAITools.Domain.Entities
         public int SchoolYearId { get; set; }
         public virtual SchoolYear SchoolYear { get; set; } = null!;
 
+        public int? GradeId { get; set; }
+        public virtual Grade Grade { get; set; } = null!;
+
         // Navigation
         public virtual ICollection<Module> Modules { get; set; } = [];
+        public virtual ICollection<CurriculumDetail> CurriculumDetails { get; set; } = [];
+        public virtual ICollection<CurriculumActivity> CurriculumActivities { get; set; } = [];
     }
 }

@@ -1,3 +1,4 @@
+using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TeacherAITools.Application.Common.Enums;
@@ -9,31 +10,27 @@ using TeacherAITools.Domain.Wrappers;
 
 namespace TeacherAITools.Application.Curriculums.Queries.GetCurriculumById
 {
-    public class GetCurriculumByIdQueryHandler : IRequestHandler<GetCurriculumByIdQuery, Response<GetCurriculumResponse>>
+    public class GetCurriculumByIdQueryHandler(
+        IUnitOfWork unitOfWork,
+        IMapper mapper) : IRequestHandler<GetCurriculumByIdQuery, Response<GetDetailCurriculumResponse>>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly IMapper _mapper = mapper;
 
-        public GetCurriculumByIdQueryHandler(IUnitOfWork unitOfWork)
+        public async Task<Response<GetDetailCurriculumResponse>> Handle(GetCurriculumByIdQuery request, CancellationToken cancellationToken)
         {
-            _unitOfWork = unitOfWork;
-        }
+            var curriculumQuery = await _unitOfWork.Curriculums.GetAsync(curriculum => curriculum.CurriculumId == request.Id);
 
-        public async Task<Response<GetCurriculumResponse>> Handle(GetCurriculumByIdQuery request, CancellationToken cancellationToken)
-        {
-            var curriculumQuery = await _unitOfWork.Curriculums.GetAsync(curriculum => curriculum.CurriculumId == request.id);
+            var curriculum = curriculumQuery
+                .Include(c => c.SchoolYear)
+                .Include(c => c.CurriculumActivities)
+                .Include(c => c.CurriculumDetails)
+                        .ThenInclude(c => c.CurriculumSubSection)
+                                    .ThenInclude(c => c.CurriculumSection)
+                                                .ThenInclude(c => c.CurriculumTopic)
+                .FirstOrDefault() ?? throw new ApiException(ResponseCode.CURRICULUM_NOT_FOUND);
 
-            var curriculum = curriculumQuery/*.Include(c => c.Grade)*/.Include(c => c.SchoolYear).FirstOrDefault() ?? throw new ApiException(ResponseCode.CURRICULUM_NOT_FOUND);
-
-            var response = new GetCurriculumResponse
-            {
-                CurriculumId = curriculum.CurriculumId,
-                Name = curriculum.Name,
-                Description = curriculum.Description,
-                TotalPeriods = curriculum.TotalPeriods,
-                Year = curriculum.SchoolYear.Year
-            };
-
-            return new Response<GetCurriculumResponse>(code: (int)ResponseCode.SUCCESS, data: response, message: ResponseCode.SUCCESS.GetDescription());
+            return new Response<GetDetailCurriculumResponse>(code: (int)ResponseCode.SUCCESS, data: _mapper.Map<GetDetailCurriculumResponse>(curriculum), message: ResponseCode.SUCCESS.GetDescription());
         }
     }
 }

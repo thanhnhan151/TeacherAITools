@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using TeacherAITools.Application.Common.Exceptions;
-using TeacherAITools.Application.Lessons.Commands.UpdateStatusTeacherLesson;
-using TeacherAITools.Application.Lessons.Commands.UpdateTeacherLesson;
 using TeacherAITools.Application.TeacherLessons.Commands.CreatePendingTeacherLesson;
 using TeacherAITools.Application.TeacherLessons.Commands.CreateTeacherLesson;
+using TeacherAITools.Application.TeacherLessons.Commands.UpdateStatusTeacherLesson;
+using TeacherAITools.Application.TeacherLessons.Commands.UpdateTeacherLesson;
 using TeacherAITools.Application.TeacherLessons.Common;
 using TeacherAITools.Application.TeacherLessons.Queries.GetTeacherLessonById;
 using TeacherAITools.Application.TeacherLessons.Queries.GetTeacherLessons;
@@ -15,7 +15,7 @@ using TeacherAITools.Domain.Wrappers;
 
 namespace TeacherAITools.Api.Controllers
 {
-    [Route("api/v{version:apiVersion}/teacher-lessons")]
+    [Route("api/v{version:apiVersion}/lesson-plans")]
     [ApiVersion(1)]
     public class TeacherLessonsController(
         IMediator mediator,

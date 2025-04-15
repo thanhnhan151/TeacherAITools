@@ -84,7 +84,7 @@ namespace TeacherAITools.Infrastructure.TeacherLessons
         {
             "name" => lesson => lesson.Prompt.Lesson.Name,
             //"dob" => user => user.DoB,
-            _ => lesson => lesson.TeacherLessonId
+            _ => lesson => lesson.LessonPlanId
         };
 
         public async Task<bool> IsBelongedToTeacherAsync(int userId, int promptId) => await _dbContext.TeacherLessons.AnyAsync(t => t.UserId == userId && t.PromptId == promptId);

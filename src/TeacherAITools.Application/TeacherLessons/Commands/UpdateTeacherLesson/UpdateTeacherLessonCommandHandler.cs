@@ -7,7 +7,7 @@ using TeacherAITools.Application.TeacherLessons.Common;
 using TeacherAITools.Domain.Entities;
 using TeacherAITools.Domain.Wrappers;
 
-namespace TeacherAITools.Application.Lessons.Commands.UpdateTeacherLesson
+namespace TeacherAITools.Application.TeacherLessons.Commands.UpdateTeacherLesson
 {
     public class UpdateTeacherLessonCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<UpdateTeacherLessonCommand, Response<GetDetailTeacherLessonResponse>>
     {
@@ -15,11 +15,12 @@ namespace TeacherAITools.Application.Lessons.Commands.UpdateTeacherLesson
 
         public async Task<Response<GetDetailTeacherLessonResponse>> Handle(UpdateTeacherLessonCommand request, CancellationToken cancellationToken)
         {
-            var query = await _unitOfWork.TeacherLessons.GetAsync(expression: m => m.TeacherLessonId == request.Id, disableTracking: true);
+            var query = await _unitOfWork.TeacherLessons.GetAsync(expression: m => m.LessonPlanId == request.Id, disableTracking: true);
 
             var teacherLesson = query.FirstOrDefault() ?? throw new ApiException(ResponseCode.TEACHER_LESSON_DONT_EXIST);
 
-            var lessonHistory = new LessonHistory{
+            var lessonHistory = new LessonHistory
+            {
                 StartUp = teacherLesson.StartUp,
                 Knowledge = teacherLesson.Knowledge,
                 Goal = teacherLesson.Goal,

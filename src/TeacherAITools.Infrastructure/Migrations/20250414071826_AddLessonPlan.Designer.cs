@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TeacherAITools.Infrastructure.Common.Persistence;
@@ -11,9 +12,11 @@ using TeacherAITools.Infrastructure.Common.Persistence;
 namespace TeacherAITools.Infrastructure.Migrations
 {
     [DbContext(typeof(TeacherAIToolsDbContext))]
-    partial class TeacherAIToolsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250414071826_AddLessonPlan")]
+    partial class AddLessonPlan
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -185,11 +188,8 @@ namespace TeacherAITools.Infrastructure.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
-
-                    b.Property<int?>("GradeId")
-                        .HasColumnType("integer");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -213,128 +213,9 @@ namespace TeacherAITools.Infrastructure.Migrations
 
                     b.HasKey("CurriculumId");
 
-                    b.HasIndex("GradeId");
-
                     b.HasIndex("SchoolYearId");
 
                     b.ToTable("Curriculum", (string)null);
-                });
-
-            modelBuilder.Entity("TeacherAITools.Domain.Entities.CurriculumActivity", b =>
-                {
-                    b.Property<int>("CurriculumActivityId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CurriculumActivityId"));
-
-                    b.Property<string>("CurriculumAcitityDescription")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int?>("CurriculumId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("CurriculumActivityId");
-
-                    b.HasIndex("CurriculumId");
-
-                    b.ToTable("CurriculumActivity", (string)null);
-                });
-
-            modelBuilder.Entity("TeacherAITools.Domain.Entities.CurriculumDetail", b =>
-                {
-                    b.Property<int>("CurriculumDetailId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CurriculumDetailId"));
-
-                    b.Property<string>("CurriculumContent")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("CurriculumGoal")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int?>("CurriculumId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("CurriculumSubSectionId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("CurriculumDetailId");
-
-                    b.HasIndex("CurriculumId");
-
-                    b.HasIndex("CurriculumSubSectionId");
-
-                    b.ToTable("CurriculumDetail", (string)null);
-                });
-
-            modelBuilder.Entity("TeacherAITools.Domain.Entities.CurriculumSection", b =>
-                {
-                    b.Property<int>("CurriculumSectionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CurriculumSectionId"));
-
-                    b.Property<string>("CurriculumSectionName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<int?>("CurriculumTopicId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("CurriculumSectionId");
-
-                    b.HasIndex("CurriculumTopicId");
-
-                    b.ToTable("CurriculumSection", (string)null);
-                });
-
-            modelBuilder.Entity("TeacherAITools.Domain.Entities.CurriculumSubSection", b =>
-                {
-                    b.Property<int>("CurriculumSubSectionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CurriculumSubSectionId"));
-
-                    b.Property<int?>("CurriculumSectionId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("CurriculumSubSectionName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.HasKey("CurriculumSubSectionId");
-
-                    b.HasIndex("CurriculumSectionId");
-
-                    b.ToTable("CurriculumSubSection", (string)null);
-                });
-
-            modelBuilder.Entity("TeacherAITools.Domain.Entities.CurriculumTopic", b =>
-                {
-                    b.Property<int>("CurriculumTopicId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CurriculumTopicId"));
-
-                    b.Property<string>("CurriculumTopicName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.HasKey("CurriculumTopicId");
-
-                    b.ToTable("CurriculumTopic", (string)null);
                 });
 
             modelBuilder.Entity("TeacherAITools.Domain.Entities.District", b =>
@@ -1046,67 +927,13 @@ namespace TeacherAITools.Infrastructure.Migrations
 
             modelBuilder.Entity("TeacherAITools.Domain.Entities.Curriculum", b =>
                 {
-                    b.HasOne("TeacherAITools.Domain.Entities.Grade", "Grade")
-                        .WithMany("Curriculums")
-                        .HasForeignKey("GradeId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.HasOne("TeacherAITools.Domain.Entities.SchoolYear", "SchoolYear")
                         .WithMany("Curriculums")
                         .HasForeignKey("SchoolYearId")
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
-                    b.Navigation("Grade");
-
                     b.Navigation("SchoolYear");
-                });
-
-            modelBuilder.Entity("TeacherAITools.Domain.Entities.CurriculumActivity", b =>
-                {
-                    b.HasOne("TeacherAITools.Domain.Entities.Curriculum", "Curriculum")
-                        .WithMany("CurriculumActivities")
-                        .HasForeignKey("CurriculumId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Curriculum");
-                });
-
-            modelBuilder.Entity("TeacherAITools.Domain.Entities.CurriculumDetail", b =>
-                {
-                    b.HasOne("TeacherAITools.Domain.Entities.Curriculum", "Curriculum")
-                        .WithMany("CurriculumDetails")
-                        .HasForeignKey("CurriculumId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("TeacherAITools.Domain.Entities.CurriculumSubSection", "CurriculumSubSection")
-                        .WithMany("CurriculumDetails")
-                        .HasForeignKey("CurriculumSubSectionId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Curriculum");
-
-                    b.Navigation("CurriculumSubSection");
-                });
-
-            modelBuilder.Entity("TeacherAITools.Domain.Entities.CurriculumSection", b =>
-                {
-                    b.HasOne("TeacherAITools.Domain.Entities.CurriculumTopic", "CurriculumTopic")
-                        .WithMany("CurriculumSections")
-                        .HasForeignKey("CurriculumTopicId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("CurriculumTopic");
-                });
-
-            modelBuilder.Entity("TeacherAITools.Domain.Entities.CurriculumSubSection", b =>
-                {
-                    b.HasOne("TeacherAITools.Domain.Entities.CurriculumSection", "CurriculumSection")
-                        .WithMany("CurriculumSubSections")
-                        .HasForeignKey("CurriculumSectionId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("CurriculumSection");
                 });
 
             modelBuilder.Entity("TeacherAITools.Domain.Entities.District", b =>
@@ -1354,26 +1181,7 @@ namespace TeacherAITools.Infrastructure.Migrations
 
             modelBuilder.Entity("TeacherAITools.Domain.Entities.Curriculum", b =>
                 {
-                    b.Navigation("CurriculumActivities");
-
-                    b.Navigation("CurriculumDetails");
-
                     b.Navigation("Modules");
-                });
-
-            modelBuilder.Entity("TeacherAITools.Domain.Entities.CurriculumSection", b =>
-                {
-                    b.Navigation("CurriculumSubSections");
-                });
-
-            modelBuilder.Entity("TeacherAITools.Domain.Entities.CurriculumSubSection", b =>
-                {
-                    b.Navigation("CurriculumDetails");
-                });
-
-            modelBuilder.Entity("TeacherAITools.Domain.Entities.CurriculumTopic", b =>
-                {
-                    b.Navigation("CurriculumSections");
                 });
 
             modelBuilder.Entity("TeacherAITools.Domain.Entities.District", b =>
@@ -1383,8 +1191,6 @@ namespace TeacherAITools.Infrastructure.Migrations
 
             modelBuilder.Entity("TeacherAITools.Domain.Entities.Grade", b =>
                 {
-                    b.Navigation("Curriculums");
-
                     b.Navigation("Modules");
 
                     b.Navigation("Users");

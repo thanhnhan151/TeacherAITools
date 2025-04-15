@@ -3,7 +3,6 @@ using TeacherAITools.Application.Common.Enums;
 using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.Common.Extensions;
 using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
-using TeacherAITools.Application.Lessons.Commands.UpdateStatusTeacherLesson;
 using TeacherAITools.Application.TeacherLessons.Common;
 using TeacherAITools.Domain.Wrappers;
 
@@ -15,7 +14,7 @@ namespace TeacherAITools.Application.TeacherLessons.Commands.UpdateStatusTeacher
 
         public async Task<Response<GetDetailTeacherLessonResponse>> Handle(UpdateStatusTeacherLessonCommand request, CancellationToken cancellationToken)
         {
-            var query = await _unitOfWork.TeacherLessons.GetAsync(expression: m => m.TeacherLessonId == request.Id, disableTracking: true);
+            var query = await _unitOfWork.TeacherLessons.GetAsync(expression: m => m.LessonPlanId == request.Id, disableTracking: true);
 
             var teacherLesson = query.FirstOrDefault() ?? throw new ApiException(ResponseCode.TEACHER_LESSON_DONT_EXIST);
 
