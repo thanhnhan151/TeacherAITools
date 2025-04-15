@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TeacherAITools.Application.Common.Enums;
@@ -21,7 +17,7 @@ namespace TeacherAITools.Application.LessonHistories.Queries.GetLessonHistories
             var result = await _unitOfWork.LessonHistories.PaginationAsync(
                 page: request.PageNumber,
                 pageSize: request.PageSize,
-                includeFunc: m => m.Include(m => m.TeacherLesson),
+                includeFunc: m => m.Include(m => m.LessonPlan),
                 orderBy: request.GetOrder(),
                 filter: request.GetExpressions(),
                 cancellationToken: cancellationToken);
