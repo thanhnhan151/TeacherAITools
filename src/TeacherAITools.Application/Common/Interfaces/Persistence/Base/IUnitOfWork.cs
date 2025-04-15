@@ -56,6 +56,8 @@
 
         ITeacherLessonRepository TeacherLessons { get; }
 
+        ILessonHistoryRepository LessonHistories { get; }
+
         Task CompleteAsync();
 
         void Complete();
