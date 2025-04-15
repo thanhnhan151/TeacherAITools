@@ -4,9 +4,10 @@ using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.Common.Extensions;
 using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
 using TeacherAITools.Application.TeacherLessons.Common;
+using TeacherAITools.Domain.Entities;
 using TeacherAITools.Domain.Wrappers;
 
-namespace TeacherAITools.Application.Lessons.Commands.UpdateTeacherLesson
+namespace TeacherAITools.Application.TeacherLessons.Commands.UpdateTeacherLesson
 {
     public class UpdateTeacherLessonCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<UpdateTeacherLessonCommand, Response<GetDetailTeacherLessonResponse>>
     {
@@ -18,6 +19,16 @@ namespace TeacherAITools.Application.Lessons.Commands.UpdateTeacherLesson
 
             var teacherLesson = query.FirstOrDefault() ?? throw new ApiException(ResponseCode.TEACHER_LESSON_DONT_EXIST);
 
+            var lessonHistory = new LessonHistory
+            {
+                StartUp = teacherLesson.StartUp,
+                Knowledge = teacherLesson.Knowledge,
+                Goal = teacherLesson.Goal,
+                SchoolSupply = teacherLesson.SchoolSupply,
+                Practice = teacherLesson.Practice,
+                Apply = teacherLesson.Apply,
+            };
+
             teacherLesson.StartUp = request.updateTeacherLessonRequest.StartUp;
             teacherLesson.Knowledge = request.updateTeacherLessonRequest.Knowledge;
             teacherLesson.Goal = request.updateTeacherLessonRequest.Goal;
@@ -25,6 +36,7 @@ namespace TeacherAITools.Application.Lessons.Commands.UpdateTeacherLesson
             teacherLesson.Practice = request.updateTeacherLessonRequest.Practice;
             teacherLesson.Apply = request.updateTeacherLessonRequest.Apply;
 
+            await _unitOfWork.LessonHistories.AddAsync(lessonHistory);
             await _unitOfWork.TeacherLessons.UpdateAsync(teacherLesson);
             await _unitOfWork.CompleteAsync();
 

@@ -3,7 +3,6 @@ using TeacherAITools.Application.Common.Enums;
 using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.Common.Extensions;
 using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
-using TeacherAITools.Application.Lessons.Commands.UpdateStatusTeacherLesson;
 using TeacherAITools.Application.TeacherLessons.Common;
 using TeacherAITools.Domain.Wrappers;
 
