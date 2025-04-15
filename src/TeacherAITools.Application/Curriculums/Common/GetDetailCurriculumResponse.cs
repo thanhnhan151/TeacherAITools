@@ -14,6 +14,9 @@
     public class DetailItem
     {
         public int CurriculumDetailId { get; set; }
+        public string CurriculumTopic { get; set; } = string.Empty;
+        public string CurriculumSection { get; set; } = string.Empty;
+        public string CurriculumSubSection { get; set; } = string.Empty;
         public string CurriculumContent { get; set; } = string.Empty;
         public string CurriculumGoal { get; set; } = string.Empty;
     }

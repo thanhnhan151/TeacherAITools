@@ -4,5 +4,5 @@ using TeacherAITools.Domain.Wrappers;
 
 namespace TeacherAITools.Application.Curriculums.Queries.GetCurriculumById
 {
-    public record GetCurriculumByIdQuery(int id) : IRequest<Response<GetCurriculumResponse>>;
+    public record GetCurriculumByIdQuery(int Id) : IRequest<Response<GetDetailCurriculumResponse>>;
 }

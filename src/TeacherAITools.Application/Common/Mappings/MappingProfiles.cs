@@ -150,8 +150,12 @@ namespace TeacherAITools.Application.Common.Mappings
 
             #region Curriculum
             CreateMap<Curriculum, GetDetailCurriculumResponse>()
+                .ForMember(c => c.Year, c => c.MapFrom(c => c.SchoolYear.Year))
                 .ForMember(c => c.Name, c => c.MapFrom(c => $"{c.Name} {c.GradeId}"));
-            CreateMap<CurriculumDetail, DetailItem>();
+            CreateMap<CurriculumDetail, DetailItem>()
+                .ForMember(c => c.CurriculumTopic, c => c.MapFrom(c => c.CurriculumSubSection.CurriculumSection.CurriculumTopic.CurriculumTopicName))
+                .ForMember(c => c.CurriculumSection, c => c.MapFrom(c => c.CurriculumSubSection.CurriculumSection.CurriculumSectionName))
+                .ForMember(c => c.CurriculumSubSection, c => c.MapFrom(c => c.CurriculumSubSection.CurriculumSubSectionName));
             CreateMap<CurriculumActivity, ActivityItem>();
             #endregion
         }
