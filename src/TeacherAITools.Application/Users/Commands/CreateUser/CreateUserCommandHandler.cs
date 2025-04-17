@@ -54,7 +54,7 @@ namespace TeacherAITools.Application.Users.Commands.CreateUser
                 RoleId = request.RoleId,
                 SchoolId = request.SchoolId,
                 GradeId = request.GradeId,
-                IsActive = false,
+                IsActive = true,
                 ManagerId = null
             };
 
