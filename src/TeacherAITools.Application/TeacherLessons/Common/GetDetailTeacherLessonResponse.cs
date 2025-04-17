@@ -2,7 +2,7 @@
 {
     public class GetDetailTeacherLessonResponse
     {
-        public int TeacherLessonId { get; set; }
+        public int LessonPlanId { get; set; }
         public string StartUp { get; set; } = string.Empty;
         public string Knowledge { get; set; } = string.Empty;
         public string Goal { get; set; } = string.Empty;
