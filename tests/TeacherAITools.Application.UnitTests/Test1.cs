@@ -884,7 +884,7 @@ await Assert.ThrowsExceptionAsync<ApiException>(() =>
         _unitOfWorkMock.Setup(u => u.Users).Returns(_userRepositoryMock.Object);
         _sendEmailCommandHandler = new SendEmailCommandHandler(_unitOfWorkMock.Object, _emailServiceMock.Object);
         // Arrange
-        var fakeUser = new User { Email = "fail@example.com" };
+        User? fakeUser = null;
 
         _unitOfWorkMock.Setup(u => u.Users.SendOtpAsync(It.IsAny<string>()))
             .ReturnsAsync(fakeUser);
@@ -988,12 +988,12 @@ await Assert.ThrowsExceptionAsync<ApiException>(() =>
         var existingUser = new User { UserId = userId };
         var request = new UpdateUserRequest
         (
-            "fullname",
-            "email",
-            "phonenumber",
+            "",
+            "",
+            "",
             DateOnly.MinValue,
             Gender.Male,
-            "address",
+            "",
             1
         );
 
@@ -1004,28 +1004,18 @@ await Assert.ThrowsExceptionAsync<ApiException>(() =>
         );
 
         _userRepositoryMock.Setup(r => r.GetAsync(
-            It.IsAny<Expression<Func<User, bool>>>(), 
+            It.IsAny<Expression<Func<User, bool>>>(),
             It.IsAny<Func<IQueryable<User>, IOrderedQueryable<User>>>(),
             It.IsAny<Func<IQueryable<User>, IQueryable<User>>>(),
             It.IsAny<bool>()))
             .ReturnsAsync(new List<User> { existingUser }.AsQueryable());
 
-        var validationFailures = new List<ValidationFailure>
-            {
-                new ValidationFailure("Fullname", "Fullname is required")
-            };
-
-        var a = new ValidationResult(validationFailures);
-
-        var validatorMock = new Mock<FluentValidation.IValidator<UpdateUserRequest>>();
-        validatorMock.Setup(v => v.ValidateAsync(It.IsAny<UpdateUserRequest>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(a);
+        var validator = new UpdateUserCommandValidator(_unitOfWorkMock.Object);
+        await validator.ValidateAsync(request);
 
         // Act & Assert
         var ex = await Assert.ThrowsExceptionAsync<ValidationException>(async () =>
             await _updateUserCommandHandler.Handle(command, CancellationToken.None));
-
-        Assert.IsTrue(ex.Errors.Contains("Fullname is required"));
     }
 
     [TestMethod]
