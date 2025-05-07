@@ -3,6 +3,7 @@ using System.Text;
 using AutoMapper;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using TeacherAITools.Application.Common.Enums;
 using TeacherAITools.Application.Common.Exceptions;
@@ -11,6 +12,22 @@ using TeacherAITools.Application.Common.Interfaces.Persistence;
 using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
 using TeacherAITools.Application.Common.Interfaces.Services;
 using TeacherAITools.Application.Common.Models.Requests;
+using TeacherAITools.Application.Lessons.Commands.CreateLesson;
+using TeacherAITools.Application.Lessons.Commands.DeleteLesson;
+using TeacherAITools.Application.Lessons.Commands.UpdateIsApprovedLesson;
+using TeacherAITools.Application.Lessons.Commands.UpdateLesson;
+using TeacherAITools.Application.Lessons.Common;
+using TeacherAITools.Application.Lessons.Queries.GetLessonById;
+using TeacherAITools.Application.Lessons.Queries.GetLessons;
+using TeacherAITools.Application.Lessons.Queries.GetPromptById;
+using TeacherAITools.Application.Prompts.Commnon;
+using TeacherAITools.Application.TeacherLessons.Commands.CreatePendingTeacherLesson;
+using TeacherAITools.Application.TeacherLessons.Commands.CreateTeacherLesson;
+using TeacherAITools.Application.TeacherLessons.Commands.UpdateStatusTeacherLesson;
+using TeacherAITools.Application.TeacherLessons.Commands.UpdateTeacherLesson;
+using TeacherAITools.Application.TeacherLessons.Common;
+using TeacherAITools.Application.TeacherLessons.Queries.GetTeacherLessonById;
+using TeacherAITools.Application.TeacherLessons.Queries.GetTeacherLessons;
 using TeacherAITools.Application.Users.Commands.ChangePassword;
 using TeacherAITools.Application.Users.Commands.CheckOtp;
 using TeacherAITools.Application.Users.Commands.CreateUser;
@@ -27,6 +44,7 @@ using TeacherAITools.Application.Weeks.Common;
 using TeacherAITools.Application.Weeks.Queries.GetWeeks;
 using TeacherAITools.Domain.Common;
 using TeacherAITools.Domain.Entities;
+using TeacherAITools.Domain.Entities.Base.Implementations;
 using TeacherAITools.Domain.Wrappers;
 using TeacherAITools.Infrastructure.Modules;
 
@@ -46,6 +64,12 @@ public sealed class Test1
     private Mock<IGradeRepository> _gradeRepositoryMock;
     private Mock<IEmailService> _emailServiceMock;
     private Mock<IUploadFileService> _uploadFileServiceMock;
+    private Mock<ICurrentUserService> _currentUserServiceMock;
+    private Mock<ILessonsRepository> _lessonRepositoryMock;
+    private Mock<IPromptRepository> _promptRepositoryMock;
+    private Mock<ITeacherLessonRepository> _teacherLessonRepoMock;
+    private Mock<IDateTimeProvider> _dateTimeProviderMock;
+    private Mock<ILessonHistoryRepository> _lessonHistoryRepoMock;
 
     private GetWeeksQueryHandler _getWeeksQueryHandler;
     private GetTeacherLessonsByIdQueryHandler _getTeacherLessonsByIdQueryHandler;
@@ -58,7 +82,19 @@ public sealed class Test1
     private DisableUserCommandHandler _disableUserCommandHandler;
     private SendEmailCommandHandler _sendEmailCommandHandler;
     private UpdateUserCommandHandler _updateUserCommandHandler;
-    private Mock<ICurrentUserService> _currentUserServiceMock;
+    private GetLessonByIdQueryHandler _getLessonByIdQueryHandler;
+    private GetLessonsQueryHandler _getLessonsQueryHandler;
+    private GetPromptByIdQueryHandler _getPromptByIdQueryHandler;
+    private CreateLessonCommandHandler _createLessonCommandHandler;
+    private DeleteLessonCommandHandler _deleteLessonCommandHandler;
+    private UpdateIsApprovedLessonCommandHandler _updateIsApprovedLessonCommandHandler;
+    private UpdateLessonCommandHandler _updateLessonCommandHandler;
+    private GetTeacherLessonByIdQueryHandler _getTeacherLessonByIdQueryHandler;
+    private GetTeacherLessonsQueryHandler _getTeacherLessonsQueryHandler;
+    private CreatePendingTeacherLessonCommandHandler _createPendingTeacherLessonCommandHandler;
+    private CreateTeacherLessonCommandHandler _createTeacherLessonCommandHandler;
+    private UpdateStatusTeacherLessonCommandHandler _updateStatusTeacherLessonCommandHandler;
+    private UpdateTeacherLessonCommandHandler _updateTeacherLessonCommandHandler;
 
     [TestInitialize]
     public void Setup()
@@ -74,6 +110,11 @@ public sealed class Test1
         _mapperMock = new Mock<IMapper>();
         _uploadFileServiceMock = new Mock<IUploadFileService>();
         _currentUserServiceMock = new Mock<ICurrentUserService>();
+        _lessonRepositoryMock = new Mock<ILessonsRepository>();
+        _promptRepositoryMock = new Mock<IPromptRepository>();
+        _teacherLessonRepoMock = new Mock<ITeacherLessonRepository>();
+        _dateTimeProviderMock = new Mock<IDateTimeProvider>();
+        _lessonHistoryRepoMock = new Mock<ILessonHistoryRepository>();
     }
 
     [TestMethod]
@@ -1110,4 +1151,666 @@ await Assert.ThrowsExceptionAsync<ApiException>(() =>
     }
 
     #endregion
+
+    #region Lesson
+    [TestMethod]
+    public async Task Handle_GetLessonByIdQueryHandler_ReturnsSuccessResponseWithLessonDetail()
+    {
+        _unitOfWorkMock.Setup(u => u.Lessons).Returns(_lessonRepositoryMock.Object);
+        _getLessonByIdQueryHandler = new GetLessonByIdQueryHandler(_unitOfWorkMock.Object);
+
+        // Arrange
+        var lessonId = 1;
+
+        var lesson = new Lesson
+        {
+            LessonId = lessonId,
+            Name = "Lesson A",
+            Description = "Description A",
+            TotalPeriods = 10,
+            LessonType = new LessonType { LessonTypeName = "Type A" },
+            Note = new Note { Description = "Note A" },
+            Week = new Week { WeekNumber = 5 },
+            Module = new Module
+            {
+                Name = "Module A",
+                Grade = new Grade { GradeNumber = 12 }
+            }
+        };
+
+        var lessonsQueryable = new List<Lesson> { lesson }.AsQueryable();
+
+        _getLessonByIdQueryHandler = new GetLessonByIdQueryHandler(_unitOfWorkMock.Object);
+
+
+        _lessonRepositoryMock
+            .Setup(repo => repo.GetAsync(
+                It.IsAny<Expression<Func<Lesson, bool>>>()))
+            .ReturnsAsync(lessonsQueryable);
+
+        var query = new GetLessonByIdQuery(lessonId);
+
+        // Act
+        var result = await _getLessonByIdQueryHandler.Handle(query, CancellationToken.None);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual((int)ResponseCode.SUCCESS, result.Code);
+        Assert.AreEqual(ResponseCode.SUCCESS.GetDescription(), result.Message);
+        Assert.IsNotNull(result.Data);
+        Assert.AreEqual(lessonId, result.Data.LessonId);
+        Assert.AreEqual("Lesson A", result.Data.Name);
+        Assert.AreEqual("Description A", result.Data.Description);
+        Assert.AreEqual(10, result.Data.TotalPeriods);
+        Assert.AreEqual("Type A", result.Data.LessonType);
+        Assert.AreEqual("Note A", result.Data.Note);
+        Assert.AreEqual(5, result.Data.Week);
+        Assert.AreEqual("Module A", result.Data.Module);
+        Assert.AreEqual(12, result.Data.GradeNumber);
+    }
+
+    [TestMethod]
+    public async Task Handle_GetLessonsQueryHandler_ReturnsPaginatedLessonResponses()
+    {
+        _unitOfWorkMock.Setup(u => u.Lessons).Returns(_lessonRepositoryMock.Object);
+        _getLessonsQueryHandler = new GetLessonsQueryHandler(_unitOfWorkMock.Object);
+
+        // Arrange
+        var pageNumber = 1;
+        var pageSize = 10;
+
+        var lessons = new List<Lesson>
+    {
+        new Lesson
+        {
+            LessonId = 1,
+            Name = "Math",
+            Description = "Basic Math",
+            TotalPeriods = 5,
+            LessonType = new LessonType { LessonTypeName = "Lecture" },
+            Note = new Note { Description = "Note 1" },
+            Week = new Week { WeekNumber = 1 },
+            Module = new Module
+            {
+                Name = "Algebra",
+                Grade = new Grade { GradeNumber = 10 }
+            }
+        }
+    };
+
+        var paginationResult = new BasePaginationEntity<Lesson>
+        {
+            Data = lessons,
+            Total = lessons.Count
+        };
+
+        _lessonRepositoryMock
+            .Setup(repo => repo.PaginationAsync(
+                pageNumber,
+                pageSize,
+                It.IsAny<Expression<Func<Lesson, bool>>>(),
+                It.IsAny<Func<IQueryable<Lesson>, IIncludableQueryable<Lesson, object>>>(),
+                It.IsAny<Func<IQueryable<Lesson>, IOrderedQueryable<Lesson>>>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(paginationResult);
+
+        var query = new GetLessonsQuery
+        {
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
+
+        // Act
+        var result = await _getLessonsQueryHandler.Handle(query, CancellationToken.None);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual((int)ResponseCode.SUCCESS, result.Code);
+        Assert.AreEqual(ResponseCode.SUCCESS.GetDescription(), result.Message);
+        Assert.IsNotNull(result.Data);
+        Assert.AreEqual(pageNumber, result.Data.Page);
+        Assert.AreEqual(pageSize, result.Data.PageSize);
+        Assert.AreEqual(1, result.Data.TotalSize);
+        Assert.AreEqual(1, result.Data.TotalPage);
+        Assert.AreEqual(1, result.Data.Items.Count);
+
+        var lessonResponse = result.Data.Items.First();
+        Assert.AreEqual(1, lessonResponse.LessonId);
+        Assert.AreEqual("Math", lessonResponse.Name);
+        Assert.AreEqual("Basic Math", lessonResponse.Description);
+        Assert.AreEqual(5, lessonResponse.TotalPeriods);
+        Assert.AreEqual("Lecture", lessonResponse.LessonType);
+        Assert.AreEqual("Note 1", lessonResponse.Note);
+        Assert.AreEqual(1, lessonResponse.Week);
+        Assert.AreEqual("Algebra", lessonResponse.Module);
+        Assert.AreEqual(10, lessonResponse.GradeNumber);
+    }
+
+    [TestMethod]
+    public async Task Handle_GetPromptByIdQueryHandler_ReturnsMappedPromptResponse()
+    {
+        _unitOfWorkMock.Setup(u => u.Prompts).Returns(_promptRepositoryMock.Object);
+        _getPromptByIdQueryHandler = new GetPromptByIdQueryHandler(_unitOfWorkMock.Object, _mapperMock.Object);
+
+        // Arrange
+        var lessonId = 1;
+
+        var prompt = new Prompt
+        {
+            PromptId = 10,
+            LessonId = lessonId,
+        };
+
+        var promptList = new List<Prompt> { prompt }.AsQueryable();
+
+        _promptRepositoryMock
+            .Setup(repo => repo.GetAsync(It.IsAny<Expression<Func<Prompt, bool>>>()))
+            .ReturnsAsync(promptList);
+
+        var mappedResponse = new GetPromptResponse
+        {
+            PromptId = prompt.PromptId,
+        };
+
+        _mapperMock
+            .Setup(m => m.Map<GetPromptResponse>(prompt))
+            .Returns(mappedResponse);
+
+        var query = new GetPromptByIdQuery(lessonId);
+
+        // Act
+        var result = await _getPromptByIdQueryHandler.Handle(query, CancellationToken.None);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual((int)ResponseCode.SUCCESS, result.Code);
+        Assert.AreEqual(ResponseCode.SUCCESS.GetDescription(), result.Message);
+        Assert.IsNotNull(result.Data);
+        Assert.AreEqual(prompt.PromptId, result.Data.PromptId);
+    }
+
+    [TestMethod]
+    public async Task Handle_CreateLessonCommandHandler_ReturnsCreatedResponse()
+    {
+        _unitOfWorkMock.Setup(u => u.Lessons).Returns(_lessonRepositoryMock.Object);
+        _createLessonCommandHandler = new CreateLessonCommandHandler(_unitOfWorkMock.Object);
+
+        // Arrange
+        var createRequest = new CreateLessonRequest
+        {
+            Name = "New Lesson",
+            Description = "Description",
+            TotalPeriods = 5,
+            LessonTypeId = 1,
+            NoteId = 1,
+            WeekId = 1,
+            ModuleId = 1
+        };
+
+        var command = new CreateLessonCommand(createRequest);
+
+        _unitOfWorkMock.Setup(u => u.LessonTypes.Any(It.IsAny<Expression<Func<LessonType, bool>>>()))
+            .Returns(true);
+
+        _unitOfWorkMock.Setup(u => u.Notes.Any(It.IsAny<Expression<Func<Note, bool>>>()))
+            .Returns(true);
+
+        _unitOfWorkMock.Setup(u => u.Modules.Any(It.IsAny<Expression<Func<Module, bool>>>()))
+            .Returns(true);
+
+        _lessonRepositoryMock.Setup(repo => repo.GetLastIdLesson())
+            .Returns(10);
+
+        _lessonRepositoryMock.Setup(repo => repo.AddAsync(It.IsAny<Lesson>()))
+            .ReturnsAsync((Lesson l) => l);
+
+        _unitOfWorkMock.Setup(u => u.CompleteAsync()).Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _createLessonCommandHandler.Handle(command, CancellationToken.None);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual((int)ResponseCode.CREATED_SUCCESS, result.Code);
+        Assert.AreEqual(ResponseCode.CREATED_SUCCESS.GetDescription(), result.Message);
+    }
+
+    [TestMethod]
+    public async Task Handle_CreateLessonCommandHandler_ThrowLessonType()
+    {
+        _unitOfWorkMock.Setup(u => u.Lessons).Returns(_lessonRepositoryMock.Object);
+        _createLessonCommandHandler = new CreateLessonCommandHandler(_unitOfWorkMock.Object);
+
+        // Arrange
+        var createRequest = new CreateLessonRequest
+        {
+            Name = "New Lesson",
+            Description = "Description",
+            TotalPeriods = 5,
+            LessonTypeId = 1,
+            NoteId = 1,
+            WeekId = 1,
+            ModuleId = 1
+        };
+
+        var command = new CreateLessonCommand(createRequest);
+
+        _unitOfWorkMock.Setup(u => u.LessonTypes.Any(It.IsAny<Expression<Func<LessonType, bool>>>()))
+            .Returns(false);
+
+        _unitOfWorkMock.Setup(u => u.Notes.Any(It.IsAny<Expression<Func<Note, bool>>>()))
+            .Returns(true);
+
+        _unitOfWorkMock.Setup(u => u.Modules.Any(It.IsAny<Expression<Func<Module, bool>>>()))
+            .Returns(true);
+
+        _lessonRepositoryMock.Setup(repo => repo.GetLastIdLesson())
+            .Returns(10);
+
+        _unitOfWorkMock.Setup(u => u.CompleteAsync()).Returns(Task.CompletedTask);
+
+        // Act
+        await Assert.ThrowsExceptionAsync<ApiException>(() => _createLessonCommandHandler.Handle(command, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_CreateLessonCommandHandler_ThrowNote()
+    {
+        _unitOfWorkMock.Setup(u => u.Lessons).Returns(_lessonRepositoryMock.Object);
+        _createLessonCommandHandler = new CreateLessonCommandHandler(_unitOfWorkMock.Object);
+
+        // Arrange
+        var createRequest = new CreateLessonRequest
+        {
+            Name = "New Lesson",
+            Description = "Description",
+            TotalPeriods = 5,
+            LessonTypeId = 1,
+            NoteId = 1,
+            WeekId = 1,
+            ModuleId = 1
+        };
+
+        var command = new CreateLessonCommand(createRequest);
+
+        _unitOfWorkMock.Setup(u => u.LessonTypes.Any(It.IsAny<Expression<Func<LessonType, bool>>>()))
+            .Returns(true);
+
+        _unitOfWorkMock.Setup(u => u.Notes.Any(It.IsAny<Expression<Func<Note, bool>>>()))
+            .Returns(false);
+
+        _unitOfWorkMock.Setup(u => u.Modules.Any(It.IsAny<Expression<Func<Module, bool>>>()))
+            .Returns(true);
+
+        _lessonRepositoryMock.Setup(repo => repo.GetLastIdLesson())
+            .Returns(10);
+
+        _unitOfWorkMock.Setup(u => u.CompleteAsync()).Returns(Task.CompletedTask);
+
+        // Act
+        await Assert.ThrowsExceptionAsync<ApiException>(() => _createLessonCommandHandler.Handle(command, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_CreateLessonCommandHandler_ThrowModule()
+    {
+        _unitOfWorkMock.Setup(u => u.Lessons).Returns(_lessonRepositoryMock.Object);
+        _createLessonCommandHandler = new CreateLessonCommandHandler(_unitOfWorkMock.Object);
+
+        // Arrange
+        var createRequest = new CreateLessonRequest
+        {
+            Name = "New Lesson",
+            Description = "Description",
+            TotalPeriods = 5,
+            LessonTypeId = 1,
+            NoteId = 1,
+            WeekId = 1,
+            ModuleId = 1
+        };
+
+        var command = new CreateLessonCommand(createRequest);
+
+        _unitOfWorkMock.Setup(u => u.LessonTypes.Any(It.IsAny<Expression<Func<LessonType, bool>>>()))
+            .Returns(true);
+
+        _unitOfWorkMock.Setup(u => u.Notes.Any(It.IsAny<Expression<Func<Note, bool>>>()))
+            .Returns(true);
+
+        _unitOfWorkMock.Setup(u => u.Modules.Any(It.IsAny<Expression<Func<Module, bool>>>()))
+            .Returns(false);
+
+        _lessonRepositoryMock.Setup(repo => repo.GetLastIdLesson())
+            .Returns(10);
+
+        _unitOfWorkMock.Setup(u => u.CompleteAsync()).Returns(Task.CompletedTask);
+
+        // Act
+        await Assert.ThrowsExceptionAsync<ApiException>(() => _createLessonCommandHandler.Handle(command, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_DeleteLessonCommandHandler_ReturnsDeletedResponse()
+    {
+        _unitOfWorkMock.Setup(u => u.Lessons).Returns(_lessonRepositoryMock.Object);
+        _deleteLessonCommandHandler = new DeleteLessonCommandHandler(_unitOfWorkMock.Object);
+
+        var command = new DeleteLessonCommand(1);
+
+        // Arrange
+        var lessonId = 1;
+        var existingLesson = new Lesson { LessonId = lessonId };
+
+        _lessonRepositoryMock
+            .Setup(r => r.GetAsync(It.IsAny<Expression<Func<Lesson, bool>>>(), null, null, true))
+            .ReturnsAsync(new List<Lesson> { existingLesson }.AsQueryable());
+
+        _lessonRepositoryMock
+            .Setup(r => r.UpdateAsync(existingLesson))
+            .Returns(Task.CompletedTask);
+
+        _unitOfWorkMock
+            .Setup(u => u.CompleteAsync())
+            .Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _deleteLessonCommandHandler.Handle(lessonId, CancellationToken.None);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual((int)ResponseCode.DELETED_SUCCESS, result.Code);
+        Assert.AreEqual(ResponseCode.DELETED_SUCCESS.GetDescription(), result.Message);
+    }
+
+    [TestMethod]
+    public async Task Handle_UpdateIsApprovedLessonCommandHandler_ReturnsUpdatedResponse()
+    {
+        _unitOfWorkMock.Setup(u => u.Lessons).Returns(_lessonRepositoryMock.Object);
+        _updateIsApprovedLessonCommandHandler = new UpdateIsApprovedLessonCommandHandler(_unitOfWorkMock.Object);
+
+        // Arrange
+        var lessonId = 1;
+        var lesson = new Lesson
+        {
+            LessonId = lessonId,
+        };
+
+        var command = new UpdateIsApprovedLessonCommand
+        (
+            lessonId,
+            new UpdateIsApprovedRequest
+            {
+                IsApproved = true,
+                DisapprovedReason = null
+            }
+        );
+
+        _lessonRepositoryMock
+            .Setup(repo => repo.GetAsync(It.IsAny<Expression<Func<Lesson, bool>>>(), null, null, true))
+            .ReturnsAsync(new List<Lesson> { lesson }.AsQueryable());
+
+        _lessonRepositoryMock
+            .Setup(repo => repo.UpdateAsync(It.IsAny<Lesson>()))
+            .Returns(Task.CompletedTask);
+
+        _unitOfWorkMock
+            .Setup(u => u.CompleteAsync())
+            .Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _updateIsApprovedLessonCommandHandler.Handle(command, CancellationToken.None);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual((int)ResponseCode.UPDATED_SUCCESS, result.Code);
+        Assert.AreEqual(ResponseCode.UPDATED_SUCCESS.GetDescription(), result.Message);
+    }
+
+    [TestMethod]
+    public async Task Handle_UpdateLessonCommandHandler_ReturnsUpdatedResponse()
+    {
+        _unitOfWorkMock.Setup(u => u.Lessons).Returns(_lessonRepositoryMock.Object);
+        _updateLessonCommandHandler = new UpdateLessonCommandHandler(_unitOfWorkMock.Object);
+
+        // Arrange
+        var lessonId = 1;
+        var lesson = new Lesson
+        {
+            LessonId = lessonId,
+            Name = "Old Name",
+            Description = "Old Description",
+            TotalPeriods = 10,
+            LessonTypeId = 1,
+            NoteId = 1,
+            WeekId = 1,
+            ModuleId = 1
+        };
+
+        var updateRequest = new UpdateLessonRequest
+        {
+            Name = "Updated Name",
+            Description = "Updated Description",
+            TotalPeriods = 12,
+            LessonTypeId = 1,
+            NoteId = 1,
+            WeekId = 1,
+            ModuleId = 1
+        };
+
+        var command = new UpdateLessonCommand
+        (lessonId,
+           updateRequest
+        );
+
+        _unitOfWorkMock.Setup(u => u.LessonTypes.Any(It.IsAny<Expression<Func<LessonType, bool>>>())).Returns(true);
+        _unitOfWorkMock.Setup(u => u.Notes.Any(It.IsAny<Expression<Func<Note, bool>>>())).Returns(true);
+        _unitOfWorkMock.Setup(u => u.Modules.Any(It.IsAny<Expression<Func<Module, bool>>>())).Returns(true);
+        _lessonRepositoryMock
+            .Setup(repo => repo.GetAsync(It.IsAny<Expression<Func<Lesson, bool>>>(), null, null, true))
+            .ReturnsAsync(new List<Lesson> { lesson }.AsQueryable());
+
+        _lessonRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<Lesson>())).Returns(Task.CompletedTask);
+        _unitOfWorkMock.Setup(u => u.CompleteAsync()).Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _updateLessonCommandHandler.Handle(command, CancellationToken.None);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual((int)ResponseCode.UPDATED_SUCCESS, result.Code);
+        Assert.AreEqual(ResponseCode.UPDATED_SUCCESS.GetDescription(), result.Message);
+    }
+
+    [TestMethod]
+    public async Task Handle_UpdateLessonCommandHandler_ThrowLessonType()
+    {
+        _unitOfWorkMock.Setup(u => u.Lessons).Returns(_lessonRepositoryMock.Object);
+        _updateLessonCommandHandler = new UpdateLessonCommandHandler(_unitOfWorkMock.Object);
+
+        // Arrange
+        var lessonId = 1;
+        var lesson = new Lesson
+        {
+            LessonId = lessonId,
+            Name = "Old Name",
+            Description = "Old Description",
+            TotalPeriods = 10,
+            LessonTypeId = 1,
+            NoteId = 1,
+            WeekId = 1,
+            ModuleId = 1
+        };
+
+        var updateRequest = new UpdateLessonRequest
+        {
+            Name = "Updated Name",
+            Description = "Updated Description",
+            TotalPeriods = 12,
+            LessonTypeId = 1,
+            NoteId = 1,
+            WeekId = 1,
+            ModuleId = 1
+        };
+
+        var command = new UpdateLessonCommand
+        (lessonId,
+           updateRequest
+        );
+
+        _unitOfWorkMock.Setup(u => u.LessonTypes.Any(It.IsAny<Expression<Func<LessonType, bool>>>())).Returns(false);
+        _unitOfWorkMock.Setup(u => u.Notes.Any(It.IsAny<Expression<Func<Note, bool>>>())).Returns(true);
+        _unitOfWorkMock.Setup(u => u.Modules.Any(It.IsAny<Expression<Func<Module, bool>>>())).Returns(true);
+
+        _lessonRepositoryMock
+            .Setup(repo => repo.GetAsync(It.IsAny<Expression<Func<Lesson, bool>>>(), null, null, true))
+            .ReturnsAsync(new List<Lesson> { lesson }.AsQueryable());
+
+        _lessonRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<Lesson>())).Returns(Task.CompletedTask);
+        _unitOfWorkMock.Setup(u => u.CompleteAsync()).Returns(Task.CompletedTask);
+
+        // Act
+        await Assert.ThrowsExceptionAsync<ApiException>(() => _updateLessonCommandHandler.Handle(command, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_UpdateLessonCommandHandler_ThrowNote()
+    {
+        _unitOfWorkMock.Setup(u => u.Lessons).Returns(_lessonRepositoryMock.Object);
+        _updateLessonCommandHandler = new UpdateLessonCommandHandler(_unitOfWorkMock.Object);
+
+        // Arrange
+        var lessonId = 1;
+        var lesson = new Lesson
+        {
+            LessonId = lessonId,
+            Name = "Old Name",
+            Description = "Old Description",
+            TotalPeriods = 10,
+            LessonTypeId = 1,
+            NoteId = 1,
+            WeekId = 1,
+            ModuleId = 1
+        };
+
+        var updateRequest = new UpdateLessonRequest
+        {
+            Name = "Updated Name",
+            Description = "Updated Description",
+            TotalPeriods = 12,
+            LessonTypeId = 1,
+            NoteId = 1,
+            WeekId = 1,
+            ModuleId = 1
+        };
+
+        var command = new UpdateLessonCommand
+        (lessonId,
+           updateRequest
+        );
+        _unitOfWorkMock.Setup(u => u.LessonTypes.Any(It.IsAny<Expression<Func<LessonType, bool>>>())).Returns(true);
+        _unitOfWorkMock.Setup(u => u.Notes.Any(It.IsAny<Expression<Func<Note, bool>>>())).Returns(false);
+        _unitOfWorkMock.Setup(u => u.Modules.Any(It.IsAny<Expression<Func<Module, bool>>>())).Returns(true);
+
+        _lessonRepositoryMock
+            .Setup(repo => repo.GetAsync(It.IsAny<Expression<Func<Lesson, bool>>>(), null, null, true))
+            .ReturnsAsync(new List<Lesson> { lesson }.AsQueryable());
+
+        _lessonRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<Lesson>())).Returns(Task.CompletedTask);
+        _unitOfWorkMock.Setup(u => u.CompleteAsync()).Returns(Task.CompletedTask);
+
+        // Act
+        await Assert.ThrowsExceptionAsync<ApiException>(() => _updateLessonCommandHandler.Handle(command, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_UpdateLessonCommandHandler_ThrowModule()
+    {
+        _unitOfWorkMock.Setup(u => u.Lessons).Returns(_lessonRepositoryMock.Object);
+        _updateLessonCommandHandler = new UpdateLessonCommandHandler(_unitOfWorkMock.Object);
+
+        // Arrange
+        var lessonId = 1;
+        var lesson = new Lesson
+        {
+            LessonId = lessonId,
+            Name = "Old Name",
+            Description = "Old Description",
+            TotalPeriods = 10,
+            LessonTypeId = 1,
+            NoteId = 1,
+            WeekId = 1,
+            ModuleId = 1
+        };
+
+        var updateRequest = new UpdateLessonRequest
+        {
+            Name = "Updated Name",
+            Description = "Updated Description",
+            TotalPeriods = 12,
+            LessonTypeId = 1,
+            NoteId = 1,
+            WeekId = 1,
+            ModuleId = 1
+        };
+
+        var command = new UpdateLessonCommand
+        (lessonId,
+           updateRequest
+        );
+
+        _unitOfWorkMock.Setup(u => u.LessonTypes.Any(It.IsAny<Expression<Func<LessonType, bool>>>())).Returns(true);
+        _unitOfWorkMock.Setup(u => u.Notes.Any(It.IsAny<Expression<Func<Note, bool>>>())).Returns(true);
+        _unitOfWorkMock.Setup(u => u.Modules.Any(It.IsAny<Expression<Func<Module, bool>>>())).Returns(false);
+
+        _lessonRepositoryMock
+            .Setup(repo => repo.GetAsync(It.IsAny<Expression<Func<Lesson, bool>>>(), null, null, true))
+            .ReturnsAsync(new List<Lesson> { lesson }.AsQueryable());
+
+        _lessonRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<Lesson>())).Returns(Task.CompletedTask);
+        _unitOfWorkMock.Setup(u => u.CompleteAsync()).Returns(Task.CompletedTask);
+
+        // Act
+        await Assert.ThrowsExceptionAsync<ApiException>(() => _updateLessonCommandHandler.Handle(command, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_UpdateLessonCommandHandler_ThrowNotFoundLesson()
+    {
+        _unitOfWorkMock.Setup(u => u.Lessons).Returns(_lessonRepositoryMock.Object);
+        _updateLessonCommandHandler = new UpdateLessonCommandHandler(_unitOfWorkMock.Object);
+
+        // Arrange
+        var lessonId = 1;
+        var updateRequest = new UpdateLessonRequest
+        {
+            Name = "Updated Name",
+            Description = "Updated Description",
+            TotalPeriods = 12,
+            LessonTypeId = 1,
+            NoteId = 1,
+            WeekId = 1,
+            ModuleId = 1
+        };
+
+        var command = new UpdateLessonCommand
+        (lessonId,
+           updateRequest
+        );
+
+        _unitOfWorkMock.Setup(u => u.LessonTypes.Any(It.IsAny<Expression<Func<LessonType, bool>>>())).Returns(true);
+        _unitOfWorkMock.Setup(u => u.Notes.Any(It.IsAny<Expression<Func<Note, bool>>>())).Returns(true);
+        _unitOfWorkMock.Setup(u => u.Modules.Any(It.IsAny<Expression<Func<Module, bool>>>())).Returns(true);
+
+        _lessonRepositoryMock
+            .Setup(repo => repo.GetAsync(It.IsAny<Expression<Func<Lesson, bool>>>(), null, null, true))
+            .ReturnsAsync(new List<Lesson>().AsQueryable());
+
+        _lessonRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<Lesson>())).Returns(Task.CompletedTask);
+        _unitOfWorkMock.Setup(u => u.CompleteAsync()).Returns(Task.CompletedTask);
+
+        // Act
+        await Assert.ThrowsExceptionAsync<ApiException>(() => _updateLessonCommandHandler.Handle(command, CancellationToken.None));
+    }
+    #endregion
+
 }
