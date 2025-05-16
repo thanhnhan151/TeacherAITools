@@ -2791,4 +2791,376 @@ await Assert.ThrowsExceptionAsync<ApiException>(() =>
         Assert.AreEqual(1, response.Data.TotalPage); // 2 items, pageSize 10 -> totalPage = 1
     }
     #endregion
+
+    #region Blog
+    [TestMethod]
+    public async Task Handle_ShouldCreateBlog_WhenRequestIsValid()
+    {
+        _createBlogCommandHandler = new CreateBlogCommandHandler(_unitOfWorkMock.Object, _dateTimeProviderMock.Object);
+        // Arrange
+        var request = new CreateBlogCommand
+        (
+            "Valid Title",
+            "Valid body",
+            1,
+            1
+        );
+
+        var now = DateTime.UtcNow;
+        _dateTimeProviderMock.Setup(x => x.UtcNow).Returns(now);
+
+        _unitOfWorkMock.Setup(x => x.Categories.GetByIdAsync(1)).ReturnsAsync(new Category());
+        _unitOfWorkMock.Setup(x => x.TeacherLessons.GetByIdAsync(1)).ReturnsAsync(new TeacherLesson());
+        _unitOfWorkMock.Setup(x => x.Blogs.AddAsync(It.IsAny<Blog>())).ReturnsAsync(new Blog());
+        _unitOfWorkMock.Setup(x => x.CompleteAsync()).Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _createBlogCommandHandler.Handle(request, CancellationToken.None);
+
+        // Assert
+        Assert.AreEqual((int)ResponseCode.CREATED_SUCCESS, result.Code);
+        Assert.AreEqual(ResponseCode.CREATED_SUCCESS.GetDescription(), result.Message);
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldThrowValidationException_WhenTitleIsEmpty()
+    {
+        _createBlogCommandHandler = new CreateBlogCommandHandler(_unitOfWorkMock.Object, _dateTimeProviderMock.Object);
+        // Arrange
+        var request = new CreateBlogCommand
+        (
+            "",
+            "Valid body",
+            1,
+            1
+        );
+
+        _unitOfWorkMock.Setup(x => x.Categories.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new Category());
+        _unitOfWorkMock.Setup(x => x.TeacherLessons.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new TeacherLesson());
+
+        // Act & Assert
+        var ex = await Assert.ThrowsExceptionAsync<ValidationException>(() =>
+            _createBlogCommandHandler.Handle(request, CancellationToken.None));
+
+        Assert.IsTrue(ex.Errors.Any(e => e.Contains("Title is required")));
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldThrowValidationException_WhenBodyIsEmpty()
+    {
+        _createBlogCommandHandler = new CreateBlogCommandHandler(_unitOfWorkMock.Object, _dateTimeProviderMock.Object);
+        var request = new CreateBlogCommand
+        (
+            "Valid Title",
+            "",
+            1,
+            1
+        );
+
+        _unitOfWorkMock.Setup(x => x.Categories.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new Category());
+        _unitOfWorkMock.Setup(x => x.TeacherLessons.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new TeacherLesson());
+
+        var ex = await Assert.ThrowsExceptionAsync<ValidationException>(() =>
+            _createBlogCommandHandler.Handle(request, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldThrowValidationException_WhenCategoryNotFound()
+    {
+        _createBlogCommandHandler = new CreateBlogCommandHandler(_unitOfWorkMock.Object, _dateTimeProviderMock.Object);
+        var request = new CreateBlogCommand
+        (
+            "Valid Title",
+            "Valid Body",
+            999,
+            1
+        );
+
+        _unitOfWorkMock.Setup(x => x.Categories.GetByIdAsync(999)).ReturnsAsync((Category)null);
+        _unitOfWorkMock.Setup(x => x.TeacherLessons.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new TeacherLesson());
+
+        var ex = await Assert.ThrowsExceptionAsync<ValidationException>(() =>
+            _createBlogCommandHandler.Handle(request, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldThrowValidationException_WhenTeacherLessonNotFound()
+    {
+        _createBlogCommandHandler = new CreateBlogCommandHandler(_unitOfWorkMock.Object, _dateTimeProviderMock.Object);
+        var request = new CreateBlogCommand
+        (
+            "Valid Title",
+            "Valid Body",
+            1,
+            999
+        );
+
+        _unitOfWorkMock.Setup(x => x.Categories.GetByIdAsync(1)).ReturnsAsync(new Category());
+        _unitOfWorkMock.Setup(x => x.TeacherLessons.GetByIdAsync(999)).ReturnsAsync((TeacherLesson)null);
+
+        var ex = await Assert.ThrowsExceptionAsync<ValidationException>(() =>
+            _createBlogCommandHandler.Handle(request, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldDisableBlog_WhenBlogIsActive()
+    {
+        _disableBlogCommandHandler = new DisableBlogCommandHandler(_unitOfWorkMock.Object);// Arrange
+        var blog = new Blog { BlogId = 1, IsActive = true };
+        var queryableBlog = new List<Blog> { blog }.AsQueryable();
+
+        _unitOfWorkMock.Setup(x => x.Blogs.GetAsync(It.IsAny<Expression<Func<Blog, bool>>>(),
+            It.IsAny<Func<IQueryable<Blog>, IOrderedQueryable<Blog>>>(),
+            It.IsAny<Func<IQueryable<Blog>, IQueryable<Blog>>>(),
+            It.IsAny<bool>()))
+            .ReturnsAsync(queryableBlog);
+
+        _unitOfWorkMock.Setup(x => x.Blogs.UpdateAsync(It.IsAny<Blog>())).Returns(Task.CompletedTask);
+        _unitOfWorkMock.Setup(x => x.CompleteAsync()).Returns(Task.CompletedTask);
+
+        var request = new DisableBlogCommand(1);
+
+        // Act
+        var result = await _disableBlogCommandHandler.Handle(request, CancellationToken.None);
+
+        // Assert
+        Assert.AreEqual(false, blog.IsActive);
+        Assert.AreEqual((int)ResponseCode.DISABLED_SUCCESS, result.Code);
+        Assert.AreEqual(ResponseCode.DISABLED_SUCCESS.GetDescription(), result.Message);
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldEnableBlog_WhenBlogIsInactive()
+    {
+        _disableBlogCommandHandler = new DisableBlogCommandHandler(_unitOfWorkMock.Object);// Arrange
+        var blog = new Blog { BlogId = 2, IsActive = false };
+        var queryableBlog = new List<Blog> { blog }.AsQueryable();
+
+        _unitOfWorkMock.Setup(x => x.Blogs.GetAsync(It.IsAny<Expression<Func<Blog, bool>>>(),
+            It.IsAny<Func<IQueryable<Blog>, IOrderedQueryable<Blog>>>(),
+            It.IsAny<Func<IQueryable<Blog>, IQueryable<Blog>>>(),
+            It.IsAny<bool>()))
+            .ReturnsAsync(queryableBlog);
+
+        _unitOfWorkMock.Setup(x => x.Blogs.UpdateAsync(It.IsAny<Blog>())).Returns(Task.CompletedTask);
+        _unitOfWorkMock.Setup(x => x.CompleteAsync()).Returns(Task.CompletedTask);
+
+        var request = new DisableBlogCommand(2);
+
+        // Act
+        var result = await _disableBlogCommandHandler.Handle(request, CancellationToken.None);
+
+        // Assert
+        Assert.AreEqual(true, blog.IsActive);
+        Assert.AreEqual((int)ResponseCode.DISABLED_SUCCESS, result.Code);
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldThrowException_WhenBlogNotFound()
+    {
+        _disableBlogCommandHandler = new DisableBlogCommandHandler(_unitOfWorkMock.Object);// Arrange
+        _unitOfWorkMock.Setup(x => x.Blogs.GetAsync(It.IsAny<Expression<Func<Blog, bool>>>(),
+            It.IsAny<Func<IQueryable<Blog>, IOrderedQueryable<Blog>>>(),
+            It.IsAny<Func<IQueryable<Blog>, IQueryable<Blog>>>(),
+            It.IsAny<bool>()))
+            .ReturnsAsync(new List<Blog>().AsQueryable());
+
+        var request = new DisableBlogCommand(99);
+
+        // Act & Assert
+        var ex = await Assert.ThrowsExceptionAsync<ApiException>(() =>
+            _disableBlogCommandHandler.Handle(request, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldUpdateBlog_WhenValidRequest()
+    {
+        _updateBlogCommandHandler = new UpdateBlogCommandHandler(_unitOfWorkMock.Object);
+        // Arrange
+        var blog = new Blog { BlogId = 1, Title = "Old Title", Body = "Old Body" };
+        var request = new UpdateBlogCommand
+        (1,
+            new UpdateBlogRequest
+            (
+                "New Title",
+                "New Body"
+            )
+        );
+
+        _unitOfWorkMock.Setup(u => u.Blogs.GetAsync(It.IsAny<Expression<Func<Blog, bool>>>(),
+            It.IsAny<Func<IQueryable<Blog>, IOrderedQueryable<Blog>>>(),
+            It.IsAny<Func<IQueryable<Blog>, IQueryable<Blog>>>(),
+            It.IsAny<bool>()))
+            .ReturnsAsync(new List<Blog> { blog }.AsQueryable());
+
+        _unitOfWorkMock.Setup(u => u.Blogs.UpdateAsync(It.IsAny<Blog>())).Returns(Task.CompletedTask);
+        _unitOfWorkMock.Setup(u => u.CompleteAsync()).Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _updateBlogCommandHandler.Handle(request, CancellationToken.None);
+
+        // Assert
+        Assert.AreEqual("New Title", blog.Title);
+        Assert.AreEqual("New Body", blog.Body);
+        Assert.AreEqual((int)ResponseCode.UPDATED_SUCCESS, result.Code);
+        Assert.AreEqual(ResponseCode.UPDATED_SUCCESS.GetDescription(), result.Message);
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldThrowValidationException_WhenBlogNotFound()
+    {
+        _updateBlogCommandHandler = new UpdateBlogCommandHandler(_unitOfWorkMock.Object);
+        // Arrange
+        _unitOfWorkMock.Setup(u => u.Blogs.GetAsync(It.IsAny<Expression<Func<Blog, bool>>>(),
+            It.IsAny<Func<IQueryable<Blog>, IOrderedQueryable<Blog>>>(),
+            It.IsAny<Func<IQueryable<Blog>, IQueryable<Blog>>>(),
+            It.IsAny<bool>()))
+            .ReturnsAsync(new List<Blog>().AsQueryable());
+
+        var request = new UpdateBlogCommand
+        (999,
+            new UpdateBlogRequest
+            (
+                "Test",
+                "Test"
+            )
+        );
+
+        // Act & Assert
+        var ex = await Assert.ThrowsExceptionAsync<ValidationException>(() =>
+            _updateBlogCommandHandler.Handle(request, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldThrowValidationException_WhenTitleOrBodyMissing()
+    {
+        _updateBlogCommandHandler = new UpdateBlogCommandHandler(_unitOfWorkMock.Object);
+        // Arrange
+        var blog = new Blog { BlogId = 1, Title = "Old", Body = "Old" };
+
+        _unitOfWorkMock.Setup(u => u.Blogs.GetAsync(It.IsAny<Expression<Func<Blog, bool>>>(),
+            It.IsAny<Func<IQueryable<Blog>, IOrderedQueryable<Blog>>>(),
+            It.IsAny<Func<IQueryable<Blog>, IQueryable<Blog>>>(),
+            It.IsAny<bool>()))
+            .ReturnsAsync(new List<Blog> { blog }.AsQueryable());
+
+        var request = new UpdateBlogCommand
+        (
+             1,
+            new UpdateBlogRequest
+            (
+                 "",
+                 ""
+            )
+        );
+
+        // Act & Assert
+        var ex = await Assert.ThrowsExceptionAsync<ValidationException>(() =>
+            _updateBlogCommandHandler.Handle(request, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldReturnBlogDetail_WhenBlogExists()
+    {
+        _getBlogByIdQueryHandler = new GetBlogByIdQueryHandler(_unitOfWorkMock.Object, _mapperMock.Object);// Arrange
+        var blogId = 1;
+
+        var mockBlog = new Blog
+        {
+            BlogId = blogId,
+            Title = "Sample Blog",
+            Category = new Category { CategoryId = 1, CategoryName = "Tech" },
+            Comments = new List<Comment>
+            {
+                new Comment { User = new User { UserId = 1, Fullname = "User A" }, CommentBody = "Great post!" }
+            }
+        };
+
+        var mockBlogList = new List<Blog> { mockBlog }.AsQueryable();
+
+        _unitOfWorkMock.Setup(u => u.Blogs.GetAsync(It.IsAny<Expression<Func<Blog, bool>>>()))
+            .ReturnsAsync(mockBlogList);
+
+        _mapperMock.Setup(m => m.Map<GetBlogDetailResponse>(It.IsAny<Blog>()))
+            .Returns(new GetBlogDetailResponse { BlogId = blogId, Title = "Sample Blog" });
+
+        var request = new GetBlogByIdQuery(blogId);
+
+        // Act
+        var result = await _getBlogByIdQueryHandler.Handle(request, CancellationToken.None);
+
+        // Assert
+        Assert.AreEqual((int)ResponseCode.SUCCESS, result.Code);
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldThrowApiException_WhenBlogNotFound()
+    {
+        _getBlogByIdQueryHandler = new GetBlogByIdQueryHandler(_unitOfWorkMock.Object, _mapperMock.Object);// Arrange
+        _unitOfWorkMock.Setup(u => u.Blogs.GetAsync(It.IsAny<Expression<Func<Blog, bool>>>(),
+            It.IsAny<Func<IQueryable<Blog>, IOrderedQueryable<Blog>>>(),
+            It.IsAny<Func<IQueryable<Blog>, IQueryable<Blog>>>(),
+            It.IsAny<bool>()))
+            .ReturnsAsync(new List<Blog>().AsQueryable());
+
+        var request = new GetBlogByIdQuery(999);
+
+        // Act & Assert
+        var ex = await Assert.ThrowsExceptionAsync<ApiException>(() =>
+            _getBlogByIdQueryHandler.Handle(request, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldReturnPaginatedBlogList_WhenCalled()
+    {
+        _getBlogsQueryHandler = new GetBlogsQueryHandler(_unitOfWorkMock.Object, _mapperMock.Object);
+        // Arrange
+        var blogs = new List<Blog>
+        {
+            new Blog { BlogId = 1, Title = "Blog 1" },
+            new Blog { BlogId = 2, Title = "Blog 2" }
+        };
+
+        var paginatedBlogData = new PaginatedList<Blog>(blogs, totalRecords: 2, currentPage: 1, pageSize: 10);
+
+        _unitOfWorkMock.Setup(u => u.Blogs.PaginatedListAsync(
+                It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
+                It.IsAny<int?>(), It.IsAny<bool>(),
+                It.IsAny<int>(), It.IsAny<int>()))
+            .ReturnsAsync(paginatedBlogData);
+
+        var mappedBlogData = new PaginatedList<GetBlogResponse>(
+            new List<GetBlogResponse>
+            {
+                new GetBlogResponse { BlogId = 1, Title = "Blog 1" },
+                new GetBlogResponse { BlogId = 2, Title = "Blog 2" }
+            },
+            totalRecords: 2,
+            currentPage: 1,
+            pageSize: 10);
+
+        _mapperMock.Setup(m => m.Map<PaginatedList<GetBlogResponse>>(paginatedBlogData))
+            .Returns(mappedBlogData);
+
+        var query = new GetBlogsQuery
+        (
+            "",
+            "Title",
+            "asc",
+            false,
+            null,
+            1,
+            10
+        );
+
+        // Act
+        var result = await _getBlogsQueryHandler.Handle(query, CancellationToken.None);
+
+        // Assert
+        Assert.AreEqual((int)ResponseCode.SUCCESS, result.Code);
+        Assert.IsNotNull(result.Data);
+        Assert.AreEqual(2, result.Data.Items.Count);
+        Assert.AreEqual("Blog 1", result.Data.Items[0].Title);
+    }
+    #endregion
 }
