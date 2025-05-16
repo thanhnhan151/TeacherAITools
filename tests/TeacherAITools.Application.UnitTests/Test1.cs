@@ -3163,4 +3163,44 @@ await Assert.ThrowsExceptionAsync<ApiException>(() =>
         Assert.AreEqual("Blog 1", result.Data.Items[0].Title);
     }
     #endregion
+
+    #region Categories
+    [TestMethod]
+    public async Task Handle_ShouldReturnCategoryList_WhenCategoriesExist()
+    {
+        _getCategoriesQueryHandler = new GetCategoriesQueryHandler(_unitOfWorkMock.Object, _mapperMock.Object);
+        // Arrange
+        var categories = new List<Category>
+        {
+            new Category { CategoryId = 1, CategoryName = "Math" },
+            new Category { CategoryId = 2, CategoryName = "Science" }
+        };
+
+        _unitOfWorkMock.Setup(u => u.Categories.GetAllAsync(
+            It.IsAny<Expression<Func<Category, bool>>>(),
+            It.IsAny<Func<IQueryable<Category>, IQueryable<Category>>>(),
+            It.IsAny<bool>()
+        )).ReturnsAsync(categories.AsQueryable());
+
+        var expectedMappedCategories = new List<GetCategoryResponse>
+        {
+            new GetCategoryResponse (1, "Math" ),
+            new GetCategoryResponse ( 2, "Science" )
+        };
+
+        _mapperMock.Setup(m => m.Map<List<GetCategoryResponse>>(It.IsAny<List<Category>>()))
+            .Returns(expectedMappedCategories);
+
+        var query = new GetCategoriesQuery();
+
+        // Act
+        var result = await _getCategoriesQueryHandler.Handle(query, CancellationToken.None);
+
+        // Assert
+        Assert.AreEqual((int)ResponseCode.SUCCESS, result.Code);
+        Assert.IsNotNull(result.Data);
+        Assert.AreEqual(2, result.Data.Count);
+    }
+    #endregion
+
 }
