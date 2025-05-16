@@ -3203,4 +3203,121 @@ await Assert.ThrowsExceptionAsync<ApiException>(() =>
     }
     #endregion
 
+    #region City
+    [TestMethod]
+    public async Task Handle_ShouldReturnCityWithDistricts_WhenCityExists()
+    {
+        _getDistrictsByCityIdQueryHandler = new GetDistrictsByCityIdQueryHandler(_unitOfWorkMock.Object, _mapperMock.Object);
+        // Arrange
+        var cityId = 1;
+        var city = new City
+        {
+            CityId = cityId,
+            CityName = "Ho Chi Minh",
+            Districts = new List<District>
+            {
+                new District { DistrictId = 1, DistrictName = "District 1" },
+                new District { DistrictId = 2, DistrictName = "District 2" }
+            }
+        };
+
+        var cityList = new List<City> { city }.AsQueryable();
+
+        _unitOfWorkMock.Setup(u => u.Cities.GetAsync(
+           It.IsAny<Expression<Func<City, bool>>>(),
+            It.IsAny<Func<IQueryable<City>, IOrderedQueryable<City>>>(),
+            It.IsAny<Func<IQueryable<City>, IQueryable<City>>>(),
+            It.IsAny<bool>()
+        )).ReturnsAsync(cityList);
+
+        var expectedResponse = new GetCityDetailResponse
+        (
+            city.CityId,
+            city.CityName,
+            new List<GetDistrictResponse>
+            {
+                new GetDistrictResponse (1,"District 1"),
+                new GetDistrictResponse ( 2,"District 2" )
+            }
+        );
+
+        _mapperMock.Setup(m => m.Map<GetCityDetailResponse>(It.IsAny<City>()))
+            .Returns(expectedResponse);
+
+        var request = new GetDistrictsByCityIdQuery(cityId);
+
+        // Act
+        var result = await _getDistrictsByCityIdQueryHandler.Handle(request, CancellationToken.None);
+
+        // Assert
+        Assert.AreEqual((int)ResponseCode.SUCCESS, result.Code);
+        Assert.IsNotNull(result.Data);
+        Assert.AreEqual(2, result.Data.Districts.Count);
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldReturnListOfCities_WhenCitiesExist()
+    {
+        _getCitiesQueryHandler = new GetCitiesQueryHandler(_unitOfWorkMock.Object, _mapperMock.Object);
+        // Arrange
+        var cities = new List<City>
+        {
+            new City { CityId = 1, CityName = "Hanoi" },
+            new City { CityId = 2, CityName = "Ho Chi Minh" }
+        };
+
+        _unitOfWorkMock.Setup(u => u.Cities.GetAllAsync(
+            It.IsAny<Expression<Func<City, bool>>>(),
+            It.IsAny<Func<IQueryable<City>, IQueryable<City>>>(),
+            It.IsAny<bool>()
+        ))
+            .ReturnsAsync(cities.AsQueryable());
+
+        var expectedResponses = new List<GetCityResponse>
+        {
+            new GetCityResponse ( 1, "Hanoi" ),
+            new GetCityResponse ( 2, "Ho Chi Minh" )
+        };
+
+        _mapperMock.Setup(m => m.Map<List<GetCityResponse>>(It.IsAny<List<City>>()))
+            .Returns(expectedResponses);
+
+        var request = new GetCitiesQuery();
+
+        // Act
+        var result = await _getCitiesQueryHandler.Handle(request, CancellationToken.None);
+
+        // Assert
+        Assert.AreEqual((int)ResponseCode.SUCCESS, result.Code);
+        Assert.AreEqual(2, result.Data.Count);
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldReturnEmptyList_WhenNoCitiesExist()
+    {
+        _getCitiesQueryHandler = new GetCitiesQueryHandler(_unitOfWorkMock.Object, _mapperMock.Object);
+        // Arrange
+        var cities = new List<City>();
+
+        _unitOfWorkMock.Setup(u => u.Cities.GetAllAsync(
+            It.IsAny<Expression<Func<City, bool>>>(),
+            It.IsAny<Func<IQueryable<City>, IQueryable<City>>>(),
+            It.IsAny<bool>()
+        ))
+            .ReturnsAsync(cities.AsQueryable());
+
+        _mapperMock.Setup(m => m.Map<List<GetCityResponse>>(It.IsAny<List<City>>()))
+            .Returns(new List<GetCityResponse>());
+
+        var request = new GetCitiesQuery();
+
+        // Act
+        var result = await _getCitiesQueryHandler.Handle(request, CancellationToken.None);
+
+        // Assert
+        Assert.AreEqual((int)ResponseCode.SUCCESS, result.Code);
+        Assert.IsNotNull(result.Data);
+        Assert.AreEqual(0, result.Data.Count);
+    }
+    #endregion
 }
