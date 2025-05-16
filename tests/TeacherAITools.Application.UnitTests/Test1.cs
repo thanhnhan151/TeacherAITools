@@ -5,6 +5,17 @@ using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
+using TeacherAITools.Application.Blogs.Commands.CreateBlog;
+using TeacherAITools.Application.Blogs.Commands.DisableBlog;
+using TeacherAITools.Application.Blogs.Commands.UpdateBlog;
+using TeacherAITools.Application.Blogs.Common;
+using TeacherAITools.Application.Blogs.Queries.GetBlogById;
+using TeacherAITools.Application.Blogs.Queries.GetBlogs;
+using TeacherAITools.Application.Categories.Common;
+using TeacherAITools.Application.Categories.Queries.GetCategories;
+using TeacherAITools.Application.Cities.Common;
+using TeacherAITools.Application.Cities.Queries.GetCities;
+using TeacherAITools.Application.Cities.Queries.GetDistrictsByCityId;
 using TeacherAITools.Application.Common.Enums;
 using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.Common.Extensions;
@@ -12,6 +23,7 @@ using TeacherAITools.Application.Common.Interfaces.Persistence;
 using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
 using TeacherAITools.Application.Common.Interfaces.Services;
 using TeacherAITools.Application.Common.Models.Requests;
+using TeacherAITools.Application.Districts.Common;
 using TeacherAITools.Application.Lessons.Commands.CreateLesson;
 using TeacherAITools.Application.Lessons.Commands.DeleteLesson;
 using TeacherAITools.Application.Lessons.Commands.UpdateIsApprovedLesson;
@@ -20,6 +32,13 @@ using TeacherAITools.Application.Lessons.Common;
 using TeacherAITools.Application.Lessons.Queries.GetLessonById;
 using TeacherAITools.Application.Lessons.Queries.GetLessons;
 using TeacherAITools.Application.Lessons.Queries.GetPromptById;
+using TeacherAITools.Application.Modules.Commands.CreateModule;
+using TeacherAITools.Application.Modules.Commands.DeleteModule;
+using TeacherAITools.Application.Modules.Commands.UpdateModule;
+using TeacherAITools.Application.Modules.Common;
+using TeacherAITools.Application.Modules.Queries.GetLessonsByModuleId;
+using TeacherAITools.Application.Modules.Queries.GetModuleById;
+using TeacherAITools.Application.Modules.Queries.GetModules;
 using TeacherAITools.Application.Prompts.Commnon;
 using TeacherAITools.Application.TeacherLessons.Commands.CreatePendingTeacherLesson;
 using TeacherAITools.Application.TeacherLessons.Commands.CreateTeacherLesson;
@@ -70,6 +89,9 @@ public sealed class Test1
     private Mock<ITeacherLessonRepository> _teacherLessonRepoMock;
     private Mock<IDateTimeProvider> _dateTimeProviderMock;
     private Mock<ILessonHistoryRepository> _lessonHistoryRepoMock;
+    private Mock<IModuleRepository> _moduleRepoMock;
+    private Mock<ICurriculumRepository> _curriculumRepoMock;
+    private Mock<IBookRepository> _bookRepoMock;
 
     private GetWeeksQueryHandler _getWeeksQueryHandler;
     private GetTeacherLessonsByIdQueryHandler _getTeacherLessonsByIdQueryHandler;
@@ -95,6 +117,20 @@ public sealed class Test1
     private CreateTeacherLessonCommandHandler _createTeacherLessonCommandHandler;
     private UpdateStatusTeacherLessonCommandHandler _updateStatusTeacherLessonCommandHandler;
     private UpdateTeacherLessonCommandHandler _updateTeacherLessonCommandHandler;
+    private CreateModuleCommandHandler _createModuleCommandHandler;
+    private DeleteModuleCommandHandler _deleteModuleCommandHandler;
+    private UpdateModuleCommandHandler _updateModuleCommandHandler;
+    private GetLessonsByModuleIdQueryHandler _getLessonsByModuleIdQueryHandler;
+    private GetModuleByIdQueryHandler _getModuleByIdQueryHandler;
+    private GetModulesQueryHandler _getModulesQueryHandler;
+    private CreateBlogCommandHandler _createBlogCommandHandler;
+    private DisableBlogCommandHandler _disableBlogCommandHandler;
+    private UpdateBlogCommandHandler _updateBlogCommandHandler;
+    private GetBlogByIdQueryHandler _getBlogByIdQueryHandler;
+    private GetBlogsQueryHandler _getBlogsQueryHandler;
+    private GetCategoriesQueryHandler _getCategoriesQueryHandler;
+    private GetDistrictsByCityIdQueryHandler _getDistrictsByCityIdQueryHandler;
+    private GetCitiesQueryHandler _getCitiesQueryHandler;
 
     [TestInitialize]
     public void Setup()
@@ -115,6 +151,9 @@ public sealed class Test1
         _teacherLessonRepoMock = new Mock<ITeacherLessonRepository>();
         _dateTimeProviderMock = new Mock<IDateTimeProvider>();
         _lessonHistoryRepoMock = new Mock<ILessonHistoryRepository>();
+        _moduleRepoMock = new Mock<IModuleRepository>();
+        _curriculumRepoMock = new Mock<ICurriculumRepository>();
+        _bookRepoMock = new Mock<IBookRepository>();
     }
 
     [TestMethod]
@@ -2230,6 +2269,1055 @@ await Assert.ThrowsExceptionAsync<ApiException>(() =>
         // Act & Assert
         var ex = await Assert.ThrowsExceptionAsync<ApiException>(() =>
             _updateTeacherLessonCommandHandler.Handle(request, CancellationToken.None));
+    }
+    #endregion
+
+    #region Module
+    [TestMethod]
+    public async Task Handle_ShouldCreateModule_WhenValid()
+    {
+        _unitOfWorkMock.Setup(u => u.Modules).Returns(_moduleRepoMock.Object);
+        _unitOfWorkMock.Setup(u => u.Curriculums).Returns(_curriculumRepoMock.Object);
+        _unitOfWorkMock.Setup(u => u.Grades).Returns(_gradeRepositoryMock.Object);
+        _unitOfWorkMock.Setup(u => u.Books).Returns(_bookRepoMock.Object);
+
+        _createModuleCommandHandler = new CreateModuleCommandHandler(_unitOfWorkMock.Object);
+
+        // Arrange
+        var request = new CreateModuleCommand
+        (new CreateModuleRequest
+        {
+            Name = "Math",
+            Desciption = "Basic math",
+            Semester = 1,
+            TotalPeriods = 30,
+            CurriculumId = 1,
+            GradeId = 2,
+            BookId = 3
+        }
+        );
+
+        _curriculumRepoMock.Setup(x => x.Any(It.IsAny<Expression<Func<Curriculum, bool>>>())).Returns(true);
+        _gradeRepositoryMock.Setup(x => x.Any(It.IsAny<Expression<Func<Grade, bool>>>())).Returns(true);
+        _bookRepoMock.Setup(x => x.Any(It.IsAny<Expression<Func<Book, bool>>>())).Returns(true);
+        _moduleRepoMock.Setup(x => x.GetAsync(
+            It.IsAny<Expression<Func<Module, bool>>>(),
+            It.IsAny<Func<IQueryable<Module>, IOrderedQueryable<Module>>>(),
+            It.IsAny<Func<IQueryable<Module>, IQueryable<Module>>>(),
+            It.IsAny<bool>()));
+        _moduleRepoMock.Setup(x => x.AddAsync(It.IsAny<Module>())).ReturnsAsync(new Module());
+
+        // Act
+        var result = await _createModuleCommandHandler.Handle(request, CancellationToken.None);
+
+        // Assert
+        Assert.AreEqual((int)ResponseCode.CREATED_SUCCESS, result.Code);
+        _moduleRepoMock.Verify(x => x.AddAsync(It.IsAny<Module>()), Times.Once);
+        _unitOfWorkMock.Verify(x => x.CompleteAsync(), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldThrow_WhenCurriculumNotFound()
+    {
+        _unitOfWorkMock.Setup(u => u.Modules).Returns(_moduleRepoMock.Object);
+        _unitOfWorkMock.Setup(u => u.Curriculums).Returns(_curriculumRepoMock.Object);
+        _unitOfWorkMock.Setup(u => u.Grades).Returns(_gradeRepositoryMock.Object);
+        _unitOfWorkMock.Setup(u => u.Books).Returns(_bookRepoMock.Object);
+
+        _createModuleCommandHandler = new CreateModuleCommandHandler(_unitOfWorkMock.Object);
+
+        // Arrange
+        var request = new CreateModuleCommand
+        (new CreateModuleRequest { CurriculumId = 1, GradeId = 1, BookId = 1 }
+        );
+
+        _curriculumRepoMock.Setup(x => x.Any(It.IsAny<Expression<Func<Curriculum, bool>>>())).Returns(false);
+
+        // Act & Assert
+        var ex = await Assert.ThrowsExceptionAsync<ApiException>(() =>
+            _createModuleCommandHandler.Handle(request, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldThrow_WhenGradeNotFound()
+    {
+        _unitOfWorkMock.Setup(u => u.Modules).Returns(_moduleRepoMock.Object);
+        _unitOfWorkMock.Setup(u => u.Curriculums).Returns(_curriculumRepoMock.Object);
+        _unitOfWorkMock.Setup(u => u.Grades).Returns(_gradeRepositoryMock.Object);
+        _unitOfWorkMock.Setup(u => u.Books).Returns(_bookRepoMock.Object);
+
+        _createModuleCommandHandler = new CreateModuleCommandHandler(_unitOfWorkMock.Object);
+
+        var request = new CreateModuleCommand
+        (new CreateModuleRequest { CurriculumId = 1, GradeId = 1, BookId = 1 }
+        );
+
+        _curriculumRepoMock.Setup(x => x.Any(It.IsAny<Expression<Func<Curriculum, bool>>>())).Returns(true);
+        _gradeRepositoryMock.Setup(x => x.Any(It.IsAny<Expression<Func<Grade, bool>>>())).Returns(false);
+
+        var ex = await Assert.ThrowsExceptionAsync<ApiException>(() =>
+            _createModuleCommandHandler.Handle(request, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldThrow_WhenBookNotFound()
+    {
+        _unitOfWorkMock.Setup(u => u.Modules).Returns(_moduleRepoMock.Object);
+        _unitOfWorkMock.Setup(u => u.Curriculums).Returns(_curriculumRepoMock.Object);
+        _unitOfWorkMock.Setup(u => u.Grades).Returns(_gradeRepositoryMock.Object);
+        _unitOfWorkMock.Setup(u => u.Books).Returns(_bookRepoMock.Object);
+
+        _createModuleCommandHandler = new CreateModuleCommandHandler(_unitOfWorkMock.Object);
+
+        var request = new CreateModuleCommand
+        (new CreateModuleRequest { CurriculumId = 1, GradeId = 1, BookId = 1 }
+        );
+
+        _curriculumRepoMock.Setup(x => x.Any(It.IsAny<Expression<Func<Curriculum, bool>>>())).Returns(true);
+        _gradeRepositoryMock.Setup(x => x.Any(It.IsAny<Expression<Func<Grade, bool>>>())).Returns(true);
+        _bookRepoMock.Setup(x => x.Any(It.IsAny<Expression<Func<Book, bool>>>())).Returns(false);
+
+        var ex = await Assert.ThrowsExceptionAsync<ApiException>(() =>
+            _createModuleCommandHandler.Handle(request, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldThrow_WhenModuleAlreadyExists()
+    {
+        _unitOfWorkMock.Setup(u => u.Modules).Returns(_moduleRepoMock.Object);
+        _unitOfWorkMock.Setup(u => u.Curriculums).Returns(_curriculumRepoMock.Object);
+        _unitOfWorkMock.Setup(u => u.Grades).Returns(_gradeRepositoryMock.Object);
+        _unitOfWorkMock.Setup(u => u.Books).Returns(_bookRepoMock.Object);
+
+        _createModuleCommandHandler = new CreateModuleCommandHandler(_unitOfWorkMock.Object);
+
+        var request = new CreateModuleCommand
+        (new CreateModuleRequest { Name = "Math", CurriculumId = 1, GradeId = 1, BookId = 1 }
+        );
+
+        _curriculumRepoMock.Setup(x => x.Any(It.IsAny<Expression<Func<Curriculum, bool>>>())).Returns(true);
+        _gradeRepositoryMock.Setup(x => x.Any(It.IsAny<Expression<Func<Grade, bool>>>())).Returns(true);
+        _bookRepoMock.Setup(x => x.Any(It.IsAny<Expression<Func<Book, bool>>>())).Returns(true);
+        _moduleRepoMock.Setup(x => x.GetAsync(It.IsAny<Expression<Func<Module, bool>>>())).ReturnsAsync(new List<Module> { new Module() }.AsQueryable());
+
+        var ex = await Assert.ThrowsExceptionAsync<ApiException>(() =>
+            _createModuleCommandHandler.Handle(request, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldSoftDeleteModule_WhenExists()
+    {
+        _unitOfWorkMock.Setup(u => u.Modules).Returns(_moduleRepoMock.Object);
+
+        _deleteModuleCommandHandler = new DeleteModuleCommandHandler(_unitOfWorkMock.Object);
+
+        // Arrange
+        var moduleId = new DeleteModuleCommand(1);
+        var existingModule = new Module { ModuleId = 1 };
+
+        _moduleRepoMock.Setup(x => x.GetAsync(It.IsAny<Expression<Func<Module, bool>>>(),
+            It.IsAny<Func<IQueryable<Module>, IOrderedQueryable<Module>>>(),
+            It.IsAny<Func<IQueryable<Module>, IQueryable<Module>>>(),
+            It.IsAny<bool>()))
+            .ReturnsAsync(new List<Module> { existingModule }.AsQueryable());
+
+        _moduleRepoMock.Setup(x => x.DeleteAsync(It.IsAny<Module>())).Returns(Task.CompletedTask);
+        _unitOfWorkMock.Setup(x => x.CompleteAsync()).Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _deleteModuleCommandHandler.Handle(moduleId, CancellationToken.None);
+
+        // Assert
+        Assert.AreEqual((int)ResponseCode.DELETED_SUCCESS, result.Code);
+        _unitOfWorkMock.Verify(x => x.CompleteAsync(), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldThrow_WhenModuleNotFound()
+    {
+        _unitOfWorkMock.Setup(u => u.Modules).Returns(_moduleRepoMock.Object);
+
+        _deleteModuleCommandHandler = new DeleteModuleCommandHandler(_unitOfWorkMock.Object);
+
+        // Arrange
+        var moduleId = new DeleteModuleCommand(99);
+
+        _moduleRepoMock.Setup(x => x.GetAsync(It.IsAny<Expression<Func<Module, bool>>>(),
+            It.IsAny<Func<IQueryable<Module>, IOrderedQueryable<Module>>>(),
+            It.IsAny<Func<IQueryable<Module>, IQueryable<Module>>>(),
+            It.IsAny<bool>()))
+            .ReturnsAsync(new List<Module>().AsQueryable());
+
+        // Act & Assert
+        var ex = await Assert.ThrowsExceptionAsync<ApiException>(() =>
+            _deleteModuleCommandHandler.Handle(moduleId, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldUpdateModule_WhenAllDataValid()
+    {
+        _unitOfWorkMock.Setup(x => x.Modules).Returns(_moduleRepoMock.Object);
+
+        _updateModuleCommandHandler = new UpdateModuleCommandHandler(_unitOfWorkMock.Object);
+
+        // Arrange
+        var command = new UpdateModuleCommand
+        (1,
+            new()
+            {
+                Name = "Updated Module",
+                Desciption = "Updated Description",
+                Semester = 2,
+                TotalPeriods = 20,
+                CurriculumId = 1,
+                GradeId = 1,
+                BookId = 1
+            }
+        );
+
+        _unitOfWorkMock.Setup(x => x.Curriculums.Any(It.IsAny<System.Linq.Expressions.Expression<Func<Curriculum, bool>>>())).Returns(true);
+        _unitOfWorkMock.Setup(x => x.Grades.Any(It.IsAny<System.Linq.Expressions.Expression<Func<Grade, bool>>>())).Returns(true);
+        _unitOfWorkMock.Setup(x => x.Books.Any(It.IsAny<System.Linq.Expressions.Expression<Func<Book, bool>>>())).Returns(true);
+
+        var existingModule = new Module { ModuleId = 1, Name = "abc" };
+        _moduleRepoMock.Setup(x => x.GetAsync(It.IsAny<Expression<Func<Module, bool>>>(),
+            It.IsAny<Func<IQueryable<Module>, IOrderedQueryable<Module>>>(),
+            It.IsAny<Func<IQueryable<Module>, IQueryable<Module>>>(),
+            It.IsAny<bool>()))
+            .ReturnsAsync(new List<Module> { existingModule }.AsQueryable());
+
+        _moduleRepoMock.Setup(x => x.UpdateAsync(It.IsAny<Module>())).Returns(Task.CompletedTask);
+        _unitOfWorkMock.Setup(x => x.CompleteAsync()).Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _updateModuleCommandHandler.Handle(command, CancellationToken.None);
+
+        // Assert
+        Assert.AreEqual((int)ResponseCode.UPDATED_SUCCESS, result.Code);
+        _moduleRepoMock.Verify(x => x.UpdateAsync(It.Is<Module>(m => m.Name == "Updated Module")), Times.Once);
+        _unitOfWorkMock.Verify(x => x.CompleteAsync(), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldThrow_WhenCurriculumNotFoundWhenUpdate()
+    {
+        _unitOfWorkMock.Setup(x => x.Modules).Returns(_moduleRepoMock.Object);
+
+        _updateModuleCommandHandler = new UpdateModuleCommandHandler(_unitOfWorkMock.Object);
+
+        var command = new UpdateModuleCommand
+       (1,
+             new() { CurriculumId = 1, GradeId = 1, BookId = 1 }
+       );
+
+        _unitOfWorkMock.Setup(x => x.Curriculums.Any(It.IsAny<System.Linq.Expressions.Expression<Func<Curriculum, bool>>>())).Returns(false);
+
+        var ex = await Assert.ThrowsExceptionAsync<ApiException>(() =>
+            _updateModuleCommandHandler.Handle(command, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldThrow_WhenGradeNotFoundWhenUpdate()
+    {
+        _unitOfWorkMock.Setup(x => x.Modules).Returns(_moduleRepoMock.Object);
+
+        _updateModuleCommandHandler = new UpdateModuleCommandHandler(_unitOfWorkMock.Object);
+
+        var command = new UpdateModuleCommand
+        (1,
+            new() { CurriculumId = 1, GradeId = 2, BookId = 1 }
+        );
+
+        _unitOfWorkMock.Setup(x => x.Curriculums.Any(It.IsAny<System.Linq.Expressions.Expression<Func<Curriculum, bool>>>())).Returns(true);
+        _unitOfWorkMock.Setup(x => x.Grades.Any(It.IsAny<System.Linq.Expressions.Expression<Func<Grade, bool>>>())).Returns(false);
+
+        var ex = await Assert.ThrowsExceptionAsync<ApiException>(() =>
+            _updateModuleCommandHandler.Handle(command, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldThrow_WhenBookNotFoundWhenUpdate()
+    {
+        _unitOfWorkMock.Setup(x => x.Modules).Returns(_moduleRepoMock.Object);
+
+        _updateModuleCommandHandler = new UpdateModuleCommandHandler(_unitOfWorkMock.Object);
+
+        var command = new UpdateModuleCommand
+        (1,
+             new() { CurriculumId = 1, GradeId = 1, BookId = 99 }
+        );
+
+        _unitOfWorkMock.Setup(x => x.Curriculums.Any(It.IsAny<System.Linq.Expressions.Expression<Func<Curriculum, bool>>>())).Returns(true);
+        _unitOfWorkMock.Setup(x => x.Grades.Any(It.IsAny<System.Linq.Expressions.Expression<Func<Grade, bool>>>())).Returns(true);
+        _unitOfWorkMock.Setup(x => x.Books.Any(It.IsAny<System.Linq.Expressions.Expression<Func<Book, bool>>>())).Returns(false);
+
+        var ex = await Assert.ThrowsExceptionAsync<ApiException>(() =>
+            _updateModuleCommandHandler.Handle(command, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldThrow_WhenModuleNotFoundWhenUpdate()
+    {
+        _unitOfWorkMock.Setup(x => x.Modules).Returns(_moduleRepoMock.Object);
+
+        _updateModuleCommandHandler = new UpdateModuleCommandHandler(_unitOfWorkMock.Object);
+
+        var command = new UpdateModuleCommand
+       (100,
+            new() { CurriculumId = 1, GradeId = 1, BookId = 1 }
+       );
+
+        _unitOfWorkMock.Setup(x => x.Curriculums.Any(It.IsAny<System.Linq.Expressions.Expression<Func<Curriculum, bool>>>())).Returns(true);
+        _unitOfWorkMock.Setup(x => x.Grades.Any(It.IsAny<System.Linq.Expressions.Expression<Func<Grade, bool>>>())).Returns(true);
+        _unitOfWorkMock.Setup(x => x.Books.Any(It.IsAny<System.Linq.Expressions.Expression<Func<Book, bool>>>())).Returns(true);
+
+        _moduleRepoMock.Setup(x => x.GetAsync(It.IsAny<Expression<Func<Module, bool>>>(),
+            It.IsAny<Func<IQueryable<Module>, IOrderedQueryable<Module>>>(),
+            It.IsAny<Func<IQueryable<Module>, IQueryable<Module>>>(),
+            It.IsAny<bool>()))
+            .ReturnsAsync(new List<Module>().AsQueryable());
+
+        var ex = await Assert.ThrowsExceptionAsync<ApiException>(() =>
+            _updateModuleCommandHandler.Handle(command, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldReturnModuleWithLessons_WhenModuleExists()
+    {
+        _unitOfWorkMock.Setup(u => u.Modules).Returns(_moduleRepoMock.Object);
+
+        _getLessonsByModuleIdQueryHandler = new GetLessonsByModuleIdQueryHandler(_unitOfWorkMock.Object, _mapperMock.Object);
+
+        // Arrange
+        var moduleId = 1;
+        var query = new GetLessonsByModuleIdQuery(moduleId);
+
+        var module = new Module
+        {
+            ModuleId = moduleId,
+            Name = "Math Module",
+            Lessons = new List<Lesson>
+            {
+                new Lesson { LessonId = 1, Name = "Lesson 1" },
+                new Lesson { LessonId = 2, Name = "Lesson 2" }
+            }
+        };
+
+        var moduleList = new List<Module> { module }.AsQueryable();
+
+        _moduleRepoMock
+            .Setup(r => r.GetAsync(It.IsAny<Expression<Func<Module, bool>>>()))
+            .ReturnsAsync(moduleList);
+
+        var mappedResponse = new GetModuleDetailResponse
+        {
+            ModuleId = module.ModuleId,
+            Name = module.Name,
+            Lessons = module.Lessons.Select(l => new GetLessonItem
+            {
+                LessonId = l.LessonId,
+                Name = l.Name
+            }).ToList()
+        };
+
+        _mapperMock.Setup(m => m.Map<GetModuleDetailResponse>(It.IsAny<Module>()))
+            .Returns(mappedResponse);
+
+        // Act
+        var response = await _getLessonsByModuleIdQueryHandler.Handle(query, CancellationToken.None);
+
+        // Assert
+        Assert.AreEqual((int)ResponseCode.SUCCESS, response.Code);
+        Assert.IsNotNull(response.Data);
+        Assert.AreEqual(2, response.Data.Lessons.Count);
+        Assert.AreEqual("Lesson 1", response.Data.Lessons[0].Name);
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldThrowApiException_WhenModuleNotFound()
+    {
+        _unitOfWorkMock.Setup(u => u.Modules).Returns(_moduleRepoMock.Object);
+
+        _getLessonsByModuleIdQueryHandler = new GetLessonsByModuleIdQueryHandler(_unitOfWorkMock.Object, _mapperMock.Object);
+
+        // Arrange
+        var query = new GetLessonsByModuleIdQuery(100);
+
+        var emptyModuleList = new List<Module>().AsQueryable(); // using MockQueryable.Moq
+
+        _moduleRepoMock
+            .Setup(r => r.GetAsync(It.IsAny<Expression<Func<Module, bool>>>(),
+            It.IsAny<Func<IQueryable<Module>, IOrderedQueryable<Module>>>(),
+            It.IsAny<Func<IQueryable<Module>, IQueryable<Module>>>(),
+            It.IsAny<bool>()))
+            .ReturnsAsync(emptyModuleList);
+
+        // Act + Assert
+        var ex = await Assert.ThrowsExceptionAsync<ApiException>(() =>
+            _getLessonsByModuleIdQueryHandler.Handle(query, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldReturnModule_WhenModuleExists()
+    {
+        _unitOfWorkMock.Setup(u => u.Modules).Returns(_moduleRepoMock.Object);
+
+        _getModuleByIdQueryHandler = new GetModuleByIdQueryHandler(_unitOfWorkMock.Object);
+        // Arrange
+        var query = new GetModuleByIdQuery(1);
+
+        var module = new Module
+        {
+            ModuleId = 1,
+            Name = "Math Module",
+            Desciption = "Basic math",
+            Semester = 1,
+            TotalPeriods = 20,
+            Curriculum = new Curriculum { Name = "2023 Curriculum" },
+            Grade = new Grade { GradeNumber = 5 },
+            Book = new Book { BookName = "Math Book" }
+        };
+
+        var modules = new List<Module> { module }.AsQueryable();
+
+        _moduleRepoMock
+            .Setup(r => r.GetAsync(It.IsAny<Expression<Func<Module, bool>>>()))
+            .ReturnsAsync(modules);
+
+        // Act
+        var response = await _getModuleByIdQueryHandler.Handle(query, CancellationToken.None);
+
+        // Assert
+        Assert.AreEqual((int)ResponseCode.SUCCESS, response.Code);
+        Assert.IsNotNull(response.Data);
+        Assert.AreEqual("Math Module", response.Data.Name);
+        Assert.AreEqual("2023 Curriculum", response.Data.Curriculum);
+        Assert.AreEqual("Math Book", response.Data.Book);
+        Assert.AreEqual(5, response.Data.GradeNumber);
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldThrowApiException_WhenModuleNotFoundGetAllModule()
+    {
+        _unitOfWorkMock.Setup(u => u.Modules).Returns(_moduleRepoMock.Object);
+
+        _getModuleByIdQueryHandler = new GetModuleByIdQueryHandler(_unitOfWorkMock.Object);
+        // Arrange
+        var query = new GetModuleByIdQuery(999);
+
+        var emptyList = new List<Module>().AsQueryable();
+
+        _moduleRepoMock
+            .Setup(r => r.GetAsync(It.IsAny<Expression<Func<Module, bool>>>(),
+            It.IsAny<Func<IQueryable<Module>, IOrderedQueryable<Module>>>(),
+            It.IsAny<Func<IQueryable<Module>, IQueryable<Module>>>(),
+            It.IsAny<bool>()))
+            .ReturnsAsync(emptyList);
+
+        // Act & Assert
+        var ex = await Assert.ThrowsExceptionAsync<ApiException>(() =>
+            _getModuleByIdQueryHandler.Handle(query, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldReturnPagedModules_WhenDataExists()
+    {
+        _unitOfWorkMock.Setup(u => u.Modules).Returns(_moduleRepoMock.Object);
+
+        _getModulesQueryHandler = new GetModulesQueryHandler(_unitOfWorkMock.Object);
+
+        // Arrange
+        var modules = new List<Module>
+        {
+            new Module
+            {
+                ModuleId = 1,
+                Name = "Math",
+                Desciption = "Basic Math",
+                Semester = 1,
+                TotalPeriods = 30,
+                Curriculum = new Curriculum { Name = "Curriculum A" },
+                Grade = new Grade { GradeNumber = 5 },
+                Book = new Book { BookName = "Book A" }
+            },
+            new Module
+            {
+                ModuleId = 2,
+                Name = "Science",
+                Desciption = "Basic Science",
+                Semester = 2,
+                TotalPeriods = 40,
+                Curriculum = new Curriculum { Name = "Curriculum B" },
+                Grade = new Grade { GradeNumber = 6 },
+                Book = new Book { BookName = "Book B" }
+            }
+        };
+
+        var paginationResult = new BasePaginationEntity<Module>
+        {
+            Total = 2,
+            Data = modules
+        };
+
+        _moduleRepoMock
+            .Setup(r => r.PaginationAsync(
+                It.IsAny<int>(),
+                It.IsAny<int>(),
+                  It.IsAny<Expression<Func<Module, bool>>>(),
+             It.IsAny<Func<IQueryable<Module>, IIncludableQueryable<Module, object>>>(),
+             It.IsAny<Func<IQueryable<Module>, IOrderedQueryable<Module>>>(),
+                It.IsAny<CancellationToken>()
+            ))
+            .ReturnsAsync(paginationResult);
+
+        var query = new GetModulesQuery
+        {
+            PageNumber = 1,
+            PageSize = 10
+        };
+
+        // Act
+        var response = await _getModulesQueryHandler.Handle(query, CancellationToken.None);
+
+        // Assert
+        Assert.AreEqual((int)ResponseCode.SUCCESS, response.Code);
+        Assert.AreEqual(2, response.Data.Items.Count);
+        Assert.AreEqual("Math", response.Data.Items[0].Name);
+        Assert.AreEqual("Curriculum A", response.Data.Items[0].Curriculum);
+        Assert.AreEqual("Book B", response.Data.Items[1].Book);
+        Assert.AreEqual(1, response.Data.Page);
+        Assert.AreEqual(10, response.Data.PageSize);
+        Assert.AreEqual(2, response.Data.TotalSize);
+        Assert.AreEqual(1, response.Data.TotalPage); // 2 items, pageSize 10 -> totalPage = 1
+    }
+    #endregion
+
+    #region Blog
+    [TestMethod]
+    public async Task Handle_ShouldCreateBlog_WhenRequestIsValid()
+    {
+        _createBlogCommandHandler = new CreateBlogCommandHandler(_unitOfWorkMock.Object, _dateTimeProviderMock.Object);
+        // Arrange
+        var request = new CreateBlogCommand
+        (
+            "Valid Title",
+            "Valid body",
+            1,
+            1
+        );
+
+        var now = DateTime.UtcNow;
+        _dateTimeProviderMock.Setup(x => x.UtcNow).Returns(now);
+
+        _unitOfWorkMock.Setup(x => x.Categories.GetByIdAsync(1)).ReturnsAsync(new Category());
+        _unitOfWorkMock.Setup(x => x.TeacherLessons.GetByIdAsync(1)).ReturnsAsync(new TeacherLesson());
+        _unitOfWorkMock.Setup(x => x.Blogs.AddAsync(It.IsAny<Blog>())).ReturnsAsync(new Blog());
+        _unitOfWorkMock.Setup(x => x.CompleteAsync()).Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _createBlogCommandHandler.Handle(request, CancellationToken.None);
+
+        // Assert
+        Assert.AreEqual((int)ResponseCode.CREATED_SUCCESS, result.Code);
+        Assert.AreEqual(ResponseCode.CREATED_SUCCESS.GetDescription(), result.Message);
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldThrowValidationException_WhenTitleIsEmpty()
+    {
+        _createBlogCommandHandler = new CreateBlogCommandHandler(_unitOfWorkMock.Object, _dateTimeProviderMock.Object);
+        // Arrange
+        var request = new CreateBlogCommand
+        (
+            "",
+            "Valid body",
+            1,
+            1
+        );
+
+        _unitOfWorkMock.Setup(x => x.Categories.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new Category());
+        _unitOfWorkMock.Setup(x => x.TeacherLessons.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new TeacherLesson());
+
+        // Act & Assert
+        var ex = await Assert.ThrowsExceptionAsync<ValidationException>(() =>
+            _createBlogCommandHandler.Handle(request, CancellationToken.None));
+
+        Assert.IsTrue(ex.Errors.Any(e => e.Contains("Title is required")));
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldThrowValidationException_WhenBodyIsEmpty()
+    {
+        _createBlogCommandHandler = new CreateBlogCommandHandler(_unitOfWorkMock.Object, _dateTimeProviderMock.Object);
+        var request = new CreateBlogCommand
+        (
+            "Valid Title",
+            "",
+            1,
+            1
+        );
+
+        _unitOfWorkMock.Setup(x => x.Categories.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new Category());
+        _unitOfWorkMock.Setup(x => x.TeacherLessons.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new TeacherLesson());
+
+        var ex = await Assert.ThrowsExceptionAsync<ValidationException>(() =>
+            _createBlogCommandHandler.Handle(request, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldThrowValidationException_WhenCategoryNotFound()
+    {
+        _createBlogCommandHandler = new CreateBlogCommandHandler(_unitOfWorkMock.Object, _dateTimeProviderMock.Object);
+        var request = new CreateBlogCommand
+        (
+            "Valid Title",
+            "Valid Body",
+            999,
+            1
+        );
+
+        _unitOfWorkMock.Setup(x => x.Categories.GetByIdAsync(999)).ReturnsAsync((Category)null);
+        _unitOfWorkMock.Setup(x => x.TeacherLessons.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new TeacherLesson());
+
+        var ex = await Assert.ThrowsExceptionAsync<ValidationException>(() =>
+            _createBlogCommandHandler.Handle(request, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldThrowValidationException_WhenTeacherLessonNotFound()
+    {
+        _createBlogCommandHandler = new CreateBlogCommandHandler(_unitOfWorkMock.Object, _dateTimeProviderMock.Object);
+        var request = new CreateBlogCommand
+        (
+            "Valid Title",
+            "Valid Body",
+            1,
+            999
+        );
+
+        _unitOfWorkMock.Setup(x => x.Categories.GetByIdAsync(1)).ReturnsAsync(new Category());
+        _unitOfWorkMock.Setup(x => x.TeacherLessons.GetByIdAsync(999)).ReturnsAsync((TeacherLesson)null);
+
+        var ex = await Assert.ThrowsExceptionAsync<ValidationException>(() =>
+            _createBlogCommandHandler.Handle(request, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldDisableBlog_WhenBlogIsActive()
+    {
+        _disableBlogCommandHandler = new DisableBlogCommandHandler(_unitOfWorkMock.Object);// Arrange
+        var blog = new Blog { BlogId = 1, IsActive = true };
+        var queryableBlog = new List<Blog> { blog }.AsQueryable();
+
+        _unitOfWorkMock.Setup(x => x.Blogs.GetAsync(It.IsAny<Expression<Func<Blog, bool>>>(),
+            It.IsAny<Func<IQueryable<Blog>, IOrderedQueryable<Blog>>>(),
+            It.IsAny<Func<IQueryable<Blog>, IQueryable<Blog>>>(),
+            It.IsAny<bool>()))
+            .ReturnsAsync(queryableBlog);
+
+        _unitOfWorkMock.Setup(x => x.Blogs.UpdateAsync(It.IsAny<Blog>())).Returns(Task.CompletedTask);
+        _unitOfWorkMock.Setup(x => x.CompleteAsync()).Returns(Task.CompletedTask);
+
+        var request = new DisableBlogCommand(1);
+
+        // Act
+        var result = await _disableBlogCommandHandler.Handle(request, CancellationToken.None);
+
+        // Assert
+        Assert.AreEqual(false, blog.IsActive);
+        Assert.AreEqual((int)ResponseCode.DISABLED_SUCCESS, result.Code);
+        Assert.AreEqual(ResponseCode.DISABLED_SUCCESS.GetDescription(), result.Message);
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldEnableBlog_WhenBlogIsInactive()
+    {
+        _disableBlogCommandHandler = new DisableBlogCommandHandler(_unitOfWorkMock.Object);// Arrange
+        var blog = new Blog { BlogId = 2, IsActive = false };
+        var queryableBlog = new List<Blog> { blog }.AsQueryable();
+
+        _unitOfWorkMock.Setup(x => x.Blogs.GetAsync(It.IsAny<Expression<Func<Blog, bool>>>(),
+            It.IsAny<Func<IQueryable<Blog>, IOrderedQueryable<Blog>>>(),
+            It.IsAny<Func<IQueryable<Blog>, IQueryable<Blog>>>(),
+            It.IsAny<bool>()))
+            .ReturnsAsync(queryableBlog);
+
+        _unitOfWorkMock.Setup(x => x.Blogs.UpdateAsync(It.IsAny<Blog>())).Returns(Task.CompletedTask);
+        _unitOfWorkMock.Setup(x => x.CompleteAsync()).Returns(Task.CompletedTask);
+
+        var request = new DisableBlogCommand(2);
+
+        // Act
+        var result = await _disableBlogCommandHandler.Handle(request, CancellationToken.None);
+
+        // Assert
+        Assert.AreEqual(true, blog.IsActive);
+        Assert.AreEqual((int)ResponseCode.DISABLED_SUCCESS, result.Code);
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldThrowException_WhenBlogNotFound()
+    {
+        _disableBlogCommandHandler = new DisableBlogCommandHandler(_unitOfWorkMock.Object);// Arrange
+        _unitOfWorkMock.Setup(x => x.Blogs.GetAsync(It.IsAny<Expression<Func<Blog, bool>>>(),
+            It.IsAny<Func<IQueryable<Blog>, IOrderedQueryable<Blog>>>(),
+            It.IsAny<Func<IQueryable<Blog>, IQueryable<Blog>>>(),
+            It.IsAny<bool>()))
+            .ReturnsAsync(new List<Blog>().AsQueryable());
+
+        var request = new DisableBlogCommand(99);
+
+        // Act & Assert
+        var ex = await Assert.ThrowsExceptionAsync<ApiException>(() =>
+            _disableBlogCommandHandler.Handle(request, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldUpdateBlog_WhenValidRequest()
+    {
+        _updateBlogCommandHandler = new UpdateBlogCommandHandler(_unitOfWorkMock.Object);
+        // Arrange
+        var blog = new Blog { BlogId = 1, Title = "Old Title", Body = "Old Body" };
+        var request = new UpdateBlogCommand
+        (1,
+            new UpdateBlogRequest
+            (
+                "New Title",
+                "New Body"
+            )
+        );
+
+        _unitOfWorkMock.Setup(u => u.Blogs.GetAsync(It.IsAny<Expression<Func<Blog, bool>>>(),
+            It.IsAny<Func<IQueryable<Blog>, IOrderedQueryable<Blog>>>(),
+            It.IsAny<Func<IQueryable<Blog>, IQueryable<Blog>>>(),
+            It.IsAny<bool>()))
+            .ReturnsAsync(new List<Blog> { blog }.AsQueryable());
+
+        _unitOfWorkMock.Setup(u => u.Blogs.UpdateAsync(It.IsAny<Blog>())).Returns(Task.CompletedTask);
+        _unitOfWorkMock.Setup(u => u.CompleteAsync()).Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _updateBlogCommandHandler.Handle(request, CancellationToken.None);
+
+        // Assert
+        Assert.AreEqual("New Title", blog.Title);
+        Assert.AreEqual("New Body", blog.Body);
+        Assert.AreEqual((int)ResponseCode.UPDATED_SUCCESS, result.Code);
+        Assert.AreEqual(ResponseCode.UPDATED_SUCCESS.GetDescription(), result.Message);
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldThrowValidationException_WhenBlogNotFound()
+    {
+        _updateBlogCommandHandler = new UpdateBlogCommandHandler(_unitOfWorkMock.Object);
+        // Arrange
+        _unitOfWorkMock.Setup(u => u.Blogs.GetAsync(It.IsAny<Expression<Func<Blog, bool>>>(),
+            It.IsAny<Func<IQueryable<Blog>, IOrderedQueryable<Blog>>>(),
+            It.IsAny<Func<IQueryable<Blog>, IQueryable<Blog>>>(),
+            It.IsAny<bool>()))
+            .ReturnsAsync(new List<Blog>().AsQueryable());
+
+        var request = new UpdateBlogCommand
+        (999,
+            new UpdateBlogRequest
+            (
+                "Test",
+                "Test"
+            )
+        );
+
+        // Act & Assert
+        var ex = await Assert.ThrowsExceptionAsync<ValidationException>(() =>
+            _updateBlogCommandHandler.Handle(request, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldThrowValidationException_WhenTitleOrBodyMissing()
+    {
+        _updateBlogCommandHandler = new UpdateBlogCommandHandler(_unitOfWorkMock.Object);
+        // Arrange
+        var blog = new Blog { BlogId = 1, Title = "Old", Body = "Old" };
+
+        _unitOfWorkMock.Setup(u => u.Blogs.GetAsync(It.IsAny<Expression<Func<Blog, bool>>>(),
+            It.IsAny<Func<IQueryable<Blog>, IOrderedQueryable<Blog>>>(),
+            It.IsAny<Func<IQueryable<Blog>, IQueryable<Blog>>>(),
+            It.IsAny<bool>()))
+            .ReturnsAsync(new List<Blog> { blog }.AsQueryable());
+
+        var request = new UpdateBlogCommand
+        (
+             1,
+            new UpdateBlogRequest
+            (
+                 "",
+                 ""
+            )
+        );
+
+        // Act & Assert
+        var ex = await Assert.ThrowsExceptionAsync<ValidationException>(() =>
+            _updateBlogCommandHandler.Handle(request, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldReturnBlogDetail_WhenBlogExists()
+    {
+        _getBlogByIdQueryHandler = new GetBlogByIdQueryHandler(_unitOfWorkMock.Object, _mapperMock.Object);// Arrange
+        var blogId = 1;
+
+        var mockBlog = new Blog
+        {
+            BlogId = blogId,
+            Title = "Sample Blog",
+            Category = new Category { CategoryId = 1, CategoryName = "Tech" },
+            Comments = new List<Comment>
+            {
+                new Comment { User = new User { UserId = 1, Fullname = "User A" }, CommentBody = "Great post!" }
+            }
+        };
+
+        var mockBlogList = new List<Blog> { mockBlog }.AsQueryable();
+
+        _unitOfWorkMock.Setup(u => u.Blogs.GetAsync(It.IsAny<Expression<Func<Blog, bool>>>()))
+            .ReturnsAsync(mockBlogList);
+
+        _mapperMock.Setup(m => m.Map<GetBlogDetailResponse>(It.IsAny<Blog>()))
+            .Returns(new GetBlogDetailResponse { BlogId = blogId, Title = "Sample Blog" });
+
+        var request = new GetBlogByIdQuery(blogId);
+
+        // Act
+        var result = await _getBlogByIdQueryHandler.Handle(request, CancellationToken.None);
+
+        // Assert
+        Assert.AreEqual((int)ResponseCode.SUCCESS, result.Code);
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldThrowApiException_WhenBlogNotFound()
+    {
+        _getBlogByIdQueryHandler = new GetBlogByIdQueryHandler(_unitOfWorkMock.Object, _mapperMock.Object);// Arrange
+        _unitOfWorkMock.Setup(u => u.Blogs.GetAsync(It.IsAny<Expression<Func<Blog, bool>>>(),
+            It.IsAny<Func<IQueryable<Blog>, IOrderedQueryable<Blog>>>(),
+            It.IsAny<Func<IQueryable<Blog>, IQueryable<Blog>>>(),
+            It.IsAny<bool>()))
+            .ReturnsAsync(new List<Blog>().AsQueryable());
+
+        var request = new GetBlogByIdQuery(999);
+
+        // Act & Assert
+        var ex = await Assert.ThrowsExceptionAsync<ApiException>(() =>
+            _getBlogByIdQueryHandler.Handle(request, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldReturnPaginatedBlogList_WhenCalled()
+    {
+        _getBlogsQueryHandler = new GetBlogsQueryHandler(_unitOfWorkMock.Object, _mapperMock.Object);
+        // Arrange
+        var blogs = new List<Blog>
+        {
+            new Blog { BlogId = 1, Title = "Blog 1" },
+            new Blog { BlogId = 2, Title = "Blog 2" }
+        };
+
+        var paginatedBlogData = new PaginatedList<Blog>(blogs, totalRecords: 2, currentPage: 1, pageSize: 10);
+
+        _unitOfWorkMock.Setup(u => u.Blogs.PaginatedListAsync(
+                It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
+                It.IsAny<int?>(), It.IsAny<bool>(),
+                It.IsAny<int>(), It.IsAny<int>()))
+            .ReturnsAsync(paginatedBlogData);
+
+        var mappedBlogData = new PaginatedList<GetBlogResponse>(
+            new List<GetBlogResponse>
+            {
+                new GetBlogResponse { BlogId = 1, Title = "Blog 1" },
+                new GetBlogResponse { BlogId = 2, Title = "Blog 2" }
+            },
+            totalRecords: 2,
+            currentPage: 1,
+            pageSize: 10);
+
+        _mapperMock.Setup(m => m.Map<PaginatedList<GetBlogResponse>>(paginatedBlogData))
+            .Returns(mappedBlogData);
+
+        var query = new GetBlogsQuery
+        (
+            "",
+            "Title",
+            "asc",
+            false,
+            null,
+            1,
+            10
+        );
+
+        // Act
+        var result = await _getBlogsQueryHandler.Handle(query, CancellationToken.None);
+
+        // Assert
+        Assert.AreEqual((int)ResponseCode.SUCCESS, result.Code);
+        Assert.IsNotNull(result.Data);
+        Assert.AreEqual(2, result.Data.Items.Count);
+        Assert.AreEqual("Blog 1", result.Data.Items[0].Title);
+    }
+    #endregion
+
+    #region Categories
+    [TestMethod]
+    public async Task Handle_ShouldReturnCategoryList_WhenCategoriesExist()
+    {
+        _getCategoriesQueryHandler = new GetCategoriesQueryHandler(_unitOfWorkMock.Object, _mapperMock.Object);
+        // Arrange
+        var categories = new List<Category>
+        {
+            new Category { CategoryId = 1, CategoryName = "Math" },
+            new Category { CategoryId = 2, CategoryName = "Science" }
+        };
+
+        _unitOfWorkMock.Setup(u => u.Categories.GetAllAsync(
+            It.IsAny<Expression<Func<Category, bool>>>(),
+            It.IsAny<Func<IQueryable<Category>, IQueryable<Category>>>(),
+            It.IsAny<bool>()
+        )).ReturnsAsync(categories.AsQueryable());
+
+        var expectedMappedCategories = new List<GetCategoryResponse>
+        {
+            new GetCategoryResponse (1, "Math" ),
+            new GetCategoryResponse ( 2, "Science" )
+        };
+
+        _mapperMock.Setup(m => m.Map<List<GetCategoryResponse>>(It.IsAny<List<Category>>()))
+            .Returns(expectedMappedCategories);
+
+        var query = new GetCategoriesQuery();
+
+        // Act
+        var result = await _getCategoriesQueryHandler.Handle(query, CancellationToken.None);
+
+        // Assert
+        Assert.AreEqual((int)ResponseCode.SUCCESS, result.Code);
+        Assert.IsNotNull(result.Data);
+        Assert.AreEqual(2, result.Data.Count);
+    }
+    #endregion
+
+    #region City
+    [TestMethod]
+    public async Task Handle_ShouldReturnCityWithDistricts_WhenCityExists()
+    {
+        _getDistrictsByCityIdQueryHandler = new GetDistrictsByCityIdQueryHandler(_unitOfWorkMock.Object, _mapperMock.Object);
+        // Arrange
+        var cityId = 1;
+        var city = new City
+        {
+            CityId = cityId,
+            CityName = "Ho Chi Minh",
+            Districts = new List<District>
+            {
+                new District { DistrictId = 1, DistrictName = "District 1" },
+                new District { DistrictId = 2, DistrictName = "District 2" }
+            }
+        };
+
+        var cityList = new List<City> { city }.AsQueryable();
+
+        _unitOfWorkMock.Setup(u => u.Cities.GetAsync(
+           It.IsAny<Expression<Func<City, bool>>>(),
+            It.IsAny<Func<IQueryable<City>, IOrderedQueryable<City>>>(),
+            It.IsAny<Func<IQueryable<City>, IQueryable<City>>>(),
+            It.IsAny<bool>()
+        )).ReturnsAsync(cityList);
+
+        var expectedResponse = new GetCityDetailResponse
+        (
+            city.CityId,
+            city.CityName,
+            new List<GetDistrictResponse>
+            {
+                new GetDistrictResponse (1,"District 1"),
+                new GetDistrictResponse ( 2,"District 2" )
+            }
+        );
+
+        _mapperMock.Setup(m => m.Map<GetCityDetailResponse>(It.IsAny<City>()))
+            .Returns(expectedResponse);
+
+        var request = new GetDistrictsByCityIdQuery(cityId);
+
+        // Act
+        var result = await _getDistrictsByCityIdQueryHandler.Handle(request, CancellationToken.None);
+
+        // Assert
+        Assert.AreEqual((int)ResponseCode.SUCCESS, result.Code);
+        Assert.IsNotNull(result.Data);
+        Assert.AreEqual(2, result.Data.Districts.Count);
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldReturnListOfCities_WhenCitiesExist()
+    {
+        _getCitiesQueryHandler = new GetCitiesQueryHandler(_unitOfWorkMock.Object, _mapperMock.Object);
+        // Arrange
+        var cities = new List<City>
+        {
+            new City { CityId = 1, CityName = "Hanoi" },
+            new City { CityId = 2, CityName = "Ho Chi Minh" }
+        };
+
+        _unitOfWorkMock.Setup(u => u.Cities.GetAllAsync(
+            It.IsAny<Expression<Func<City, bool>>>(),
+            It.IsAny<Func<IQueryable<City>, IQueryable<City>>>(),
+            It.IsAny<bool>()
+        ))
+            .ReturnsAsync(cities.AsQueryable());
+
+        var expectedResponses = new List<GetCityResponse>
+        {
+            new GetCityResponse ( 1, "Hanoi" ),
+            new GetCityResponse ( 2, "Ho Chi Minh" )
+        };
+
+        _mapperMock.Setup(m => m.Map<List<GetCityResponse>>(It.IsAny<List<City>>()))
+            .Returns(expectedResponses);
+
+        var request = new GetCitiesQuery();
+
+        // Act
+        var result = await _getCitiesQueryHandler.Handle(request, CancellationToken.None);
+
+        // Assert
+        Assert.AreEqual((int)ResponseCode.SUCCESS, result.Code);
+        Assert.AreEqual(2, result.Data.Count);
+    }
+
+    [TestMethod]
+    public async Task Handle_ShouldReturnEmptyList_WhenNoCitiesExist()
+    {
+        _getCitiesQueryHandler = new GetCitiesQueryHandler(_unitOfWorkMock.Object, _mapperMock.Object);
+        // Arrange
+        var cities = new List<City>();
+
+        _unitOfWorkMock.Setup(u => u.Cities.GetAllAsync(
+            It.IsAny<Expression<Func<City, bool>>>(),
+            It.IsAny<Func<IQueryable<City>, IQueryable<City>>>(),
+            It.IsAny<bool>()
+        ))
+            .ReturnsAsync(cities.AsQueryable());
+
+        _mapperMock.Setup(m => m.Map<List<GetCityResponse>>(It.IsAny<List<City>>()))
+            .Returns(new List<GetCityResponse>());
+
+        var request = new GetCitiesQuery();
+
+        // Act
+        var result = await _getCitiesQueryHandler.Handle(request, CancellationToken.None);
+
+        // Assert
+        Assert.AreEqual((int)ResponseCode.SUCCESS, result.Code);
+        Assert.IsNotNull(result.Data);
+        Assert.AreEqual(0, result.Data.Count);
     }
     #endregion
 }
