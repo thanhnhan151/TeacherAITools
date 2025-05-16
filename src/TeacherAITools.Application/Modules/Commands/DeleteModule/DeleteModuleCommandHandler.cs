@@ -16,13 +16,13 @@ namespace TeacherAITools.Application.Modules.Commands.DeleteModule
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Response<GetModuleResponse>> Handle(int request, CancellationToken cancellationToken)
+        public async Task<Response<GetModuleResponse>> Handle(DeleteModuleCommand request, CancellationToken cancellationToken)
         {
-            var moduleQuery = await _unitOfWork.Modules.GetAsync(expression: m => m.ModuleId == request, disableTracking: true);
+            var moduleQuery = await _unitOfWork.Modules.GetAsync(expression: m => m.ModuleId == request.id, disableTracking: true);
 
             var module = moduleQuery.FirstOrDefault() ?? throw new ApiException(ResponseCode.MODULE_NOT_FOUND);
 
-            await _unitOfWork.Modules.UpdateAsync(module);
+            await _unitOfWork.Modules.DeleteAsync(module);
             await _unitOfWork.CompleteAsync();
 
             return new Response<GetModuleResponse>(code: (int)ResponseCode.DELETED_SUCCESS, message: ResponseCode.DELETED_SUCCESS.GetDescription());
