@@ -82,7 +82,9 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
 
         public Task DeleteAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            _dbContext.Set<TEntity>().Remove(entity);
+
+            return Task.CompletedTask;
         }
 
         public async Task AddRangeAsync(IEnumerable<TEntity> entities)

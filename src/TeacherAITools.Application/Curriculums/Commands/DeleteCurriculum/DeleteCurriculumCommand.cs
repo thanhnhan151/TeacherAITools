@@ -5,5 +5,5 @@ using TeacherAITools.Domain.Wrappers;
 
 namespace TeacherAITools.Application.Curriculums.Commands.DeleteCurriculum
 {
-    public record DeleteCurriculumCommand(int id) : IRequest<Response<GetCurriculumResponse>>;
+    public record DeleteCurriculumCommand(int Id) : IRequest<Response<GetCurriculumResponse>>;
 }
