@@ -1,10 +1,10 @@
-﻿using System.Linq.Expressions;
-using System.Text;
-using AutoMapper;
+﻿using AutoMapper;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
+using System.Linq.Expressions;
+using System.Text;
 using TeacherAITools.Application.Blogs.Commands.CreateBlog;
 using TeacherAITools.Application.Blogs.Commands.DisableBlog;
 using TeacherAITools.Application.Blogs.Commands.UpdateBlog;
@@ -65,7 +65,6 @@ using TeacherAITools.Domain.Common;
 using TeacherAITools.Domain.Entities;
 using TeacherAITools.Domain.Entities.Base.Implementations;
 using TeacherAITools.Domain.Wrappers;
-using TeacherAITools.Infrastructure.Modules;
 
 namespace TeacherAITools.Application.UnitTests;
 
@@ -954,8 +953,8 @@ public sealed class Test1
         var command = new SendEmailCommand("nonexistent@example.com");
 
         // Act
-await Assert.ThrowsExceptionAsync<ApiException>(() =>
-       _sendEmailCommandHandler.Handle(command, CancellationToken.None));
+        await Assert.ThrowsExceptionAsync<ApiException>(() =>
+               _sendEmailCommandHandler.Handle(command, CancellationToken.None));
     }
 
     [TestMethod]
@@ -1007,7 +1006,7 @@ await Assert.ThrowsExceptionAsync<ApiException>(() =>
         );
 
         _userRepositoryMock.Setup(r => r.GetAsync(
-            It.IsAny<Expression<Func<User, bool>>>(), 
+            It.IsAny<Expression<Func<User, bool>>>(),
             It.IsAny<Func<IQueryable<User>, IOrderedQueryable<User>>>(),
             It.IsAny<Func<IQueryable<User>, IQueryable<User>>>(),
             It.IsAny<bool>()))
@@ -1047,7 +1046,7 @@ await Assert.ThrowsExceptionAsync<ApiException>(() =>
         );
 
         _userRepositoryMock.Setup(r => r.GetAsync(
-            It.IsAny<Expression<Func<User, bool>>>(), 
+            It.IsAny<Expression<Func<User, bool>>>(),
             It.IsAny<Func<IQueryable<User>, IOrderedQueryable<User>>>(),
             It.IsAny<Func<IQueryable<User>, IQueryable<User>>>(),
             It.IsAny<bool>()))
@@ -1102,13 +1101,13 @@ await Assert.ThrowsExceptionAsync<ApiException>(() =>
     public async Task Handle_ShouldUploadProfileImageSuccessfully()
     {
         // Arrange
-        var command = new UploadProfileImgCommand ( MockFile("test.jpg", 1024 * 1024) );
+        var command = new UploadProfileImgCommand(MockFile("test.jpg", 1024 * 1024));
         var userId = "1";
         var user = new User { UserId = 1 };
 
         _currentUserServiceMock.Setup(x => x.CurrentPrincipal).Returns(userId);
         _unitOfWorkMock.Setup(x => x.Users.GetAsync(
-            It.IsAny<Expression<Func<User, bool>>>(), 
+            It.IsAny<Expression<Func<User, bool>>>(),
             It.IsAny<Func<IQueryable<User>, IOrderedQueryable<User>>>(),
             It.IsAny<Func<IQueryable<User>, IQueryable<User>>>(),
             It.IsAny<bool>()
@@ -1131,7 +1130,7 @@ await Assert.ThrowsExceptionAsync<ApiException>(() =>
     [ExpectedException(typeof(ApiException))]
     public async Task Handle_ShouldThrowException_WhenFileExtensionInvalid()
     {
-        var command = new UploadProfileImgCommand (MockFile("file.txt", 1024) );
+        var command = new UploadProfileImgCommand(MockFile("file.txt", 1024));
         var handler = new UploadProfileImgCommandHandler(_unitOfWorkMock.Object, _uploadFileServiceMock.Object, _currentUserServiceMock.Object);
 
         await handler.Handle(command, CancellationToken.None);
@@ -1141,7 +1140,7 @@ await Assert.ThrowsExceptionAsync<ApiException>(() =>
     [ExpectedException(typeof(ApiException))]
     public async Task Handle_ShouldThrowException_WhenFileTooLarge()
     {
-        var command = new UploadProfileImgCommand (MockFile("file.jpg", 6 * 1024 * 1024) );
+        var command = new UploadProfileImgCommand(MockFile("file.jpg", 6 * 1024 * 1024));
         var handler = new UploadProfileImgCommandHandler(_unitOfWorkMock.Object, _uploadFileServiceMock.Object, _currentUserServiceMock.Object);
 
         await handler.Handle(command, CancellationToken.None);
@@ -1151,7 +1150,7 @@ await Assert.ThrowsExceptionAsync<ApiException>(() =>
     [ExpectedException(typeof(ApiException))]
     public async Task Handle_ShouldThrowException_WhenCurrentUserNull()
     {
-        var command = new UploadProfileImgCommand (MockFile("test.jpg", 1024 * 1024) );
+        var command = new UploadProfileImgCommand(MockFile("test.jpg", 1024 * 1024));
         _currentUserServiceMock.Setup(x => x.CurrentPrincipal).Returns((string)null);
 
         var handler = new UploadProfileImgCommandHandler(_unitOfWorkMock.Object, _uploadFileServiceMock.Object, _currentUserServiceMock.Object);
@@ -1163,10 +1162,10 @@ await Assert.ThrowsExceptionAsync<ApiException>(() =>
     [ExpectedException(typeof(ApiException))]
     public async Task Handle_ShouldThrowException_WhenUserNotFound()
     {
-        var command = new UploadProfileImgCommand (MockFile("test.jpg", 1024 * 1024) );
+        var command = new UploadProfileImgCommand(MockFile("test.jpg", 1024 * 1024));
         _currentUserServiceMock.Setup(x => x.CurrentPrincipal).Returns("1");
         _unitOfWorkMock.Setup(x => x.Users.GetAsync(
-            It.IsAny<Expression<Func<User, bool>>>(), 
+            It.IsAny<Expression<Func<User, bool>>>(),
             It.IsAny<Func<IQueryable<User>, IOrderedQueryable<User>>>(),
             It.IsAny<Func<IQueryable<User>, IQueryable<User>>>(),
             It.IsAny<bool>()
