@@ -11,6 +11,7 @@ namespace TeacherAITools.Application.TeacherLessons.Commands.CreateTeacherLesson
         string SchoolSupply,
         string Practice,
         string Apply,
+        string Duration,
         int UserId,
         int PromptId) : IRequest<Response<GetTeacherLessonResponse>>;
 }

@@ -7,6 +7,7 @@ using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.Lessons.Commands.CreateLesson;
 using TeacherAITools.Application.Lessons.Commands.DeleteLesson;
 using TeacherAITools.Application.Lessons.Commands.UpdateLesson;
+using TeacherAITools.Application.Lessons.Commands.UpdateLessonInfo;
 using TeacherAITools.Application.Lessons.Common;
 using TeacherAITools.Application.Lessons.Queries.GetLessonById;
 using TeacherAITools.Application.Lessons.Queries.GetLessons;
@@ -123,6 +124,27 @@ namespace TeacherAITools.Api.Controllers
                 {
                     errorCode = e.ErrorCode,
                     error = e.Error,
+                    errorMessage = e.ErrorMessage
+                });
+            }
+        }
+
+        [HttpPut("{id}/info")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(Response<GetLessonResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> UpdateAsync(int id, [FromBody] UpdateLessonInfoRequest request)
+        {
+            try
+            {
+                return Ok(await mediator.Send(new UpdateLessonInfoCommand(id, request)));
+            }
+            catch (ValidationException e)
+            {
+                return NotFound(new
+                {
+                    errorCode = e.ErrorCode,
+                    errors = e.Errors,
                     errorMessage = e.ErrorMessage
                 });
             }
