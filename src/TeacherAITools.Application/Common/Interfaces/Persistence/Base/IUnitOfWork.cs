@@ -59,6 +59,11 @@
         ILessonHistoryRepository LessonHistories { get; }
 
         ICurriculumFeedbackRepository CurriculumFeedbacks { get; }
+        ICurriculumDetailRepository CurriculumDetails { get; }
+
+        ICurriculumSectionRepository CurriculumSections { get; }
+        ICurriculumSubSectionRepository CurriculumSubSections { get; }
+        ICurriculumTopicRepository CurriculumTopics { get; }
 
         Task CompleteAsync();
 

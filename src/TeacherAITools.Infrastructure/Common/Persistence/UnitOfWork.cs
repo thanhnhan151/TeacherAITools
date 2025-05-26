@@ -79,6 +79,10 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
         public ILessonHistoryRepository LessonHistories { get; private set; }
 
         public ICurriculumFeedbackRepository CurriculumFeedbacks { get; private set; }
+        public ICurriculumDetailRepository CurriculumDetails { get; private set; }
+        public ICurriculumSectionRepository CurriculumSections { get; private set; }
+        public ICurriculumSubSectionRepository CurriculumSubSections { get; private set; }
+        public ICurriculumTopicRepository CurriculumTopics { get; private set; }
 
         public UnitOfWork(
             TeacherAIToolsDbContext dbContext,
@@ -145,6 +149,10 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
             LessonHistories = new LessonHistoryRepository(_dbContext, _logger);
 
             CurriculumFeedbacks = new CurriculumFeedbackRepository(_dbContext, _logger);
+            CurriculumDetails = new CurriculumDetailRepository(_dbContext, _logger);
+            CurriculumSections = new CurriculumSectionRepository(_dbContext, _logger);
+            CurriculumSubSections = new CurriculumSubSectionRepository(_dbContext, _logger);
+            CurriculumTopics = new CurriculumTopicRepository(_dbContext, _logger);
         }
 
         public async Task CompleteAsync() => await _dbContext.SaveChangesAsync();
