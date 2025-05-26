@@ -18,6 +18,9 @@ namespace TeacherAITools.Infrastructure.Lessons
             builder.Property(l => l.Description)
                 .HasMaxLength(50);
 
+            builder.Property(u => u.Duration)
+                .HasMaxLength(11);
+
             //builder.Property(l => l.DisapprovedReason)
             //    .HasMaxLength(50);
 

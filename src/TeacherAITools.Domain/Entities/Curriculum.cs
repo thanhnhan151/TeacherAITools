@@ -19,5 +19,6 @@ namespace TeacherAITools.Domain.Entities
         public virtual ICollection<Module> Modules { get; set; } = [];
         public virtual ICollection<CurriculumDetail> CurriculumDetails { get; set; } = [];
         public virtual ICollection<CurriculumActivity> CurriculumActivities { get; set; } = [];
+        public virtual ICollection<CurriculumFeedback> CurriculumFeedbacks { get; set; } = [];
     }
 }

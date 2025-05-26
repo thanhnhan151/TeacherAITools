@@ -1,5 +1,7 @@
-namespace TeacherAITools.Application.Curriculums.Common{
-    public class CreateCurriculumRequest{
+namespace TeacherAITools.Application.Curriculums.Common
+{
+    public class CreateCurriculumRequest
+    {
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public int TotalPeriods { get; set; }

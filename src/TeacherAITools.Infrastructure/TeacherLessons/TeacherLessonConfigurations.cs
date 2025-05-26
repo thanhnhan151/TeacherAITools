@@ -12,6 +12,9 @@ namespace TeacherAITools.Infrastructure.TeacherLessons
 
             builder.HasKey(u => u.LessonPlanId);
 
+            builder.Property(u => u.Duration)
+                .HasMaxLength(11);
+
             builder.HasOne(u => u.User)
                 .WithMany(u => u.LessonPlans)
                 .HasForeignKey(u => u.UserId)

@@ -58,6 +58,8 @@
 
         ILessonHistoryRepository LessonHistories { get; }
 
+        ICurriculumFeedbackRepository CurriculumFeedbacks { get; }
+
         Task CompleteAsync();
 
         void Complete();

@@ -19,7 +19,7 @@ namespace TeacherAITools.Api.Controllers
         ILogger<PromptsController> logger) : ApiController(mediator, logger)
     {
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize]
         [ProducesResponseType(typeof(Response<string>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> LoginAsync([FromBody] CreatePromptCommand request)
