@@ -157,6 +157,9 @@ namespace TeacherAITools.Application.Common.Mappings
                 .ForMember(c => c.CurriculumSection, c => c.MapFrom(c => c.CurriculumSubSection.CurriculumSection.CurriculumSectionName))
                 .ForMember(c => c.CurriculumSubSection, c => c.MapFrom(c => c.CurriculumSubSection.CurriculumSubSectionName));
             CreateMap<CurriculumActivity, ActivityItem>();
+            CreateMap<CurriculumFeedback, GetCurriculumFeedbackResponse>()
+                .ForMember(c => c.TimeStamp, c => c.MapFrom(c => c.TimeStamp.GetFormatDateTime()))
+                .ForMember(c => c.User, c => c.MapFrom(c => c.User.Username));
             #endregion
         }
     }
