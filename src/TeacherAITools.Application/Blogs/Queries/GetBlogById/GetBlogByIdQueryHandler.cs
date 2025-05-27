@@ -23,7 +23,7 @@ namespace TeacherAITools.Application.Blogs.Queries.GetBlogById
 
             var blog = blogQuery
                 .Include(r => r.Category)
-                .Include(r => r.Comments)
+                .Include(r => r.Comments.Where(c => c.Status))
                     .ThenInclude(r => r.User)
                 .FirstOrDefault() ?? throw new ApiException(ResponseCode.BLOG_NOT_FOUND);
 
