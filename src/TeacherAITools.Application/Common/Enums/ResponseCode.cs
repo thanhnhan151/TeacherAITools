@@ -182,5 +182,25 @@ namespace TeacherAITools.Application.Common.Enums
 
         [Description("Reject must have reason!")]
         MUST_HAVE_DISAPPROVED_REASON = 60,
+
+        #region Curriculum Detail
+        [Description("Curriculum detail not found!")]
+        CURRICULUM_DETAIL_NOT_FOUND = 61,
+        #endregion
+
+        #region Curriculum Detail
+        [Description("Curriculum sub section not found!")]
+        CURRICULUM_SUB_SECTION_NOT_FOUND = 62,
+        #endregion
+
+        #region Curriculum Detail
+        [Description("Curriculum section not found!")]
+        CURRICULUM_SECTION_NOT_FOUND = 63,
+        #endregion
+
+        #region Curriculum Detail
+        [Description("Curriculum topic not found!")]
+        CURRICULUM_TOPIC_NOT_FOUND = 64,
+        #endregion
     }
 }
