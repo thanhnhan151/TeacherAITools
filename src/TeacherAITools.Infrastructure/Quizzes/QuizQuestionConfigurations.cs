@@ -13,8 +13,7 @@ namespace TeacherAITools.Infrastructure.Quizzes
             builder.HasKey(q => q.QuestionId);
 
             builder.Property(q => q.QuestionName)
-                .IsRequired()
-                .HasMaxLength(50);
+                .IsRequired();
 
             builder.HasOne(q => q.Quiz)
                 .WithMany(q => q.QuizQuestions)
