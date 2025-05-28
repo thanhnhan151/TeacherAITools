@@ -1,4 +1,14 @@
-﻿using TeacherAITools.Infrastructure.Common.Persistence;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
+using TeacherAITools.Application.Common.Interfaces.Security;
+using TeacherAITools.Application.Common.Interfaces.Services;
+using TeacherAITools.Infrastructure.Common.Persistence;
 using TeacherAITools.Infrastructure.Security;
 using TeacherAITools.Infrastructure.Services;
 
