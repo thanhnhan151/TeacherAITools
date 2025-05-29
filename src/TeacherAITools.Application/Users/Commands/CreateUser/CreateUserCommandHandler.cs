@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using TeacherAITools.Application.Common.Constants;
 using TeacherAITools.Application.Common.Enums;
 using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.Common.Extensions;
@@ -54,6 +55,7 @@ namespace TeacherAITools.Application.Users.Commands.CreateUser
                 RoleId = request.RoleId,
                 SchoolId = request.SchoolId,
                 GradeId = request.GradeId,
+                ImgURL = DefaultAvatar.UserPicture,
                 IsActive = true,
                 ManagerId = null
             };
