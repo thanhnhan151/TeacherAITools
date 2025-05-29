@@ -3,15 +3,19 @@ using TeacherAITools.Application.Common.Enums;
 using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.Common.Extensions;
 using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
+using TeacherAITools.Application.Common.Interfaces.Services;
 using TeacherAITools.Application.TeacherLessons.Common;
 using TeacherAITools.Domain.Entities;
 using TeacherAITools.Domain.Wrappers;
 
 namespace TeacherAITools.Application.TeacherLessons.Commands.UpdateTeacherLesson
 {
-    public class UpdateTeacherLessonCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<UpdateTeacherLessonCommand, Response<GetDetailTeacherLessonResponse>>
+    public class UpdateTeacherLessonCommandHandler(
+        IUnitOfWork unitOfWork,
+        IDateTimeProvider dateTimeProvider) : IRequestHandler<UpdateTeacherLessonCommand, Response<GetDetailTeacherLessonResponse>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
 
         public async Task<Response<GetDetailTeacherLessonResponse>> Handle(UpdateTeacherLessonCommand request, CancellationToken cancellationToken)
         {
@@ -27,6 +31,8 @@ namespace TeacherAITools.Application.TeacherLessons.Commands.UpdateTeacherLesson
                 SchoolSupply = teacherLesson.SchoolSupply,
                 Practice = teacherLesson.Practice,
                 Apply = teacherLesson.Apply,
+                LessonPlanId = request.Id,
+                UpdatedAt = _dateTimeProvider.UtcNow
             };
 
             teacherLesson.StartUp = request.updateTeacherLessonRequest.StartUp;
