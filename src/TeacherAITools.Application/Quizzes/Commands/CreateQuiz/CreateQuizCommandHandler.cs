@@ -33,6 +33,8 @@ namespace TeacherAITools.Application.Quizzes.Commands.CreateQuiz
 
             foreach (var question in request.CreateQuizRquest.QuizQuestions)
             {
+                var newId = _unitOfWork.QuizQuestions.GetLastIdQuestion();
+                newQuestion.QuestionId = newId;
                 newQuestion.QuestionName = question.QuestionName;
                 newQuestion.QuizId = quizId;
 
