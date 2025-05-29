@@ -8,6 +8,5 @@ namespace TeacherAITools.Application.Users.Common
     string PhoneNumber,
     DateOnly DateOfBirth,
     Gender Gender,
-    string Address,
-    int WardId);
+    string Address);
 }

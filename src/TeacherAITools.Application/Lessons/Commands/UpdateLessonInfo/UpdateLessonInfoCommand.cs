@@ -4,5 +4,10 @@ using TeacherAITools.Domain.Wrappers;
 
 namespace TeacherAITools.Application.Lessons.Commands.UpdateLessonInfo
 {
-    public record UpdateLessonInfoCommand(int LessonId, UpdateLessonInfoRequest Info) : IRequest<Response<GetLessonResponse>>;
+    public record UpdateLessonInfoCommand(
+        int LessonId,
+        string SpecialAbility,
+        string GeneralCapacity,
+        string Quality,
+        string SchoolSupply) : IRequest<Response<GetLessonResponse>>;
 }
