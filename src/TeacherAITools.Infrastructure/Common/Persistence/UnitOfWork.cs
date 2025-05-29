@@ -4,6 +4,7 @@ using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
 using TeacherAITools.Infrastructure.Blogs;
 using TeacherAITools.Infrastructure.Citites;
 using TeacherAITools.Infrastructure.Curriculums;
+using TeacherAITools.Infrastructure.LessonDatas;
 using TeacherAITools.Infrastructure.Lessons;
 using TeacherAITools.Infrastructure.Modules;
 using TeacherAITools.Infrastructure.Notifications;
@@ -79,10 +80,22 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
         public ILessonHistoryRepository LessonHistories { get; private set; }
 
         public ICurriculumFeedbackRepository CurriculumFeedbacks { get; private set; }
+
         public ICurriculumDetailRepository CurriculumDetails { get; private set; }
+
         public ICurriculumSectionRepository CurriculumSections { get; private set; }
+
         public ICurriculumSubSectionRepository CurriculumSubSections { get; private set; }
+
         public ICurriculumTopicRepository CurriculumTopics { get; private set; }
+
+        public IStartUpRepository StartUps { get; private set; }
+
+        public IKnowLedgeRepository KnowLedeges { get; private set; }
+
+        public IPracticeRepository Practices { get; private set; }
+
+        public IApplyRepository Applies { get; private set; }
 
         public UnitOfWork(
             TeacherAIToolsDbContext dbContext,
@@ -149,10 +162,22 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
             LessonHistories = new LessonHistoryRepository(_dbContext, _logger);
 
             CurriculumFeedbacks = new CurriculumFeedbackRepository(_dbContext, _logger);
+
             CurriculumDetails = new CurriculumDetailRepository(_dbContext, _logger);
+
             CurriculumSections = new CurriculumSectionRepository(_dbContext, _logger);
+
             CurriculumSubSections = new CurriculumSubSectionRepository(_dbContext, _logger);
+
             CurriculumTopics = new CurriculumTopicRepository(_dbContext, _logger);
+
+            StartUps = new StartUpRepository(_dbContext, _logger);
+
+            KnowLedeges = new KnowLedgeRepository(_dbContext, _logger);
+
+            Practices = new PracticeRepository(_dbContext, _logger);
+
+            Applies = new ApplyRepository(_dbContext, _logger);
         }
 
         public async Task CompleteAsync() => await _dbContext.SaveChangesAsync();
