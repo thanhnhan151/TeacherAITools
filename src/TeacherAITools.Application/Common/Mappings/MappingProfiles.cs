@@ -7,6 +7,7 @@ using TeacherAITools.Application.Common.Extensions;
 using TeacherAITools.Application.Curriculums.Common;
 using TeacherAITools.Application.Districts.Common;
 using TeacherAITools.Application.Grades.Common;
+using TeacherAITools.Application.Lessons.Common;
 using TeacherAITools.Application.LessonTypes.Common;
 using TeacherAITools.Application.Modules.Common;
 using TeacherAITools.Application.Notes.Common;
@@ -106,7 +107,8 @@ namespace TeacherAITools.Application.Common.Mappings
             #endregion
 
             #region Quiz
-            CreateMap<Quiz, GetQuizResponse>();
+            CreateMap<Quiz, GetQuizResponse>()
+                .ForMember(q => q.LessonName, q => q.MapFrom(q => q.Lesson.Name));
             CreateMap<Quiz, GetQuizDetailResponse>();
             CreateMap<QuizQuestion, GetQuizQuestion>();
             CreateMap<QuizAnswer, GetQuizAnswer>();
@@ -160,6 +162,10 @@ namespace TeacherAITools.Application.Common.Mappings
             CreateMap<CurriculumFeedback, GetCurriculumFeedbackResponse>()
                 .ForMember(c => c.TimeStamp, c => c.MapFrom(c => c.TimeStamp.GetFormatDateTime()))
                 .ForMember(c => c.User, c => c.MapFrom(c => c.User.Username));
+            #endregion
+
+            #region Lesson
+            CreateMap<GetLessonDetailResponse, Lesson>();
             #endregion
         }
     }

@@ -27,12 +27,12 @@ namespace TeacherAITools.Application.Lessons.Commands.UpdateLessonInfo
                 throw new ValidationException(ResponseCode.USER_NOT_FOUND, errorMessages);
             }
 
-            lesson.StartUp = request.Info.StartUp;
-            lesson.Knowledge = request.Info.Knowledge;
-            lesson.Goal = request.Info.Goal;
+            //lesson.StartUp = request.Info.StartUp;
+            //lesson.Knowledge = request.Info.Knowledge;
+            //lesson.Goal = request.Info.Goal;
             lesson.SchoolSupply = request.Info.SchoolSupply;
-            lesson.Practice = request.Info.Practice;
-            lesson.Apply = request.Info.Apply;
+            //lesson.Practice = request.Info.Practice;
+            //lesson.Apply = request.Info.Apply;
             lesson.Duration = request.Info.Duration;
 
             await _unitOfWork.Lessons.UpdateAsync(lesson);

@@ -9,12 +9,10 @@ namespace TeacherAITools.Domain.Entities
         public string Description { get; set; } = string.Empty;
         //public string DisapprovedReason { get; set; } = string.Empty;
         public int TotalPeriods { get; set; }
-        public string StartUp { get; set; } = string.Empty;
-        public string Knowledge { get; set; } = string.Empty;
-        public string Goal { get; set; } = string.Empty;
+        public string SpecialAbility { get; set; } = string.Empty;
+        public string GeneralCapacity { get; set; } = string.Empty;
+        public string Quality { get; set; } = string.Empty;
         public string SchoolSupply { get; set; } = string.Empty;
-        public string Practice { get; set; } = string.Empty;
-        public string Apply { get; set; } = string.Empty;
         public string Duration { get; set; } = string.Empty;
 
         // Foreign Key
@@ -39,7 +37,15 @@ namespace TeacherAITools.Domain.Entities
         public int ModuleId { get; set; }
         public virtual Module Module { get; set; } = null!;
 
-        public virtual Prompt? Prompt { get; set; }
+        public virtual Prompt Prompt { get; set; } = null!;
+
+        public virtual StartUp StartUp { get; set; } = null!;
+
+        public virtual KnowLedge KnowLedge { get; set; } = null!;
+
+        public virtual Practice Practice { get; set; } = null!;
+
+        public virtual Apply Apply { get; set; } = null!;
 
         //Navigation
         public virtual ICollection<Quiz> Quizzes { get; set; } = [];
