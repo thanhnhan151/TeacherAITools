@@ -45,6 +45,7 @@ namespace TeacherAITools.Application.Lessons.Queries.GetLessonById
                 Week = lesson.Week.WeekNumber,
                 Module = lesson.Module.Name,
                 GradeNumber = lesson.Module.Grade.GradeNumber,
+                SchoolSupply = lesson.SchoolSupply,
                 SpecialAbility = lesson.SpecialAbility,
                 GeneralCapacity = lesson.GeneralCapacity,
                 Quality = lesson.Quality,
