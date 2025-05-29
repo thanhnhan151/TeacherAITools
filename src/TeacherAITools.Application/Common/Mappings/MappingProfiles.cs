@@ -79,7 +79,8 @@ namespace TeacherAITools.Application.Common.Mappings
 
             #region Comment
             CreateMap<Comment, GetCommentResponse>()
-                .ForMember(m => m.User, m => m.MapFrom(m => m.User.Fullname))
+                .ForMember(m => m.ImgURL, m => m.MapFrom(m => m.User.ImgURL))
+                .ForMember(m => m.User, m => m.MapFrom(m => $"{m.User.Fullname} - Giáo viên lớp {m.User.Grade}"))
                 .ForMember(m => m.TimeStamp, m => m.MapFrom(m => m.TimeStamp.GetFormatDateTime()));
             #endregion
 
@@ -160,8 +161,9 @@ namespace TeacherAITools.Application.Common.Mappings
                 .ForMember(c => c.CurriculumSubSection, c => c.MapFrom(c => c.CurriculumSubSection.CurriculumSubSectionName));
             CreateMap<CurriculumActivity, ActivityItem>();
             CreateMap<CurriculumFeedback, GetCurriculumFeedbackResponse>()
+                .ForMember(m => m.ImgURL, m => m.MapFrom(m => m.User.ImgURL))
                 .ForMember(c => c.TimeStamp, c => c.MapFrom(c => c.TimeStamp.GetFormatDateTime()))
-                .ForMember(c => c.User, c => c.MapFrom(c => c.User.Username));
+                .ForMember(c => c.User, c => c.MapFrom(c => $"{c.User.Username} - Giáo viên lớp {c.User.Grade}"));
             #endregion
 
             #region Lesson
