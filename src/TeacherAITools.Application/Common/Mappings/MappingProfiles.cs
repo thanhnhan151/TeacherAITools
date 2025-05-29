@@ -164,6 +164,7 @@ namespace TeacherAITools.Application.Common.Mappings
                 .ForMember(m => m.ImgURL, m => m.MapFrom(m => m.User.ImgURL))
                 .ForMember(c => c.TimeStamp, c => c.MapFrom(c => c.TimeStamp.GetFormatDateTime()))
                 .ForMember(c => c.User, c => c.MapFrom(c => $"{c.User.Username} - Giáo viên lớp {c.User.Grade}"));
+            CreateMap<CurriculumSubSection, GetCurriculumSubSectionsResponse>();
             #endregion
 
             #region Lesson

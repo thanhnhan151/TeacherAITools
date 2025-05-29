@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.Curriculums.Commands.CreateCurriculum;
-using TeacherAITools.Application.Curriculums.Commands.CreateFeedbackByCurriculumId;
 using TeacherAITools.Application.Curriculums.Commands.CreateCurriculumDetail;
+using TeacherAITools.Application.Curriculums.Commands.CreateFeedbackByCurriculumId;
 using TeacherAITools.Application.Curriculums.Commands.DeleteCurriculum;
 using TeacherAITools.Application.Curriculums.Commands.DeleteCurriculumDetail;
 using TeacherAITools.Application.Curriculums.Commands.UpdateCurriculum;
@@ -14,6 +14,7 @@ using TeacherAITools.Application.Curriculums.Commands.UpdateCurriculumDetail;
 using TeacherAITools.Application.Curriculums.Common;
 using TeacherAITools.Application.Curriculums.Queries.GetCurriculumById;
 using TeacherAITools.Application.Curriculums.Queries.GetCurriculums;
+using TeacherAITools.Application.Curriculums.Queries.GetCurriculumSubSections;
 using TeacherAITools.Application.Curriculums.Queries.GetFeedbacksByCurriculumId;
 using TeacherAITools.Domain.Wrappers;
 
@@ -58,7 +59,7 @@ namespace TeacherAITools.Api.Controllers
             try
             {
                 return Ok(await _mediator.Send(new CreateFeedbackByCurriculumIdCommand(id, request)));
-                }
+            }
             catch (ApiException e)
             {
                 return BadRequest(new
@@ -69,7 +70,7 @@ namespace TeacherAITools.Api.Controllers
                 });
             }
         }
-        
+
         [HttpPost("detail")]
         [AllowAnonymous]
         [ProducesResponseType(typeof(Response<GetDetailCurriculumResponse>), (int)HttpStatusCode.OK)]
@@ -100,6 +101,27 @@ namespace TeacherAITools.Api.Controllers
             try
             {
                 return Ok(await _mediator.Send(new GetCurriculumByIdQuery(id)));
+            }
+            catch (ApiException e)
+            {
+                return NotFound(new
+                {
+                    errorCode = e.ErrorCode,
+                    error = e.Error,
+                    errorMessage = e.ErrorMessage
+                });
+            }
+        }
+
+        [HttpGet("sub-sections")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(Response<List<GetCurriculumSubSectionsResponse>>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetAsync()
+        {
+            try
+            {
+                return Ok(await _mediator.Send(new GetCurriculumSubSectionsQuery()));
             }
             catch (ApiException e)
             {
