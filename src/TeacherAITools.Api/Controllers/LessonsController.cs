@@ -47,7 +47,7 @@ namespace TeacherAITools.Api.Controllers
 
         [HttpGet("{id}")]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(Response<GetLessonResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(Response<GetLessonDetailResponse>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetByIdAsync(int id)
         {

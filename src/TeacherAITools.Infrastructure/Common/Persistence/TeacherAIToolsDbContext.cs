@@ -60,6 +60,10 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
         public DbSet<CurriculumSubSection> CurriculumSubSections { get; set; }
         public DbSet<CurriculumDetail> CurriculumDetails { get; set; }
         public DbSet<CurriculumFeedback> CurriculumFeedbacks { get; set; }
+        public DbSet<StartUp> StartUps { get; set; }
+        public DbSet<KnowLedge> KnowLedges { get; set; }
+        public DbSet<Practice> Practices { get; set; }
+        public DbSet<Apply> Applies { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
