@@ -33,7 +33,7 @@ namespace TeacherAITools.Application.Quizzes.Commands.CreateQuiz
 
             foreach (var question in request.CreateQuizRquest.QuizQuestions)
             {
-                var newId = _unitOfWork.QuizQuestions.GetLastIdQuestion();
+                var newId = _unitOfWork.QuizQuestions.GetLastIdQuestion() + 1;
                 newQuestion.QuestionId = newId;
                 newQuestion.QuestionName = question.QuestionName;
                 newQuestion.QuizId = quizId;
@@ -41,14 +41,12 @@ namespace TeacherAITools.Application.Quizzes.Commands.CreateQuiz
                 await _unitOfWork.QuizQuestions.AddAsync(newQuestion);
                 await _unitOfWork.CompleteAsync();
 
-                var questionId = _unitOfWork.QuizQuestions.GetLastIdQuestion();
-
                 foreach (var answer in question.QuizAnswers)
                 {
                     var answerId = _unitOfWork.QuizAnswers.GetLastIdAnswer() + 1;
                     newAnswer.Answer = answer.Answer;
                     newAnswer.IsCorrect = answer.IsCorrect;
-                    newAnswer.QuestionId = questionId;
+                    newAnswer.QuestionId = newId;
                     newAnswer.AnswerId = answerId;
 
                     await _unitOfWork.QuizAnswers.AddAsync(newAnswer);
