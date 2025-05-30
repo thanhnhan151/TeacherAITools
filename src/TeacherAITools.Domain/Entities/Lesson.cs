@@ -31,7 +31,7 @@ namespace TeacherAITools.Domain.Entities
         //public int UserId { get; set; }
         //public virtual User User { get; set; } = null!;
 
-        public int WeekId { get; set; }
+        public int WeekId { get; set; } = 1;
         public virtual Week Week { get; set; } = null!;
 
         public int ModuleId { get; set; }

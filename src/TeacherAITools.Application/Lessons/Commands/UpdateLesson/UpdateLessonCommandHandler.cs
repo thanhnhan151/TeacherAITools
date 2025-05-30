@@ -64,11 +64,7 @@ namespace TeacherAITools.Application.Lessons.Commands.UpdateLesson
             lesson.Description = request.updateLessonRequest.Description;
             lesson.TotalPeriods = request.updateLessonRequest.TotalPeriods;
             lesson.LessonTypeId = request.updateLessonRequest.LessonTypeId;
-            //lesson.RequirementId = request.updateLessonRequest.RequirementId;
-            //lesson.SchoolSupplyId = request.updateLessonRequest.SchoolSupplyId;
             lesson.NoteId = request.updateLessonRequest.NoteId;
-            //lesson.UserId = request.updateLessonRequest.UserId;
-            lesson.WeekId = request.updateLessonRequest.WeekId;
             lesson.ModuleId = request.updateLessonRequest.ModuleId;
 
             await _unitOfWork.Lessons.UpdateAsync(lesson);
