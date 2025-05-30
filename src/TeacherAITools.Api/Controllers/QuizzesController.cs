@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.Quizzes.Commands.CreateQuiz;
+using TeacherAITools.Application.Quizzes.Commands.DeleteQuiz;
 using TeacherAITools.Application.Quizzes.Common;
 using TeacherAITools.Application.Quizzes.Queries.GetQuizzes;
 using TeacherAITools.Application.Quizzes.Queries.GetQuizzesById;
@@ -48,6 +49,27 @@ namespace TeacherAITools.Api.Controllers
             try
             {
                 return Ok(await mediator.Send(new GetQuizByIdQuery(id)));
+            }
+            catch (ApiException e)
+            {
+                return NotFound(new
+                {
+                    errorCode = e.ErrorCode,
+                    error = e.Error,
+                    errorMessage = e.ErrorMessage
+                });
+            }
+        }
+
+        [HttpDelete("{id}")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(Response<string>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GeIdAsync(int id)
+        {
+            try
+            {
+                return Ok(await mediator.Send(new DeleteQuizCommand(id)));
             }
             catch (ApiException e)
             {

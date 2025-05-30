@@ -37,7 +37,7 @@ namespace TeacherAITools.Application.Curriculums.Queries.GetCurriculums
                     Items = result!.Data!.ConvertAll(curriculum => new GetCurriculumResponse()
                     {
                         CurriculumId = curriculum.CurriculumId,
-                        Name = $"{curriculum.Name} {curriculum.GradeId}",
+                        Name = curriculum.Name,
                         Description = curriculum.Description,
                         TotalPeriods = curriculum.TotalPeriods,
                         Year = curriculum.SchoolYear.Year
