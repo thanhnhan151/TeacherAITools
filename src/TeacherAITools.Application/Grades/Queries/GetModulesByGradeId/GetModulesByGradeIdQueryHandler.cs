@@ -21,7 +21,7 @@ namespace TeacherAITools.Application.Grades.Queries.GetModulesByGradeId
         {
             var gradeQuery = await _unitOfWork.Grades.GetAsync(g => g.GradeId == request.GradeId);
 
-            var grade = gradeQuery.Include(g => g.Modules).FirstOrDefault() ?? throw new ApiException(ResponseCode.ID_GRADE_DONT_EXIST);
+            var grade = gradeQuery.Include(g => g.Modules.Where(m => m.IsActive).OrderBy(m => m.ModuleId)).FirstOrDefault() ?? throw new ApiException(ResponseCode.ID_GRADE_DONT_EXIST);
 
             return new Response<GetGradeDetailResponse>(code: (int)ResponseCode.SUCCESS,
                 data: _mapper.Map<GetGradeDetailResponse>(grade),
