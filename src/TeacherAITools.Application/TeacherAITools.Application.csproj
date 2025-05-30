@@ -21,8 +21,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Quizzes\Commands\DisableQuiz\" />
-		<Folder Include="Quizzes\Commands\UpdateQuiz\" />
+		<Folder Include="Quizzes\Commands\DeleteQuiz\" />
 	</ItemGroup>
 
 </Project>

@@ -9,6 +9,9 @@
         public int LessonId { get; set; }
         public virtual Lesson Lesson { get; set; } = null!;
 
+        public int? UserId { get; set; }
+        public virtual User User { get; set; } = null!;
+
         // Navigation
         public virtual ICollection<QuizQuestion> QuizQuestions { get; set; } = [];
     }

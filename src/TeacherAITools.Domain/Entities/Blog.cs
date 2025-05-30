@@ -17,6 +17,9 @@ namespace TeacherAITools.Domain.Entities
         public int? LessonPlanId { get; set; }
         public virtual TeacherLesson LessonPlan { get; set; } = null!;
 
+        public int? UserId { get; set; }
+        public virtual User User { get; set; } = null!;
+
         // Navigation
         public virtual ICollection<Comment> Comments { get; set; } = [];
     }
