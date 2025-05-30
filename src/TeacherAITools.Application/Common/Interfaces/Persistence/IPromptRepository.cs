@@ -14,5 +14,7 @@ namespace TeacherAITools.Application.Common.Interfaces.Persistence
             , int pageSize);
 
         Task<bool> IsLessonIdPresentAsync(int lessonId);
+
+        int GetLastIdPrompt();
     }
 }

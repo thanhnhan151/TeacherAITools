@@ -19,6 +19,11 @@ namespace TeacherAITools.Infrastructure.Promps
                 .WithMany(p => p.Prompts)
                 .HasForeignKey(p => p.UserId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            builder.HasOne(p => p.Lesson)
+                .WithMany(p => p.Prompts)
+                .HasForeignKey(p => p.LessonId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }
