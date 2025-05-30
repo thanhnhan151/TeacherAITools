@@ -30,7 +30,7 @@ namespace TeacherAITools.Application.TeacherLessons.Commands.CreateTeacherLesson
                 Goal = request.Goal,
                 SchoolSupply = request.SchoolSupply,
                 UserId = request.UserId,
-                PromptId = request.PromptId,
+                PromptId = null,
                 CreatedAt = _dateTimeProvider.UtcNow
             };
 
