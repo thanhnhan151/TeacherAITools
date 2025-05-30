@@ -22,6 +22,7 @@ namespace TeacherAITools.Application.Blogs.Queries.GetBlogs
                     request.SearchTerm,
                     request.SortColumn,
                     request.SortOrder,
+                    request.UserId,
                     request.CategoryId,
                     request.IsActive,
                     request.Page,

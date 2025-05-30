@@ -22,6 +22,7 @@ namespace TeacherAITools.Application.Blogs.Queries.GetBlogById
             var blogQuery = await _unitOfWork.Blogs.GetAsync(b => b.BlogId == request.Id);
 
             var blog = blogQuery
+                .Include(r => r.User)
                 .Include(r => r.Category)
                 .Include(r => r.Comments.Where(c => c.Status))
                     .ThenInclude(r => r.User)
