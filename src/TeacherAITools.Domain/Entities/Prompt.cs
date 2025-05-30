@@ -7,7 +7,7 @@
         public string Description { get; set; } = string.Empty;
 
         // Foreign Keys
-        public int LessonId { get; set; }
+        public int? LessonId { get; set; }
         public virtual Lesson Lesson { get; set; } = null!;
 
         public int? UserId { get; set; }

@@ -44,5 +44,11 @@ namespace TeacherAITools.Infrastructure.Prompts
         };
 
         public async Task<bool> IsLessonIdPresentAsync(int lessonId) => await _dbContext.Prompts.AnyAsync(p => p.LessonId == lessonId);
+
+        public int GetLastIdPrompt()
+        {
+            var answer = _dbContext.Prompts.OrderBy(e => e.PromptId).LastOrDefault();
+            return answer is not null ? answer.PromptId : 0;
+        }
     }
 }

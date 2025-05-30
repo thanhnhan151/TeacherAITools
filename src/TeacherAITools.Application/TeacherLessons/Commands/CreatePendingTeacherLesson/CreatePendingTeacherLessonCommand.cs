@@ -12,5 +12,5 @@ namespace TeacherAITools.Application.TeacherLessons.Commands.CreatePendingTeache
         string Practice,
         string Apply,
         int UserId,
-        int PromptId) : IRequest<Response<GetTeacherLessonResponse>>;
+        int LessonId) : IRequest<Response<GetTeacherLessonResponse>>;
 }

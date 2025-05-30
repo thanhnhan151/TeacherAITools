@@ -31,7 +31,6 @@ namespace TeacherAITools.Application.Lessons.Queries.GetLessonById
                 .Include(l => l.Note)
                 .Include(l => l.Week)
                 .Include(l => l.Module)
-                        .ThenInclude(m => m.Grade)
                 .FirstOrDefault() ?? throw new ApiException(ResponseCode.LESSON_NOT_FOUND);
 
             var response = new GetLessonDetailResponse
@@ -44,7 +43,7 @@ namespace TeacherAITools.Application.Lessons.Queries.GetLessonById
                 Note = lesson.Note.Description,
                 Week = lesson.Week.WeekNumber,
                 Module = lesson.Module.Name,
-                GradeNumber = lesson.Module.Grade.GradeNumber,
+                GradeNumber = lesson.Module.GradeId,
                 SchoolSupply = lesson.SchoolSupply,
                 SpecialAbility = lesson.SpecialAbility,
                 GeneralCapacity = lesson.GeneralCapacity,

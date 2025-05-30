@@ -37,7 +37,7 @@ namespace TeacherAITools.Domain.Entities
         public int ModuleId { get; set; }
         public virtual Module Module { get; set; } = null!;
 
-        public virtual Prompt Prompt { get; set; } = null!;
+        //public virtual Prompt Prompt { get; set; } = null!;
 
         public virtual StartUp StartUp { get; set; } = null!;
 
@@ -52,7 +52,7 @@ namespace TeacherAITools.Domain.Entities
 
         //public virtual ICollection<Period> Periods { get; set; } = [];
 
-        //public virtual ICollection<Prompt> Prompts { get; set; } = [];
+        public virtual ICollection<Prompt> Prompts { get; set; } = [];
 
         //public virtual ICollection<Blog> Blogs { get; set; } = [];
     }
