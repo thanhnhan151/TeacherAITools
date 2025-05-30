@@ -21,7 +21,8 @@ namespace TeacherAITools.Application.Quizzes.Commands.CreateQuiz
             var quiz = new Quiz
             {
                 QuizName = request.CreateQuizRquest.QuizName,
-                LessonId = request.CreateQuizRquest.LessonId
+                LessonId = request.CreateQuizRquest.LessonId,
+                UserId = request.CreateQuizRquest.UserId
             };
 
             await _unitOfWork.Quizzes.AddAsync(quiz);
