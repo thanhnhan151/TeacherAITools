@@ -21,7 +21,7 @@ namespace TeacherAITools.Application.Modules.Queries.GetLessonsByModuleId
         {
             var moduleQuery = await _unitOfWork.Modules.GetAsync(m => m.ModuleId == request.ModuleId);
 
-            var module = moduleQuery.Include(m => m.Lessons).FirstOrDefault() ?? throw new ApiException(ResponseCode.MODULE_NOT_FOUND);
+            var module = moduleQuery.Include(m => m.Lessons.Where(l => l.IsActive)).FirstOrDefault() ?? throw new ApiException(ResponseCode.MODULE_NOT_FOUND);
 
             return new Response<GetModuleDetailResponse>(code: (int)ResponseCode.SUCCESS,
                 data: _mapper.Map<GetModuleDetailResponse>(module),

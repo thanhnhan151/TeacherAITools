@@ -147,5 +147,11 @@ namespace TeacherAITools.Infrastructure.Common.Persistence
 
             await _dbContext.Set<TEntity>().AddAsync(entity);
         }
+
+        public Task UpdateRangeAsync(IEnumerable<TEntity> entities)
+        {
+            _dbContext.UpdateRange(entities);
+            return Task.CompletedTask;
+        }
     }
 }

@@ -30,6 +30,8 @@ namespace TeacherAITools.Application.Common.Interfaces.Persistence.Base
 
         Task DeleteRangeAsync(IEnumerable<TEntity> entities);
 
+        Task UpdateRangeAsync(IEnumerable<TEntity> entities);
+
         Task DeleteAsync(object id);
 
         bool Any(Expression<Func<TEntity, bool>> predicate);

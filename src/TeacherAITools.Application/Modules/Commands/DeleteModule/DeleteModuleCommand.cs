@@ -5,5 +5,5 @@ using TeacherAITools.Domain.Wrappers;
 
 namespace TeacherAITools.Application.Modules.Commands.DeleteModule
 {
-    public record DeleteModuleCommand(int id) : IRequest<Response<GetModuleResponse>>;
+    public record DeleteModuleCommand(int Id) : IRequest<Response<GetModuleResponse>>;
 }

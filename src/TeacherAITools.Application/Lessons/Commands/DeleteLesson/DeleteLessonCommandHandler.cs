@@ -1,3 +1,4 @@
+using MediatR;
 using TeacherAITools.Application.Common.Enums;
 using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.Common.Extensions;
@@ -7,20 +8,24 @@ using TeacherAITools.Domain.Wrappers;
 
 namespace TeacherAITools.Application.Lessons.Commands.DeleteLesson
 {
-    public class DeleteLessonCommandHandler
+    public class DeleteLessonCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<DeleteLessonCommand, Response<GetLessonResponse>>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-        public DeleteLessonCommandHandler(IUnitOfWork unitOfWork)
+        public async Task<Response<GetLessonResponse>> Handle(DeleteLessonCommand request, CancellationToken cancellationToken)
         {
-            _unitOfWork = unitOfWork;
-        }
-
-        public async Task<Response<GetLessonResponse>> Handle(int request, CancellationToken cancellationToken)
-        {
-            var lessonQuery = await _unitOfWork.Lessons.GetAsync(expression: m => m.LessonId == request, disableTracking: true);
+            var lessonQuery = await _unitOfWork.Lessons.GetAsync(expression: m => m.LessonId == request.Id, disableTracking: true);
 
             var lesson = lessonQuery.FirstOrDefault() ?? throw new ApiException(ResponseCode.LESSON_NOT_FOUND);
+
+            if (lesson.IsActive)
+            {
+                lesson.IsActive = false;
+            }
+            else
+            {
+                lesson.IsActive = true;
+            }
 
             await _unitOfWork.Lessons.UpdateAsync(lesson);
             await _unitOfWork.CompleteAsync();
