@@ -1,5 +1,5 @@
-using System.Linq.Expressions;
 using MediatR;
+using System.Linq.Expressions;
 using TeacherAITools.Application.Common.Models.Requests;
 using TeacherAITools.Application.Modules.Common;
 using TeacherAITools.Domain.Entities;
@@ -11,7 +11,7 @@ namespace TeacherAITools.Application.Modules.Queries.GetModules
     {
         public override Expression<Func<Module, bool>> GetExpressions()
         {
-            Expression<Func<Module, bool>> expression = _ => true;
+            Expression<Func<Module, bool>> expression = m => m.IsActive;
             return expression;
         }
     }

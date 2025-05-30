@@ -1,3 +1,5 @@
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 using TeacherAITools.Application.Common.Enums;
 using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.Common.Extensions;
@@ -7,22 +9,35 @@ using TeacherAITools.Domain.Wrappers;
 
 namespace TeacherAITools.Application.Modules.Commands.DeleteModule
 {
-    public class DeleteModuleCommandHandler
+    public class DeleteModuleCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<DeleteModuleCommand, Response<GetModuleResponse>>
     {
-        private readonly IUnitOfWork _unitOfWork;
-
-        public DeleteModuleCommandHandler(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
         public async Task<Response<GetModuleResponse>> Handle(DeleteModuleCommand request, CancellationToken cancellationToken)
         {
-            var moduleQuery = await _unitOfWork.Modules.GetAsync(expression: m => m.ModuleId == request.id, disableTracking: true);
+            var moduleQuery = await _unitOfWork.Modules.GetAsync(expression: m => m.ModuleId == request.Id, disableTracking: true);
 
-            var module = moduleQuery.FirstOrDefault() ?? throw new ApiException(ResponseCode.MODULE_NOT_FOUND);
+            var module = moduleQuery.Include(m => m.Lessons).FirstOrDefault() ?? throw new ApiException(ResponseCode.MODULE_NOT_FOUND);
 
-            await _unitOfWork.Modules.DeleteAsync(module);
+            if (module.IsActive)
+            {
+                module.IsActive = false;
+                foreach (var lesson in module.Lessons)
+                {
+                    if (lesson.IsActive) lesson.IsActive = false;
+                }
+            }
+            else
+            {
+                module.IsActive = true;
+                foreach (var lesson in module.Lessons)
+                {
+                    if (!lesson.IsActive) lesson.IsActive = true;
+                }
+            }
+
+            await _unitOfWork.Lessons.UpdateRangeAsync(module.Lessons);
+            await _unitOfWork.Modules.UpdateAsync(module);
             await _unitOfWork.CompleteAsync();
 
             return new Response<GetModuleResponse>(code: (int)ResponseCode.DELETED_SUCCESS, message: ResponseCode.DELETED_SUCCESS.GetDescription());
