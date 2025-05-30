@@ -12,5 +12,6 @@ namespace TeacherAITools.Application.TeacherLessons.Commands.CreateTeacherLesson
         string Practice,
         string Apply,
         string Duration,
-        int UserId) : IRequest<Response<GetTeacherLessonResponse>>;
+        int UserId,
+        int LessonId) : IRequest<Response<GetTeacherLessonResponse>>;
 }
