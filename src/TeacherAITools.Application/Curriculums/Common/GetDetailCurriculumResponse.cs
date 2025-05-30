@@ -6,6 +6,7 @@
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public int TotalPeriods { get; set; }
+        public int SchoolYearId { get; set; }
         public string Year { get; set; } = string.Empty;
         public List<DetailItem> CurriculumDetails { get; set; } = [];
         public List<ActivityItem> CurriculumActivities { get; set; } = [];
