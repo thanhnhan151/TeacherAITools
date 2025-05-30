@@ -39,7 +39,8 @@ namespace TeacherAITools.Infrastructure.Security
             new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
             new Claim(ClaimTypes.Name, user.Fullname ?? string.Empty),
             new Claim(ClaimTypes.Role, user.Role.RoleName),
-            new Claim(ClaimTypes.UserData, user.ImgURL  ?? string.Empty)
+            new Claim(ClaimTypes.UserData, user.ImgURL  ?? string.Empty),
+            new Claim(ClaimTypes.Sid, user.GradeId.ToString() ?? string.Empty)
         };
 
             var securityToken = new JwtSecurityToken(
