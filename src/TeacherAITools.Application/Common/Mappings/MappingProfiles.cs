@@ -71,9 +71,11 @@ namespace TeacherAITools.Application.Common.Mappings
             #region Blog
             CreateMap<Blog, GetBlogResponse>()
                 .ForMember(b => b.Category, b => b.MapFrom(b => b.Category.CategoryName))
+                .ForMember(m => m.Name, m => m.MapFrom(m => $"{m.User.Fullname} - Giáo viên lớp {m.User.Grade}"))
                 .ForMember(m => m.PublicationDate, m => m.MapFrom(m => m.PublicationDate.GetFormatDateTime()));
             CreateMap<Blog, GetBlogDetailResponse>()
                 .ForMember(b => b.Category, b => b.MapFrom(b => b.Category.CategoryName))
+                .ForMember(m => m.Name, m => m.MapFrom(m => $"{m.User.Fullname} - Giáo viên lớp {m.User.Grade}"))
                 .ForMember(m => m.PublicationDate, m => m.MapFrom(m => m.PublicationDate.GetFormatDateTime()));
             CreateMap<PaginatedList<Blog>, PaginatedList<GetBlogResponse>>();
             #endregion
@@ -110,8 +112,15 @@ namespace TeacherAITools.Application.Common.Mappings
 
             #region Quiz
             CreateMap<Quiz, GetQuizResponse>()
+                .ForMember(q => q.Name, q => q.MapFrom(q => $"{q.User.Fullname} - Giáo viên lớp {q.User.GradeId}"))
+                .ForMember(q => q.Grade, q => q.MapFrom(q => q.Lesson.Module.GradeId))
+                .ForMember(q => q.ModuleName, q => q.MapFrom(q => q.Lesson.Module.Name))
                 .ForMember(q => q.LessonName, q => q.MapFrom(q => q.Lesson.Name));
-            CreateMap<Quiz, GetQuizDetailResponse>();
+            CreateMap<Quiz, GetQuizDetailResponse>()
+                .ForMember(q => q.Name, q => q.MapFrom(q => $"{q.User.Fullname} - Giáo viên lớp {q.User.GradeId}"))
+                .ForMember(q => q.Grade, q => q.MapFrom(q => q.Lesson.Module.GradeId))
+                .ForMember(q => q.ModuleName, q => q.MapFrom(q => q.Lesson.Module.Name))
+                .ForMember(q => q.LessonName, q => q.MapFrom(q => q.Lesson.Name));
             CreateMap<QuizQuestion, GetQuizQuestion>();
             CreateMap<QuizAnswer, GetQuizAnswer>();
             CreateMap<PaginatedList<Quiz>, PaginatedList<GetQuizResponse>>();

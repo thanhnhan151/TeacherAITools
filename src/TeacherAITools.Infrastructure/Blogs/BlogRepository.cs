@@ -10,10 +10,12 @@ namespace TeacherAITools.Infrastructure.Blogs
 {
     public class BlogRepository(TeacherAIToolsDbContext dbContext, ILogger logger) : Repository<Blog>(dbContext, logger), IBlogRepository
     {
-        public async Task<PaginatedList<Blog>> PaginatedListAsync(string? searchTerm, string? sortColumn, string? sortOrder, int? categoryId, bool isActive, int page, int pageSize)
+        public async Task<PaginatedList<Blog>> PaginatedListAsync(string? searchTerm, string? sortColumn, string? sortOrder, int? userId, int? categoryId, bool isActive, int page, int pageSize)
         {
             IQueryable<Blog> blogsQuery = _dbContext.Blogs
-                .Include(u => u.Category).Include(u => u.LessonPlan);
+                .Include(u => u.User)
+                .Include(u => u.Category)
+                .Include(u => u.LessonPlan);
 
             if (isActive) blogsQuery = blogsQuery.Where(u => u.IsActive);
 
@@ -26,6 +28,11 @@ namespace TeacherAITools.Infrastructure.Blogs
             if (categoryId != null)
             {
                 blogsQuery = blogsQuery.Where(c => c.CategoryId == categoryId);
+            }
+
+            if (userId != null)
+            {
+                blogsQuery = blogsQuery.Where(c => c.UserId == userId);
             }
 
             if (sortOrder?.ToLower() == "asc")

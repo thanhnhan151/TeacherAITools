@@ -8,6 +8,7 @@ namespace TeacherAITools.Application.Quizzes.Queries.GetQuizzes
         string? SearchTerm,
         string? SortColumn,
         string? SortOrder,
+        int? UserId,
         int? LessonId,
         int Page,
         int PageSize) : IRequest<Response<PaginatedList<GetQuizResponse>>>;

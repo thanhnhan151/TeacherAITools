@@ -9,6 +9,7 @@ namespace TeacherAITools.Application.Blogs.Queries.GetBlogs
         string? SortColumn,
         string? SortOrder,
         bool IsActive,
+        int? UserId,
         int? CategoryId,
         int Page,
         int PageSize) : IRequest<Response<PaginatedList<GetBlogResponse>>>;

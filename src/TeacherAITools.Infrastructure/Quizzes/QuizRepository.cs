@@ -10,10 +10,12 @@ namespace TeacherAITools.Infrastructure.Quizzes
 {
     public class QuizRepository(TeacherAIToolsDbContext dbContext, ILogger logger) : Repository<Quiz>(dbContext, logger), IQuizRepository
     {
-        public async Task<PaginatedList<Quiz>> PaginatedListAsync(string? searchTerm, string? sortColumn, string? sortOrder, int? lessonId, int page, int pageSize)
+        public async Task<PaginatedList<Quiz>> PaginatedListAsync(string? searchTerm, string? sortColumn, string? sortOrder, int? userId, int? lessonId, int page, int pageSize)
         {
             IQueryable<Quiz> quizzesQuery = _dbContext.Quizzes
-                .Include(u => u.Lesson);
+                .Include(q => q.User)
+                .Include(q => q.Lesson)
+                        .ThenInclude(q => q.Module);
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -24,6 +26,11 @@ namespace TeacherAITools.Infrastructure.Quizzes
             if (lessonId != null)
             {
                 quizzesQuery = quizzesQuery.Where(c => c.LessonId == lessonId);
+            }
+
+            if (userId != null)
+            {
+                quizzesQuery = quizzesQuery.Where(c => c.UserId == userId);
             }
 
             if (sortOrder?.ToLower() == "asc")

@@ -21,9 +21,13 @@ namespace TeacherAITools.Application.Quizzes.Queries.GetQuizzesById
         {
             var quizQuery = await _unitOfWork.Quizzes.GetAsync(q => q.QuizId == request.QuizId);
 
-            var quiz = quizQuery.Include(q => q.QuizQuestions)
-                                        .ThenInclude(q => q.QuizAnswers)
-                                .FirstOrDefault() ?? throw new ApiException(ResponseCode.QUIZ_NOT_FOUND);
+            var quiz = quizQuery
+                .Include(q => q.User)
+                .Include(q => q.Lesson)
+                        .ThenInclude(q => q.Module)
+                .Include(q => q.QuizQuestions)
+                        .ThenInclude(q => q.QuizAnswers)
+                .FirstOrDefault() ?? throw new ApiException(ResponseCode.QUIZ_NOT_FOUND);
 
             return new Response<GetQuizDetailResponse>(code: (int)ResponseCode.SUCCESS,
                 data: _mapper.Map<GetQuizDetailResponse>(quiz),

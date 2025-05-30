@@ -22,6 +22,7 @@ namespace TeacherAITools.Application.Quizzes.Queries.GetQuizzes
                     request.SearchTerm,
                     request.SortColumn,
                     request.SortOrder,
+                    request.UserId,
                     request.LessonId,
                     request.Page,
                     request.PageSize

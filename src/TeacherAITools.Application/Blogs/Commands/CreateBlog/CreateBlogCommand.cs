@@ -8,5 +8,6 @@ namespace TeacherAITools.Application.Blogs.Commands.CreateBlog
         string Title,
         string Body,
         int CategoryId,
-        int TeacherLessonId) : IRequest<Response<GetBlogResponse>>;
+        int TeacherLessonId,
+        int UserId) : IRequest<Response<GetBlogResponse>>;
 }

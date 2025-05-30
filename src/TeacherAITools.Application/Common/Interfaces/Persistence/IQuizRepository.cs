@@ -10,6 +10,7 @@ namespace TeacherAITools.Application.Common.Interfaces.Persistence
             (string? searchTerm
             , string? sortColumn
             , string? sortOrder
+            , int? userId
             , int? lessonId
             , int page
             , int pageSize);

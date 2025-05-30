@@ -9,6 +9,7 @@ namespace TeacherAITools.Application.Blogs.Common
         public string Body { get; set; } = string.Empty;
         public string PublicationDate { get; set; } = string.Empty;
         public string Category { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
         public int LessonPlanId { get; set; }
         public List<GetCommentResponse> Comments { get; set; } = [];
     }
