@@ -10,7 +10,6 @@ namespace TeacherAITools.Application.Lessons.Common
         public int TotalPeriods { get; set; }
         public string LessonType { get; set; } = string.Empty;
         public string Note { get; set; } = string.Empty;
-        public int Week { get; set; }
         public string Module { get; set; } = string.Empty;
         public int GradeNumber { get; set; }
         public string SpecialAbility { get; set; } = string.Empty;

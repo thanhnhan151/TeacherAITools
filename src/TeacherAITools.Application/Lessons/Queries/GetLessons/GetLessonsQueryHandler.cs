@@ -18,13 +18,8 @@ namespace TeacherAITools.Application.Lessons.Queries.GetLessons
                 page: request.PageNumber,
                 pageSize: request.PageSize,
                 includeFunc: m => m.Include(m => m.LessonType)
-                                   //.Include(m => m.Requirement)
-                                   //.Include(m => m.SchoolSupply)
                                    .Include(m => m.Note)
-                                   //.Include(m => m.User)
-                                   .Include(m => m.Week)
-                                   .Include(m => m.Module)
-                                           .ThenInclude(m => m.Grade),
+                                   .Include(m => m.Module),
                 orderBy: request.GetOrder(),
                 filter: request.GetExpressions(),
                 cancellationToken: cancellationToken);
@@ -43,13 +38,9 @@ namespace TeacherAITools.Application.Lessons.Queries.GetLessons
                         Description = lesson.Description,
                         TotalPeriods = lesson.TotalPeriods,
                         LessonType = lesson.LessonType.LessonTypeName,
-                        //Requirement = lesson.Requirement.Description,
-                        //SchoolSupply = lesson.SchoolSupply.Description,
                         Note = lesson.Note.Description,
-                        //User = lesson.User.Username,
-                        Week = lesson.Week.WeekNumber,
                         Module = lesson.Module.Name,
-                        GradeNumber = lesson.Module.Grade.GradeNumber,
+                        GradeNumber = lesson.Module.Grade.GradeId,
                     })
                 },
                 message: ResponseCode.SUCCESS.GetDescription());

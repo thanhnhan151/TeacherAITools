@@ -70,7 +70,6 @@ namespace TeacherAITools.Application.Lessons.Commands.CreateLesson
                 //SchoolSupplyId = request.createLessonRequest.SchoolSupplyId,
                 NoteId = request.createLessonRequest.NoteId,
                 //UserId = request.createLessonRequest.UserId,
-                WeekId = request.createLessonRequest.WeekId,
                 ModuleId = request.createLessonRequest.ModuleId
             };
 

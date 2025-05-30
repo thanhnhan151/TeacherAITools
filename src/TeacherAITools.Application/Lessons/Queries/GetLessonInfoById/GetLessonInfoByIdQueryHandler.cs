@@ -21,9 +21,7 @@ namespace TeacherAITools.Application.Lessons.Queries.GetLessonInfoById
             var lesson = lessonQuery
                 .Include(l => l.LessonType)
                 .Include(l => l.Note)
-                .Include(l => l.Week)
                 .Include(l => l.Module)
-                        .ThenInclude(m => m.Grade)
                 .FirstOrDefault() ?? throw new ApiException(ResponseCode.LESSON_NOT_FOUND);
 
             var response = new GetLessonInfoResponse
@@ -32,11 +30,13 @@ namespace TeacherAITools.Application.Lessons.Queries.GetLessonInfoById
                 Name = lesson.Name,
                 Description = lesson.Description,
                 TotalPeriods = lesson.TotalPeriods,
+                LessonTypeId = lesson.LessonType.LessonTypeId,
                 LessonType = lesson.LessonType.LessonTypeName,
+                NoteId = lesson.Note.NoteId,
                 Note = lesson.Note.Description,
-                Week = lesson.Week.WeekNumber,
+                ModuleId = lesson.Module.ModuleId,
                 Module = lesson.Module.Name,
-                GradeNumber = lesson.Module.Grade.GradeNumber,
+                GradeNumber = lesson.Module.GradeId,
             };
 
             return new Response<GetLessonInfoResponse>(code: (int)ResponseCode.SUCCESS, data: response, message: ResponseCode.SUCCESS.GetDescription());
