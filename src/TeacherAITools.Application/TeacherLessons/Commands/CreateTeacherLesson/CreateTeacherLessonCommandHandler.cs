@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using TeacherAITools.Application.Common.Enums;
-using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.Common.Extensions;
 using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
 using TeacherAITools.Application.Common.Interfaces.Services;
@@ -19,7 +18,7 @@ namespace TeacherAITools.Application.TeacherLessons.Commands.CreateTeacherLesson
 
         public async Task<Response<GetTeacherLessonResponse>> Handle(CreateTeacherLessonCommand request, CancellationToken cancellationToken)
         {
-            if (await _unitOfWork.TeacherLessons.IsBelongedToTeacherAsync(request.UserId, request.PromptId)) throw new ApiException(ResponseCode.ALREADY_GENERATED_LESSON);
+            //if (await _unitOfWork.TeacherLessons.IsBelongedToTeacherAsync(request.UserId, request.PromptId)) throw new ApiException(ResponseCode.ALREADY_GENERATED_LESSON);
 
             TeacherLesson teacherLesson = new()
             {
@@ -30,7 +29,7 @@ namespace TeacherAITools.Application.TeacherLessons.Commands.CreateTeacherLesson
                 Goal = request.Goal,
                 SchoolSupply = request.SchoolSupply,
                 UserId = request.UserId,
-                PromptId = request.PromptId,
+                PromptId = null,
                 CreatedAt = _dateTimeProvider.UtcNow
             };
 
