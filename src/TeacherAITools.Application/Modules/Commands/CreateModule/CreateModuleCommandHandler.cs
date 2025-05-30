@@ -20,19 +20,22 @@ namespace TeacherAITools.Application.Modules.Commands.CreateModule
 
         public async Task<Response<GetModuleResponse>> Handle(CreateModuleCommand request, CancellationToken cancellationToken)
         {
-            if(!_unitOfWork.Curriculums.Any(
-                x => x.CurriculumId == request.createModuleRequest.CurriculumId)){
-                    throw new ApiException(ResponseCode.CURRICULUM_NOT_FOUND);
+            if (!_unitOfWork.Curriculums.Any(
+                x => x.CurriculumId == request.createModuleRequest.CurriculumId))
+            {
+                throw new ApiException(ResponseCode.CURRICULUM_NOT_FOUND);
             }
 
-            if(!_unitOfWork.Grades.Any(
-                x => x.GradeId == request.createModuleRequest.GradeId)){
-                    throw new ApiException(ResponseCode.ID_GRADE_DONT_EXIST);
+            if (!_unitOfWork.Grades.Any(
+                x => x.GradeId == request.createModuleRequest.GradeId))
+            {
+                throw new ApiException(ResponseCode.ID_GRADE_DONT_EXIST);
             }
 
-            if(!_unitOfWork.Books.Any(
-                x => x.BookId == request.createModuleRequest.BookId)){
-                    throw new ApiException(ResponseCode.ID_BOOK_DONT_EXIST);
+            if (!_unitOfWork.Books.Any(
+                x => x.BookId == request.createModuleRequest.BookId))
+            {
+                throw new ApiException(ResponseCode.ID_BOOK_DONT_EXIST);
             }
 
             var moduleQuery = await _unitOfWork.Modules.GetAsync(
@@ -45,7 +48,6 @@ namespace TeacherAITools.Application.Modules.Commands.CreateModule
                 Name = request.createModuleRequest.Name,
                 Desciption = request.createModuleRequest.Desciption,
                 Semester = request.createModuleRequest.Semester,
-                TotalPeriods = request.createModuleRequest.TotalPeriods,
                 CurriculumId = request.createModuleRequest.CurriculumId,
                 GradeId = request.createModuleRequest.GradeId,
                 BookId = request.createModuleRequest.BookId
