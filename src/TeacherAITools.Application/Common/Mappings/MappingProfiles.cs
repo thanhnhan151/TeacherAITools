@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using TeacherAITools.Application.Blogs.Common;
+using TeacherAITools.Application.Books.Common;
 using TeacherAITools.Application.Categories.Common;
 using TeacherAITools.Application.Cities.Common;
 using TeacherAITools.Application.Comments.Common;
@@ -169,6 +170,10 @@ namespace TeacherAITools.Application.Common.Mappings
 
             #region Lesson
             CreateMap<GetLessonDetailResponse, Lesson>();
+            #endregion
+
+            #region
+            CreateMap<Book, GetBookResponse>();
             #endregion
         }
     }
