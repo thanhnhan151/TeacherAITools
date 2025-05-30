@@ -19,6 +19,11 @@ namespace TeacherAITools.Infrastructure.Quizzes
                 .WithMany(q => q.Quizzes)
                 .HasForeignKey(q => q.LessonId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            builder.HasOne(q => q.User)
+                .WithMany(q => q.Quizzes)
+                .HasForeignKey(q => q.UserId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }
