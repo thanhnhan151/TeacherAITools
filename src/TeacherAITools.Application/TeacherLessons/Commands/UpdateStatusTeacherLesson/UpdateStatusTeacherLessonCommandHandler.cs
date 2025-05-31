@@ -40,6 +40,8 @@ namespace TeacherAITools.Application.TeacherLessons.Commands.UpdateStatusTeacher
                         throw new ApiException(ResponseCode.MUST_HAVE_DISAPPROVED_REASON);
                     }
 
+                    teacherLesson.RejectedCount += 1;
+
                     teacherLesson.DisapprovedReason = request.updateStatusTeacherLessonRequest.DisapprovedReason;
 
                     mailRequest.ToEmail = teacherLesson.User.Email;
