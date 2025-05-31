@@ -10,6 +10,7 @@ using TeacherAITools.Application.Users.Commands.DisableUser;
 using TeacherAITools.Application.Users.Commands.UpdateUser;
 using TeacherAITools.Application.Users.Commands.UploadProfileImg;
 using TeacherAITools.Application.Users.Common;
+using TeacherAITools.Application.Users.Queries.GetPromptsByUserId;
 using TeacherAITools.Application.Users.Queries.GetTeacherLessonsById;
 using TeacherAITools.Application.Users.Queries.GetUserById;
 using TeacherAITools.Application.Users.Queries.GetUsers;
@@ -117,6 +118,27 @@ namespace TeacherAITools.Api.Controllers
             try
             {
                 return Ok(await mediator.Send(query));
+            }
+            catch (ApiException e)
+            {
+                return BadRequest(new
+                {
+                    errorCode = e.ErrorCode,
+                    error = e.Error,
+                    errorMessage = e.ErrorMessage
+                });
+            }
+        }
+
+        [HttpGet("{id}/prompts")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(Response<PaginatedList<GetUserResponse>>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetlAsync(int id)
+        {
+            try
+            {
+                return Ok(await mediator.Send(new GetPromptsByUserIdQuery(id)));
             }
             catch (ApiException e)
             {
