@@ -177,7 +177,7 @@ namespace TeacherAITools.Application.Common.Enums
         [Description("Prompt not found!")]
         PROMPT_NOT_FOUND = 58,
 
-        [Description("Teacher lesson has already existed!")]
+        [Description("Teacher lesson not found!")]
         TEACHER_LESSON_DONT_EXIST = 59,
 
         [Description("Reject must have reason!")]
@@ -205,5 +205,8 @@ namespace TeacherAITools.Application.Common.Enums
 
         [Description("Trưởng bộ môn không tồn tại!")]
         MANAGER_NOT_FOUND = 65,
+
+        [Description("Lesson has already existed")]
+        LESSON_HAS_ALREADY_EXISTED = 66,
     }
 }

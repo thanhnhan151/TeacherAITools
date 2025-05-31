@@ -20,4 +20,8 @@
 		<ProjectReference Include="..\TeacherAITools.Domain\TeacherAITools.Domain.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Users\Queries\GetPromptsByUserId\" />
+	</ItemGroup>
+
 </Project>

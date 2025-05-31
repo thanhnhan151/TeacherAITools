@@ -14,10 +14,11 @@ namespace TeacherAITools.Infrastructure.Blogs
 
             builder.Property(b => b.Title)
                 .IsRequired()
-                .HasMaxLength(150);
+                .HasMaxLength(100);
 
             builder.Property(b => b.Body)
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength(250);
 
             builder.HasOne(c => c.Category)
                 .WithMany(c => c.Blogs)

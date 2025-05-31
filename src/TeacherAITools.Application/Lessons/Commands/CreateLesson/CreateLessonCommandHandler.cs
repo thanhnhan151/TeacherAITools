@@ -58,6 +58,11 @@ namespace TeacherAITools.Application.Lessons.Commands.CreateLesson
                 throw new ApiException(ResponseCode.MODULE_NOT_FOUND);
             }
 
+            var lessonQuery = await _unitOfWork.Modules.GetAsync(
+                l => l.Name.ToLower().Equals(request.createLessonRequest.Name.ToLower()));
+
+            if (lessonQuery.FirstOrDefault() is not null) throw new ApiException(ResponseCode.LESSON_HAS_ALREADY_EXISTED);
+
             var lessonId = _unitOfWork.Lessons.GetLastIdLesson() + 1;
 
             var lesson = new Lesson
