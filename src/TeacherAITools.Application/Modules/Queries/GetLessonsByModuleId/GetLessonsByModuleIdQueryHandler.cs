@@ -6,6 +6,7 @@ using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.Common.Extensions;
 using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
 using TeacherAITools.Application.Modules.Common;
+using TeacherAITools.Domain.Common;
 using TeacherAITools.Domain.Wrappers;
 
 namespace TeacherAITools.Application.Modules.Queries.GetLessonsByModuleId
@@ -21,7 +22,16 @@ namespace TeacherAITools.Application.Modules.Queries.GetLessonsByModuleId
         {
             var moduleQuery = await _unitOfWork.Modules.GetAsync(m => m.ModuleId == request.ModuleId);
 
-            var module = moduleQuery.Include(m => m.Lessons.Where(l => l.IsActive).OrderBy(l => l.LessonId)).FirstOrDefault() ?? throw new ApiException(ResponseCode.MODULE_NOT_FOUND);
+            if (request.RoleId == (int)AvailableRole.Teacher)
+            {
+                var teacherModule = moduleQuery.Include(m => m.Lessons.Where(l => l.IsActive).OrderBy(l => l.LessonId)).FirstOrDefault() ?? throw new ApiException(ResponseCode.MODULE_NOT_FOUND);
+
+                return new Response<GetModuleDetailResponse>(code: (int)ResponseCode.SUCCESS,
+                data: _mapper.Map<GetModuleDetailResponse>(teacherModule),
+                message: ResponseCode.SUCCESS.GetDescription());
+            }
+
+            var module = moduleQuery.Include(m => m.Lessons).FirstOrDefault() ?? throw new ApiException(ResponseCode.MODULE_NOT_FOUND);
 
             return new Response<GetModuleDetailResponse>(code: (int)ResponseCode.SUCCESS,
                 data: _mapper.Map<GetModuleDetailResponse>(module),

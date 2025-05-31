@@ -95,11 +95,11 @@ namespace TeacherAITools.Api.Controllers
         [AllowAnonymous]
         [ProducesResponseType(typeof(Response<List<GetModuleResponse>>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetAsync(int id)
+        public async Task<IActionResult> GetAsync(int id, int? roleId)
         {
             try
             {
-                return Ok(await _mediator.Send(new GetLessonsByModuleIdQuery(id)));
+                return Ok(await _mediator.Send(new GetLessonsByModuleIdQuery(id, roleId)));
             }
             catch (ApiException e)
             {
