@@ -6,6 +6,7 @@ using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.Common.Extensions;
 using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
 using TeacherAITools.Application.Grades.Common;
+using TeacherAITools.Domain.Common;
 using TeacherAITools.Domain.Wrappers;
 
 namespace TeacherAITools.Application.Grades.Queries.GetModulesByGradeId
@@ -21,7 +22,16 @@ namespace TeacherAITools.Application.Grades.Queries.GetModulesByGradeId
         {
             var gradeQuery = await _unitOfWork.Grades.GetAsync(g => g.GradeId == request.GradeId);
 
-            var grade = gradeQuery.Include(g => g.Modules.Where(m => m.IsActive).OrderBy(m => m.ModuleId)).FirstOrDefault() ?? throw new ApiException(ResponseCode.ID_GRADE_DONT_EXIST);
+            if (request.RoleId == (int)AvailableRole.Teacher)
+            {
+                var teacherGrade = gradeQuery.Include(g => g.Modules.Where(m => m.IsActive).OrderBy(m => m.ModuleId)).FirstOrDefault() ?? throw new ApiException(ResponseCode.ID_GRADE_DONT_EXIST);
+
+                return new Response<GetGradeDetailResponse>(code: (int)ResponseCode.SUCCESS,
+                data: _mapper.Map<GetGradeDetailResponse>(teacherGrade),
+                message: ResponseCode.SUCCESS.GetDescription());
+            }
+
+            var grade = gradeQuery.Include(g => g.Modules).FirstOrDefault() ?? throw new ApiException(ResponseCode.ID_GRADE_DONT_EXIST);
 
             return new Response<GetGradeDetailResponse>(code: (int)ResponseCode.SUCCESS,
                 data: _mapper.Map<GetGradeDetailResponse>(grade),

@@ -4,5 +4,7 @@ using TeacherAITools.Domain.Wrappers;
 
 namespace TeacherAITools.Application.Grades.Queries.GetModulesByGradeId
 {
-    public record GetModulesByGradeIdQuery(int GradeId) : IRequest<Response<GetGradeDetailResponse>>;
+    public record GetModulesByGradeIdQuery(
+        int GradeId
+        , int? RoleId) : IRequest<Response<GetGradeDetailResponse>>;
 }

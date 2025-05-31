@@ -4,5 +4,5 @@ using TeacherAITools.Domain.Wrappers;
 
 namespace TeacherAITools.Application.Modules.Queries.GetLessonsByModuleId
 {
-    public record GetLessonsByModuleIdQuery(int ModuleId) : IRequest<Response<GetModuleDetailResponse>>;
+    public record GetLessonsByModuleIdQuery(int ModuleId, int? RoleId) : IRequest<Response<GetModuleDetailResponse>>;
 }

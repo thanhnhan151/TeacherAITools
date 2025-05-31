@@ -42,11 +42,11 @@ namespace TeacherAITools.Api.Controllers
         [AllowAnonymous]
         [ProducesResponseType(typeof(Response<GetGradeDetailResponse>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetByIdAsync(int id)
+        public async Task<IActionResult> GetByIdAsync(int id, int? roleId)
         {
             try
             {
-                return Ok(await mediator.Send(new GetModulesByGradeIdQuery(id)));
+                return Ok(await mediator.Send(new GetModulesByGradeIdQuery(id, roleId)));
             }
             catch (ApiException e)
             {
