@@ -173,7 +173,7 @@ namespace TeacherAITools.Api.Controllers
         }
 
         [HttpPut("{id}/reject")]
-        [AllowAnonymous]
+        [Authorize]
         [ProducesResponseType(typeof(Response<GetDetailTeacherLessonResponse>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> RejectTeacherLessonAsync(int id, [FromBody] string disapprovedReason)
@@ -195,7 +195,7 @@ namespace TeacherAITools.Api.Controllers
         }
 
         [HttpPut("{id}/approve")]
-        [AllowAnonymous]
+        [Authorize]
         [ProducesResponseType(typeof(Response<GetDetailTeacherLessonResponse>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> ApproveTeacherLessonAsync(int id)
