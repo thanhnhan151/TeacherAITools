@@ -7,6 +7,7 @@ using TeacherAITools.Application.Common.Extensions;
 using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
 using TeacherAITools.Application.Common.Models.Responses;
 using TeacherAITools.Application.Lessons.Common;
+using TeacherAITools.Domain.Entities;
 using TeacherAITools.Domain.Wrappers;
 
 namespace TeacherAITools.Application.Lessons.Queries.GetLessonById
@@ -31,6 +32,11 @@ namespace TeacherAITools.Application.Lessons.Queries.GetLessonById
                 .Include(l => l.Note)
                 .Include(l => l.Module)
                 .FirstOrDefault() ?? throw new ApiException(ResponseCode.LESSON_NOT_FOUND);
+
+            lesson.StartUp ??= new StartUp();
+            lesson.KnowLedge ??= new KnowLedge();
+            lesson.Practice ??= new Practice();
+            lesson.Apply ??= new Apply();
 
             var response = new GetLessonDetailResponse
             {

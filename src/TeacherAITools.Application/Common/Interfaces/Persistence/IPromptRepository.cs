@@ -16,5 +16,7 @@ namespace TeacherAITools.Application.Common.Interfaces.Persistence
         Task<bool> IsLessonIdPresentAsync(int lessonId);
 
         int GetLastIdPrompt();
+
+        Task<bool> IsBelongedToTeacherAsync(int userId, int lessonId);
     }
 }

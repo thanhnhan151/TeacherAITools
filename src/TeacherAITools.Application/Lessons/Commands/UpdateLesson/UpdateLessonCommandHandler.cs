@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using TeacherAITools.Application.Common.Enums;
 using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.Common.Extensions;
@@ -50,24 +51,44 @@ namespace TeacherAITools.Application.Lessons.Commands.UpdateLesson
             //    throw new ApiException(ResponseCode.USER_NOT_FOUND);
             //}
 
-            if (!_unitOfWork.Modules.Any(
-                x => x.ModuleId == request.updateLessonRequest.ModuleId))
-            {
-                throw new ApiException(ResponseCode.MODULE_NOT_FOUND);
-            }
+            //if (!_unitOfWork.Modules.Any(
+            //    x => x.ModuleId == request.updateLessonRequest.ModuleId))
+            //{
+            //    throw new ApiException(ResponseCode.MODULE_NOT_FOUND);
+            //}
 
-            var lessonQuery = await _unitOfWork.Lessons.GetAsync(expression: m => m.LessonId == request.Id, disableTracking: true);
+            var lessonQuery = await _unitOfWork.Lessons.GetAsync(
+                expression: m => m.LessonId == request.Id,
+                includeFunc: m => m.Include(m => m.Module)
+                                   .ThenInclude(m => m.Curriculum),
+                disableTracking: true);
 
             var lesson = lessonQuery.FirstOrDefault() ?? throw new ApiException(ResponseCode.LESSON_NOT_FOUND);
 
+            if (request.updateLessonRequest.TotalPeriods > lesson.TotalPeriods)
+            {
+                lesson.TotalPeriods += 1;
+                lesson.Module.TotalPeriods += 1;
+                lesson.Module.Curriculum.TotalPeriods += 1;
+            }
+
+            if (request.updateLessonRequest.TotalPeriods < lesson.TotalPeriods)
+            {
+                lesson.TotalPeriods -= 1;
+                lesson.Module.TotalPeriods -= 1;
+                lesson.Module.Curriculum.TotalPeriods -= 1;
+            }
+
             lesson.Name = request.updateLessonRequest.Name;
             lesson.Description = request.updateLessonRequest.Description;
-            lesson.TotalPeriods = request.updateLessonRequest.TotalPeriods;
             lesson.LessonTypeId = request.updateLessonRequest.LessonTypeId;
             lesson.NoteId = request.updateLessonRequest.NoteId;
-            lesson.ModuleId = request.updateLessonRequest.ModuleId;
 
             await _unitOfWork.Lessons.UpdateAsync(lesson);
+
+            await _unitOfWork.Modules.UpdateAsync(lesson.Module);
+
+            await _unitOfWork.Curriculums.UpdateAsync(lesson.Module.Curriculum);
             await _unitOfWork.CompleteAsync();
 
             return new Response<GetLessonResponse>(code: (int)ResponseCode.UPDATED_SUCCESS, message: ResponseCode.UPDATED_SUCCESS.GetDescription());

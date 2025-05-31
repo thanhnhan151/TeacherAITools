@@ -17,7 +17,10 @@ namespace TeacherAITools.Application.Modules.Commands.DeleteModule
         {
             var moduleQuery = await _unitOfWork.Modules.GetAsync(expression: m => m.ModuleId == request.Id, disableTracking: true);
 
-            var module = moduleQuery.Include(m => m.Lessons).FirstOrDefault() ?? throw new ApiException(ResponseCode.MODULE_NOT_FOUND);
+            var module = moduleQuery
+                .Include(m => m.Curriculum)
+                .Include(m => m.Lessons)
+                .FirstOrDefault() ?? throw new ApiException(ResponseCode.MODULE_NOT_FOUND);
 
             if (module.IsActive)
             {
@@ -26,6 +29,7 @@ namespace TeacherAITools.Application.Modules.Commands.DeleteModule
                 {
                     if (lesson.IsActive) lesson.IsActive = false;
                 }
+                module.Curriculum.TotalPeriods -= module.TotalPeriods;
             }
             else
             {
@@ -34,10 +38,15 @@ namespace TeacherAITools.Application.Modules.Commands.DeleteModule
                 {
                     if (!lesson.IsActive) lesson.IsActive = true;
                 }
+                module.Curriculum.TotalPeriods += module.TotalPeriods;
             }
 
             await _unitOfWork.Lessons.UpdateRangeAsync(module.Lessons);
+
             await _unitOfWork.Modules.UpdateAsync(module);
+
+            await _unitOfWork.Curriculums.UpdateAsync(module.Curriculum);
+
             await _unitOfWork.CompleteAsync();
 
             return new Response<GetModuleResponse>(code: (int)ResponseCode.DELETED_SUCCESS, message: ResponseCode.DELETED_SUCCESS.GetDescription());

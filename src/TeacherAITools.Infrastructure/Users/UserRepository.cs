@@ -88,36 +88,20 @@ namespace TeacherAITools.Infrastructure.Users
             _ => user => user.UserId
         };
 
-        public async Task<int> CheckSchoolManagerAsync(int roleId, int gradeId, int schoolId)
+        public async Task<int> CheckGradeManagerAsync(int roleId, int gradeId)
         {
-            switch (roleId)
-            {
-                case (int)AvailableRole.SubjectSpecialistManager:
-                    var result = await _dbContext.Users.Where(u => u.GradeId == gradeId
-                                                                && u.SchoolId == schoolId
+            var result = await _dbContext.Users.Where(u => u.GradeId == gradeId
                                                                 && u.RoleId == roleId)
                                                        .FirstOrDefaultAsync();
 
-                    if (result is not null) return 1;
-                    break;
+            if (result is not null) return 1;
 
-                case (int)AvailableRole.ViceManager:
-                    var result1 = await _dbContext.Users.Where(u => u.GradeId == gradeId
-                                                                 && u.SchoolId == schoolId
-                                                                 && u.RoleId == roleId)
-                                                       .FirstOrDefaultAsync();
-
-                    if (result1 is not null) return 0;
-                    break;
-
-            }
-
-            return -1;
+            return 0;
         }
 
-        public async Task<int> GetSchoolManagerAsync(int gradeId, int schoolId)
+        public async Task<int> GetSchoolManagerAsync(int gradeId)
         {
-            var result = await _dbContext.Users.Where(u => u.RoleId == (int)AvailableRole.SubjectSpecialistManager && u.GradeId == gradeId && u.SchoolId == schoolId).FirstOrDefaultAsync();
+            var result = await _dbContext.Users.Where(u => u.RoleId == (int)AvailableRole.SubjectSpecialistManager && u.GradeId == gradeId).FirstOrDefaultAsync();
 
             if (result is not null) return result.UserId;
 

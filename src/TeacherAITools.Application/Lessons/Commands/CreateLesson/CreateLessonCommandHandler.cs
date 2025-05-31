@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using TeacherAITools.Application.Common.Enums;
 using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.Common.Extensions;
@@ -73,7 +74,20 @@ namespace TeacherAITools.Application.Lessons.Commands.CreateLesson
                 ModuleId = request.createLessonRequest.ModuleId
             };
 
+            var moduleQuery = await _unitOfWork.Modules.GetAsync(expression: m => m.ModuleId == request.createLessonRequest.ModuleId, disableTracking: true);
+
+            var module = moduleQuery
+                .Include(m => m.Curriculum)
+                .FirstOrDefault() ?? throw new ApiException(ResponseCode.MODULE_NOT_FOUND);
+
+            module.TotalPeriods += request.createLessonRequest.TotalPeriods;
+            module.Curriculum.TotalPeriods += request.createLessonRequest.TotalPeriods;
+
             var result = await _unitOfWork.Lessons.AddAsync(lesson);
+
+            await _unitOfWork.Modules.UpdateAsync(module);
+
+            await _unitOfWork.Curriculums.UpdateAsync(module.Curriculum);
 
             await _unitOfWork.CompleteAsync();
 
