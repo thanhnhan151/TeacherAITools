@@ -24,14 +24,22 @@ namespace TeacherAITools.Application.Modules.Queries.GetLessonsByModuleId
 
             if (request.RoleId == (int)AvailableRole.Teacher)
             {
-                var teacherModule = moduleQuery.Include(m => m.Lessons.Where(l => l.IsActive).OrderBy(l => l.LessonId)).FirstOrDefault() ?? throw new ApiException(ResponseCode.MODULE_NOT_FOUND);
+                var teacherModule = moduleQuery
+                    .Include(m => m.Lessons
+                    .Where(l => l.IsActive)
+                    .OrderBy(l => l.LessonId))
+                    .ThenInclude(l => l.LessonType)
+                    .FirstOrDefault() ?? throw new ApiException(ResponseCode.MODULE_NOT_FOUND);
 
                 return new Response<GetModuleDetailResponse>(code: (int)ResponseCode.SUCCESS,
                 data: _mapper.Map<GetModuleDetailResponse>(teacherModule),
                 message: ResponseCode.SUCCESS.GetDescription());
             }
 
-            var module = moduleQuery.Include(m => m.Lessons).FirstOrDefault() ?? throw new ApiException(ResponseCode.MODULE_NOT_FOUND);
+            var module = moduleQuery
+                .Include(m => m.Lessons)
+                .ThenInclude(l => l.LessonType)
+                .FirstOrDefault() ?? throw new ApiException(ResponseCode.MODULE_NOT_FOUND);
 
             return new Response<GetModuleDetailResponse>(code: (int)ResponseCode.SUCCESS,
                 data: _mapper.Map<GetModuleDetailResponse>(module),

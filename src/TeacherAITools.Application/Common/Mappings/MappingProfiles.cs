@@ -107,7 +107,8 @@ namespace TeacherAITools.Application.Common.Mappings
 
             #region Module
             CreateMap<Module, GetModuleDetailResponse>();
-            CreateMap<Lesson, GetLessonItem>();
+            CreateMap<Lesson, GetLessonItem>()
+                .ForMember(l => l.LessonType, l => l.MapFrom(l => l.LessonType.LessonTypeName));
             #endregion
 
             #region Quiz
