@@ -12,10 +12,11 @@ namespace TeacherAITools.Application.Blogs.Commands.CreateBlog
             _unitOfWork = unitOfWork;
 
             RuleFor(b => b.Title)
-                .MaximumLength(150).WithMessage("Title can not have over 150 characters")
+                .MaximumLength(100).WithMessage("Title can not have over 150 characters")
                 .NotEmpty().WithMessage("Title is required!");
 
             RuleFor(b => b.Body)
+                .MaximumLength(250).WithMessage("Title can not have over 150 characters")
                 .NotEmpty().WithMessage("Body is required");
 
             RuleFor(b => b.CategoryId)
