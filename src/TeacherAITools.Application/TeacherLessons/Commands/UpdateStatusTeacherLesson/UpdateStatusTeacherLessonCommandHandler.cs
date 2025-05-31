@@ -40,13 +40,15 @@ namespace TeacherAITools.Application.TeacherLessons.Commands.UpdateStatusTeacher
                         throw new ApiException(ResponseCode.MUST_HAVE_DISAPPROVED_REASON);
                     }
 
+                    teacherLesson.RejectedCount += 1;
+
                     teacherLesson.DisapprovedReason = request.updateStatusTeacherLessonRequest.DisapprovedReason;
 
                     mailRequest.ToEmail = teacherLesson.User.Email;
 
                     mailRequest.Subject = "BÀI GIẢNG CỦA BẠN ĐÃ BỊ TỪ CHỐI";
 
-                    mailRequest.Body = $"Hệ thống Math AI Tools xin thông báo:\r\n\r\nThông tin chi tiết:\r\n\r\nBài học: {teacherLesson.Prompt.Lesson.Name}\r\n\r\nGiảng viên sử dụng: {teacherLesson.User.Fullname}\r\n\r\nThời gian: {teacherLesson.CreatedAt.GetFormatDateTime()}\r\n\r\nNội dung thông báo: Bài giảng của bạn đã được Quản lý chuyên môn từ chối với lý do: {teacherLesson.DisapprovedReason}\r\n\r\nTrân trọng,\r\nHệ thống AI Math Tools";
+                    mailRequest.Body = $"Hệ thống Math AI Tools xin thông báo:\n\nThông tin chi tiết:\n\nBài học: {teacherLesson.Prompt.Lesson.Name}\n\nGiảng viên sử dụng: {teacherLesson.User.Fullname}\n\nThời gian: {teacherLesson.CreatedAt.GetFormatDateTime()}\n\nNội dung thông báo: Bài giảng của bạn đã được Quản lý chuyên môn từ chối với lý do: {teacherLesson.DisapprovedReason}\n\nTrân trọng,\nHệ thống AI Math Tools";
 
                     await _emailService.SendEmailAsync(mailRequest);
                     break;
@@ -60,7 +62,7 @@ namespace TeacherAITools.Application.TeacherLessons.Commands.UpdateStatusTeacher
 
                     mailRequest.Subject = "BÀI GIẢNG CỦA BẠN ĐÃ ĐƯỢC PHÊ DUYỆT";
 
-                    mailRequest.Body = $"Hệ thống Math AI Tools xin thông báo:\r\n\r\nThông tin chi tiết:\r\n\r\nBài học: {teacherLesson.Prompt.Lesson.Name}\r\n\r\nGiảng viên sử dụng: {teacherLesson.User.Fullname}\r\n\r\nThời gian: {teacherLesson.CreatedAt.GetFormatDateTime()}\r\n\r\nNội dung thông báo: Bài giảng của bạn đã được Quản lý chuyên môn phê duyệt\r\n\r\nTrân trọng,\r\nHệ thống AI Math Tools";
+                    mailRequest.Body = $"Hệ thống Math AI Tools xin thông báo:\n\nThông tin chi tiết:\n\nBài học: {teacherLesson.Prompt.Lesson.Name}\n\nGiảng viên sử dụng: {teacherLesson.User.Fullname}\n\nThời gian: {teacherLesson.CreatedAt.GetFormatDateTime()}\n\nNội dung thông báo: Bài giảng của bạn đã được Quản lý chuyên môn phê duyệt\n\nTrân trọng,\nHệ thống AI Math Tools";
 
                     await _emailService.SendEmailAsync(mailRequest);
                     break;

@@ -62,7 +62,7 @@ namespace TeacherAITools.Application.Users.Commands.CreateUser
 
                 mailRequest.ToEmail = newUser.Email;
                 mailRequest.Subject = "TÀI KHOẢN ĐĂNG NHẬP PHẦN MỀM";
-                mailRequest.Body = "Chào Quản lý chuyên môn lớp: " + $"{newUser.GradeId}" + ",\r\n\r\nHệ thống gửi tài khoản để  đăng nhập phần mềm:\r\n\r\nUsername\r\n\r\n" + $"{newUser.Username}" + "\r\n\r\nHãy giữ kín chi tiết này\r\n\r\nPassword\r\n\r\n" + $"{newUser.PasswordHash}" + "\r\n\r\nNhập đúng ký tự hoa/thường\r\n\r\nTrân trọng,\r\n\r\nHệ thống Math AI Tools";
+                mailRequest.Body = "Chào Quản lý chuyên môn lớp: " + $"{newUser.GradeId}" + "\n\nHệ thống gửi tài khoản để  đăng nhập phần mềm:\n\nUsername: " + $"{newUser.Username}" + " Hãy giữ kín chi tiết này.\n\nPassword: " + $"{newUser.PasswordHash}" + " Nhập đúng ký tự hoa/thường\n\nTrân trọng,\n\nHệ thống Math AI Tools";
 
                 await _emailService.SendEmailAsync(mailRequest);
 
