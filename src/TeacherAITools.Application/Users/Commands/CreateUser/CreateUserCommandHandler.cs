@@ -7,6 +7,7 @@ using TeacherAITools.Application.Common.Interfaces.Persistence.Base;
 using TeacherAITools.Application.Common.Interfaces.Services;
 using TeacherAITools.Application.Common.Models.Requests;
 using TeacherAITools.Application.Users.Common;
+using TeacherAITools.Domain.Common;
 using TeacherAITools.Domain.Entities;
 using TeacherAITools.Domain.Wrappers;
 
@@ -21,6 +22,8 @@ namespace TeacherAITools.Application.Users.Commands.CreateUser
 
         public async Task<Response<GetUserResponse>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
+            var newUser = new User();
+            var mailRequest = new MailRequest();
             List<string> errorMessages = [];
             var validator = new CreateUserCommandValidator(_unitOfWork);
             var result = await validator.ValidateAsync(request, cancellationToken);
@@ -33,50 +36,66 @@ namespace TeacherAITools.Application.Users.Commands.CreateUser
                 throw new ValidationException(ResponseCode.CREATED_UNSUCC, errorMessages);
             }
 
-            var check = await _unitOfWork.Users.CheckSchoolManagerAsync(request.RoleId, request.GradeId, request.SchoolId);
-
-            switch (check)
+            if (request.RoleId == (int)AvailableRole.SubjectSpecialistManager)
             {
-                case 1:
+                var check = await _unitOfWork.Users.CheckGradeManagerAsync(request.RoleId, request.GradeId);
+
+                if (check == 1)
+                {
                     errorMessages.Add(ResponseCode.MANAGER_HAS_EXISTED.GetDescription());
                     throw new ValidationException(ResponseCode.MANAGER_HAS_EXISTED, errorMessages);
-                case 0:
-                    errorMessages.Add(ResponseCode.VICE_MANAGER_HAS_EXISTED.GetDescription());
-                    throw new ValidationException(ResponseCode.VICE_MANAGER_HAS_EXISTED, errorMessages);
-                default:
-                    break;
+                }
+
+                newUser.Username = request.Username;
+                newUser.PasswordHash = request.Password;
+                newUser.Email = request.Email;
+                newUser.RoleId = request.RoleId;
+                newUser.SchoolId = request.SchoolId;
+                newUser.GradeId = request.GradeId;
+                newUser.ImgURL = DefaultAvatar.UserPicture;
+                newUser.IsActive = true;
+                newUser.ManagerId = null;
+
+                var temp = await _unitOfWork.Users.AddAsync(newUser);
+
+                await _unitOfWork.CompleteAsync();
+
+                mailRequest.ToEmail = newUser.Email;
+                mailRequest.Subject = "Welcome to AI Math Tool";
+                mailRequest.Body = $"Username: {newUser.Username} Password: {newUser.PasswordHash}";
+
+                await _emailService.SendEmailAsync(mailRequest);
+
+                return new Response<GetUserResponse>(code: (int)ResponseCode.CREATED_SUCCESS, message: ResponseCode.CREATED_SUCCESS.GetDescription());
             }
 
-            var newUser = new User
+            var managerId = await _unitOfWork.Users.GetSchoolManagerAsync(request.GradeId);
+
+            if (managerId == 0)
             {
-                Username = request.Username,
-                PasswordHash = request.Password,
-                Email = request.Email,
-                RoleId = request.RoleId,
-                SchoolId = request.SchoolId,
-                GradeId = request.GradeId,
-                ImgURL = DefaultAvatar.UserPicture,
-                IsActive = true,
-                ManagerId = null
-            };
+                errorMessages.Add(ResponseCode.MANAGER_HAS_EXISTED.GetDescription());
+                throw new ValidationException(ResponseCode.MANAGER_NOT_FOUND, errorMessages);
+            }
 
-            //if (newUser.RoleId != (int)AvailableRole.SubjectSpecialistManager)
-            //{
-            //    newUser.ManagerId = await _unitOfWork.Users.GetSchoolManagerAsync(request.GradeId, request.SchoolId);
-            //}
+            newUser.Username = request.Username;
+            newUser.PasswordHash = request.Password;
+            newUser.Email = request.Email;
+            newUser.RoleId = request.RoleId;
+            newUser.SchoolId = request.SchoolId;
+            newUser.GradeId = request.GradeId;
+            newUser.ImgURL = DefaultAvatar.UserPicture;
+            newUser.IsActive = true;
+            newUser.ManagerId = managerId;
 
-            var mailRequest = new MailRequest
-            {
-                ToEmail = newUser.Email,
-                Subject = "Welcome to AI Math Tool",
-                Body = $"Username: {newUser.Username} Password: {newUser.PasswordHash}"
-            };
-
-            await _emailService.SendEmailAsync(mailRequest);
-
-            var res = await _unitOfWork.Users.AddAsync(newUser);
+            var newResult = await _unitOfWork.Users.AddAsync(newUser);
 
             await _unitOfWork.CompleteAsync();
+
+            mailRequest.ToEmail = newUser.Email;
+            mailRequest.Subject = "Welcome to AI Math Tool";
+            mailRequest.Body = $"Username: {newUser.Username} Password: {newUser.PasswordHash}";
+
+            await _emailService.SendEmailAsync(mailRequest);
 
             return new Response<GetUserResponse>(code: (int)ResponseCode.CREATED_SUCCESS, message: ResponseCode.CREATED_SUCCESS.GetDescription());
         }

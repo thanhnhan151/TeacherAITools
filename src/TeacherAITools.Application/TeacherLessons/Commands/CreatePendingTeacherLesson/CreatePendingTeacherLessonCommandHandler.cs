@@ -21,6 +21,8 @@ namespace TeacherAITools.Application.TeacherLessons.Commands.CreatePendingTeache
 
         public async Task<Response<GetTeacherLessonResponse>> Handle(CreatePendingTeacherLessonCommand request, CancellationToken cancellationToken)
         {
+            if (await _unitOfWork.Prompts.IsBelongedToTeacherAsync(request.UserId, request.LessonId)) throw new ApiException(ResponseCode.ALREADY_GENERATED_LESSON);
+
             var lessonQuery = await _unitOfWork.Lessons.GetAsync(lesson => lesson.LessonId == request.LessonId);
 
             var lesson = lessonQuery

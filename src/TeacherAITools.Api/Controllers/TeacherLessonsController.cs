@@ -6,6 +6,7 @@ using System.Net;
 using TeacherAITools.Application.Common.Exceptions;
 using TeacherAITools.Application.TeacherLessons.Commands.CreatePendingTeacherLesson;
 using TeacherAITools.Application.TeacherLessons.Commands.CreateTeacherLesson;
+using TeacherAITools.Application.TeacherLessons.Commands.DeleteTeacherLesson;
 using TeacherAITools.Application.TeacherLessons.Commands.UpdateStatusTeacherLesson;
 using TeacherAITools.Application.TeacherLessons.Commands.UpdateTeacherLesson;
 using TeacherAITools.Application.TeacherLessons.Common;
@@ -224,6 +225,27 @@ namespace TeacherAITools.Api.Controllers
             try
             {
                 return Ok(await mediator.Send(new UpdateTeacherLessonCommand(id, request)));
+            }
+            catch (ApiException e)
+            {
+                return NotFound(new
+                {
+                    errorCode = e.ErrorCode,
+                    error = e.Error,
+                    errorMessage = e.ErrorMessage
+                });
+            }
+        }
+
+        [HttpDelete("{id}")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(Response<string>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> DeleteAsync(int id)
+        {
+            try
+            {
+                return Ok(await mediator.Send(new DeleteTeacherLessonCommand(id)));
             }
             catch (ApiException e)
             {

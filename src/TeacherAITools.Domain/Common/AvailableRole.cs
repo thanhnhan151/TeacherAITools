@@ -8,8 +8,6 @@ namespace TeacherAITools.Domain.Common
         Administrator = 1,
         [Description("Subject Specialist Manager")]
         SubjectSpecialistManager = 2,
-        [Description("Vice Manager")]
-        ViceManager = 3,
         [Description("Teacher")]
         Teacher = 4,
     }

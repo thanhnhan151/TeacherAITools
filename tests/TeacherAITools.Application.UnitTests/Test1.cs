@@ -641,7 +641,7 @@ public sealed class Test1
         // validatorMock.Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
         //     .ReturnsAsync(new FluentValidation.Results.ValidationResult());
 
-        _userRepositoryMock.Setup(r => r.CheckSchoolManagerAsync(command.RoleId, command.GradeId, command.SchoolId))
+        _userRepositoryMock.Setup(r => r.CheckGradeManagerAsync(command.RoleId, command.GradeId))
             .ReturnsAsync(-1);
 
         _userRepositoryMock.Setup(r => r.AddAsync(It.IsAny<User>()))
@@ -690,7 +690,7 @@ public sealed class Test1
         _schoolRepositoryMock.Setup(s => s.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new School());
         _gradeRepositoryMock.Setup(s => s.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new Grade());
 
-        _userRepositoryMock.Setup(r => r.CheckSchoolManagerAsync(command.RoleId, command.GradeId, command.SchoolId))
+        _userRepositoryMock.Setup(r => r.CheckGradeManagerAsync(command.RoleId, command.GradeId))
             .ReturnsAsync(1);
 
         await Assert.ThrowsExceptionAsync<ValidationException>(() =>
@@ -731,7 +731,7 @@ public sealed class Test1
         var validator = new CreateUserCommandValidator(_unitOfWorkMock.Object);
         // var validationResult = await validator.ValidateAsync(command);
 
-        _userRepositoryMock.Setup(r => r.CheckSchoolManagerAsync(2, 1, 1)).ReturnsAsync(0);
+        _userRepositoryMock.Setup(r => r.CheckGradeManagerAsync(2, 1)).ReturnsAsync(0);
         _userRepositoryMock.Setup(r => r.AddAsync(It.IsAny<User>())).ReturnsAsync(new User());
 
         _emailServiceMock.Setup(e => e.SendEmailAsync(It.IsAny<MailRequest>())).Returns(Task.CompletedTask);
@@ -800,7 +800,7 @@ public sealed class Test1
         var validator = new CreateUserCommandValidator(_unitOfWorkMock.Object);
         await validator.ValidateAsync(command);
 
-        _userRepositoryMock.Setup(r => r.CheckSchoolManagerAsync(2, 1, 1)).ReturnsAsync(1); // Manager exists
+        _userRepositoryMock.Setup(r => r.CheckGradeManagerAsync(2, 1)).ReturnsAsync(1); // Manager exists
 
         // Act
         await Assert.ThrowsExceptionAsync<ValidationException>(() =>
@@ -832,7 +832,7 @@ public sealed class Test1
             1
         );
 
-        _userRepositoryMock.Setup(r => r.CheckSchoolManagerAsync(2, 1, 1)).ReturnsAsync(0); // Vice manager exists
+        _userRepositoryMock.Setup(r => r.CheckGradeManagerAsync(2, 1)).ReturnsAsync(0); // Vice manager exists
 
         // Act
         await Assert.ThrowsExceptionAsync<ValidationException>(() =>
@@ -995,8 +995,7 @@ public sealed class Test1
             "0987654321",
             new DateOnly(1990, 1, 1),
             Gender.Male,
-            "Male",
-            1
+            "Male"
         );
 
         var command = new UpdateUserCommand
@@ -1041,8 +1040,7 @@ public sealed class Test1
             "phonenumber",
             DateOnly.MinValue,
             Gender.Male,
-            "address",
-            1)
+            "address")
         );
 
         _userRepositoryMock.Setup(r => r.GetAsync(
@@ -1072,8 +1070,7 @@ public sealed class Test1
             "",
             DateOnly.MinValue,
             Gender.Male,
-            "",
-            1
+            ""
         );
 
         var command = new UpdateUserCommand
@@ -1195,7 +1192,7 @@ public sealed class Test1
     public async Task Handle_GetLessonByIdQueryHandler_ReturnsSuccessResponseWithLessonDetail()
     {
         _unitOfWorkMock.Setup(u => u.Lessons).Returns(_lessonRepositoryMock.Object);
-        _getLessonByIdQueryHandler = new GetLessonByIdQueryHandler(_unitOfWorkMock.Object);
+        _getLessonByIdQueryHandler = new GetLessonByIdQueryHandler(_unitOfWorkMock.Object, _mapperMock.Object);
 
         // Arrange
         var lessonId = 1;
@@ -1218,7 +1215,7 @@ public sealed class Test1
 
         var lessonsQueryable = new List<Lesson> { lesson }.AsQueryable();
 
-        _getLessonByIdQueryHandler = new GetLessonByIdQueryHandler(_unitOfWorkMock.Object);
+        _getLessonByIdQueryHandler = new GetLessonByIdQueryHandler(_unitOfWorkMock.Object, _mapperMock.Object);
 
 
         _lessonRepositoryMock
@@ -1242,7 +1239,6 @@ public sealed class Test1
         Assert.AreEqual(10, result.Data.TotalPeriods);
         Assert.AreEqual("Type A", result.Data.LessonType);
         Assert.AreEqual("Note A", result.Data.Note);
-        Assert.AreEqual(5, result.Data.Week);
         Assert.AreEqual("Module A", result.Data.Module);
         Assert.AreEqual(12, result.Data.GradeNumber);
     }
@@ -1319,7 +1315,6 @@ public sealed class Test1
         Assert.AreEqual(5, lessonResponse.TotalPeriods);
         Assert.AreEqual("Lecture", lessonResponse.LessonType);
         Assert.AreEqual("Note 1", lessonResponse.Note);
-        Assert.AreEqual(1, lessonResponse.Week);
         Assert.AreEqual("Algebra", lessonResponse.Module);
         Assert.AreEqual(10, lessonResponse.GradeNumber);
     }
@@ -1381,7 +1376,6 @@ public sealed class Test1
             TotalPeriods = 5,
             LessonTypeId = 1,
             NoteId = 1,
-            WeekId = 1,
             ModuleId = 1
         };
 
@@ -1426,8 +1420,6 @@ public sealed class Test1
             Description = "Description",
             TotalPeriods = 5,
             LessonTypeId = 1,
-            NoteId = 1,
-            WeekId = 1,
             ModuleId = 1
         };
 
@@ -1464,8 +1456,6 @@ public sealed class Test1
             Description = "Description",
             TotalPeriods = 5,
             LessonTypeId = 1,
-            NoteId = 1,
-            WeekId = 1,
             ModuleId = 1
         };
 
@@ -1503,7 +1493,6 @@ public sealed class Test1
             TotalPeriods = 5,
             LessonTypeId = 1,
             NoteId = 1,
-            WeekId = 1,
             ModuleId = 1
         };
 
@@ -1552,7 +1541,7 @@ public sealed class Test1
             .Returns(Task.CompletedTask);
 
         // Act
-        var result = await _deleteLessonCommandHandler.Handle(lessonId, CancellationToken.None);
+        var result = await _deleteLessonCommandHandler.Handle(command, CancellationToken.None);
 
         // Assert
         Assert.IsNotNull(result);
@@ -1631,8 +1620,6 @@ public sealed class Test1
             TotalPeriods = 12,
             LessonTypeId = 1,
             NoteId = 1,
-            WeekId = 1,
-            ModuleId = 1
         };
 
         var command = new UpdateLessonCommand
@@ -1686,8 +1673,6 @@ public sealed class Test1
             TotalPeriods = 12,
             LessonTypeId = 1,
             NoteId = 1,
-            WeekId = 1,
-            ModuleId = 1
         };
 
         var command = new UpdateLessonCommand
@@ -1737,8 +1722,6 @@ public sealed class Test1
             TotalPeriods = 12,
             LessonTypeId = 1,
             NoteId = 1,
-            WeekId = 1,
-            ModuleId = 1
         };
 
         var command = new UpdateLessonCommand
@@ -1787,8 +1770,6 @@ public sealed class Test1
             TotalPeriods = 12,
             LessonTypeId = 1,
             NoteId = 1,
-            WeekId = 1,
-            ModuleId = 1
         };
 
         var command = new UpdateLessonCommand
@@ -1826,8 +1807,6 @@ public sealed class Test1
             TotalPeriods = 12,
             LessonTypeId = 1,
             NoteId = 1,
-            WeekId = 1,
-            ModuleId = 1
         };
 
         var command = new UpdateLessonCommand
@@ -1971,7 +1950,7 @@ public sealed class Test1
             10
         );
 
-        _teacherLessonRepoMock.Setup(r => r.IsBelongedToTeacherAsync(request.UserId, request.PromptId)).ReturnsAsync(false);
+        _teacherLessonRepoMock.Setup(r => r.IsBelongedToTeacherAsync(request.UserId, request.LessonId)).ReturnsAsync(false);
         _dateTimeProviderMock.Setup(p => p.UtcNow).Returns(new DateTime(2024, 1, 1));
 
         // Act
@@ -1980,7 +1959,7 @@ public sealed class Test1
         // Assert
         _teacherLessonRepoMock.Verify(r => r.AddAsync(It.Is<TeacherLesson>(
             t => t.UserId == request.UserId &&
-                 t.PromptId == request.PromptId &&
+                 t.PromptId == request.LessonId &&
                  t.Status == LessonStatus.Pending &&
                  t.CreatedAt == new DateTime(2024, 1, 1))), Times.Once);
 
@@ -2015,7 +1994,7 @@ public sealed class Test1
         var expectedTime = new DateTime(2024, 1, 1);
 
         _teacherLessonRepoMock
-            .Setup(repo => repo.IsBelongedToTeacherAsync(request.UserId, request.PromptId))
+            .Setup(repo => repo.IsBelongedToTeacherAsync(request.UserId, request.LessonId))
             .ReturnsAsync(false);
 
         _dateTimeProviderMock
@@ -2190,7 +2169,7 @@ public sealed class Test1
         _unitOfWorkMock.Setup(u => u.TeacherLessons).Returns(_teacherLessonRepoMock.Object);
         _unitOfWorkMock.Setup(u => u.LessonHistories).Returns(_lessonHistoryRepoMock.Object);
 
-        _updateTeacherLessonCommandHandler = new UpdateTeacherLessonCommandHandler(_unitOfWorkMock.Object);
+        _updateTeacherLessonCommandHandler = new UpdateTeacherLessonCommandHandler(_unitOfWorkMock.Object, _dateTimeProviderMock.Object);
 
         // Arrange
         var teacherLesson = new TeacherLesson
@@ -2242,7 +2221,7 @@ public sealed class Test1
         _unitOfWorkMock.Setup(u => u.TeacherLessons).Returns(_teacherLessonRepoMock.Object);
         _unitOfWorkMock.Setup(u => u.LessonHistories).Returns(_lessonHistoryRepoMock.Object);
 
-        _updateTeacherLessonCommandHandler = new UpdateTeacherLessonCommandHandler(_unitOfWorkMock.Object);
+        _updateTeacherLessonCommandHandler = new UpdateTeacherLessonCommandHandler(_unitOfWorkMock.Object, _dateTimeProviderMock.Object);
 
         // Arrange
         var request = new UpdateTeacherLessonCommand
@@ -2290,7 +2269,6 @@ public sealed class Test1
             Name = "Math",
             Desciption = "Basic math",
             Semester = 1,
-            TotalPeriods = 30,
             CurriculumId = 1,
             GradeId = 2,
             BookId = 3
@@ -2466,12 +2444,7 @@ public sealed class Test1
             new()
             {
                 Name = "Updated Module",
-                Desciption = "Updated Description",
-                Semester = 2,
-                TotalPeriods = 20,
-                CurriculumId = 1,
-                GradeId = 1,
-                BookId = 1
+                Desciption = "Updated Description"
             }
         );
 
@@ -2507,7 +2480,7 @@ public sealed class Test1
 
         var command = new UpdateModuleCommand
        (1,
-             new() { CurriculumId = 1, GradeId = 1, BookId = 1 }
+             new()
        );
 
         _unitOfWorkMock.Setup(x => x.Curriculums.Any(It.IsAny<System.Linq.Expressions.Expression<Func<Curriculum, bool>>>())).Returns(false);
@@ -2525,7 +2498,7 @@ public sealed class Test1
 
         var command = new UpdateModuleCommand
         (1,
-            new() { CurriculumId = 1, GradeId = 2, BookId = 1 }
+            new()
         );
 
         _unitOfWorkMock.Setup(x => x.Curriculums.Any(It.IsAny<System.Linq.Expressions.Expression<Func<Curriculum, bool>>>())).Returns(true);
@@ -2544,7 +2517,7 @@ public sealed class Test1
 
         var command = new UpdateModuleCommand
         (1,
-             new() { CurriculumId = 1, GradeId = 1, BookId = 99 }
+             new()
         );
 
         _unitOfWorkMock.Setup(x => x.Curriculums.Any(It.IsAny<System.Linq.Expressions.Expression<Func<Curriculum, bool>>>())).Returns(true);
@@ -2564,7 +2537,7 @@ public sealed class Test1
 
         var command = new UpdateModuleCommand
        (100,
-            new() { CurriculumId = 1, GradeId = 1, BookId = 1 }
+            new()
        );
 
         _unitOfWorkMock.Setup(x => x.Curriculums.Any(It.IsAny<System.Linq.Expressions.Expression<Func<Curriculum, bool>>>())).Returns(true);
@@ -2803,7 +2776,8 @@ public sealed class Test1
             "Valid Title",
             "Valid body",
             1,
-            1
+            1,
+            19
         );
 
         var now = DateTime.UtcNow;
@@ -2832,7 +2806,8 @@ public sealed class Test1
             "",
             "Valid body",
             1,
-            1
+            1,
+            19
         );
 
         _unitOfWorkMock.Setup(x => x.Categories.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new Category());
@@ -2854,7 +2829,8 @@ public sealed class Test1
             "Valid Title",
             "",
             1,
-            1
+            1,
+            19
         );
 
         _unitOfWorkMock.Setup(x => x.Categories.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new Category());
@@ -2873,7 +2849,8 @@ public sealed class Test1
             "Valid Title",
             "Valid Body",
             999,
-            1
+            1,
+            19
         );
 
         _unitOfWorkMock.Setup(x => x.Categories.GetByIdAsync(999)).ReturnsAsync((Category)null);
@@ -2892,7 +2869,8 @@ public sealed class Test1
             "Valid Title",
             "Valid Body",
             1,
-            999
+            999,
+            19
         );
 
         _unitOfWorkMock.Setup(x => x.Categories.GetByIdAsync(1)).ReturnsAsync(new Category());
@@ -3124,8 +3102,8 @@ public sealed class Test1
         var paginatedBlogData = new PaginatedList<Blog>(blogs, totalRecords: 2, currentPage: 1, pageSize: 10);
 
         _unitOfWorkMock.Setup(u => u.Blogs.PaginatedListAsync(
-                It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
-                It.IsAny<int?>(), It.IsAny<bool>(),
+                It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()
+                , It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>(),
                 It.IsAny<int>(), It.IsAny<int>()))
             .ReturnsAsync(paginatedBlogData);
 
@@ -3148,6 +3126,7 @@ public sealed class Test1
             "Title",
             "asc",
             false,
+            19,
             null,
             1,
             10

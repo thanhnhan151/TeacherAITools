@@ -202,5 +202,8 @@ namespace TeacherAITools.Application.Common.Enums
         [Description("Curriculum topic not found!")]
         CURRICULUM_TOPIC_NOT_FOUND = 64,
         #endregion
+
+        [Description("Trưởng bộ môn không tồn tại!")]
+        MANAGER_NOT_FOUND = 65,
     }
 }

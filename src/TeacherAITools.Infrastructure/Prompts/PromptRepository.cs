@@ -50,5 +50,8 @@ namespace TeacherAITools.Infrastructure.Prompts
             var answer = _dbContext.Prompts.OrderBy(e => e.PromptId).LastOrDefault();
             return answer is not null ? answer.PromptId : 0;
         }
+
+        public async Task<bool> IsBelongedToTeacherAsync(int userId, int lessonId)
+        => await _dbContext.Prompts.AnyAsync(t => t.UserId == userId && t.LessonId == lessonId);
     }
 }

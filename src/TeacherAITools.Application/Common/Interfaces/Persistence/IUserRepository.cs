@@ -17,9 +17,9 @@ namespace TeacherAITools.Application.Common.Interfaces.Persistence
             , int page
             , int pageSize);
 
-        Task<int> CheckSchoolManagerAsync(int roleId, int gradeId, int schoolId);
+        Task<int> CheckGradeManagerAsync(int roleId, int gradeId);
 
-        Task<int> GetSchoolManagerAsync(int gradeId, int schoolId);
+        Task<int> GetSchoolManagerAsync(int gradeId);
 
         Task<User?> SendOtpAsync(string email);
 
