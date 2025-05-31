@@ -13,11 +13,9 @@ namespace TeacherAITools.Application.TeacherLessons.Commands.UpdateStatusTeacher
 {
     public class UpdateStatusTeacherLessonCommandHandler(
         IUnitOfWork unitOfWork,
-        ICurrentUserService currentUserService,
         IEmailService emailService) : IRequestHandler<UpdateStatusTeacherLessonCommand, Response<GetDetailTeacherLessonResponse>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        private readonly ICurrentUserService _currentUserService = currentUserService;
         private readonly IEmailService _emailService = emailService;
 
         public async Task<Response<GetDetailTeacherLessonResponse>> Handle(UpdateStatusTeacherLessonCommand request, CancellationToken cancellationToken)
@@ -44,7 +42,7 @@ namespace TeacherAITools.Application.TeacherLessons.Commands.UpdateStatusTeacher
 
                     teacherLesson.DisapprovedReason = request.updateStatusTeacherLessonRequest.DisapprovedReason;
 
-                    mailRequest.ToEmail = _currentUserService.Email ?? string.Empty;
+                    mailRequest.ToEmail = teacherLesson.User.Email;
 
                     mailRequest.Subject = "BÀI GIẢNG CỦA BẠN ĐÃ BỊ TỪ CHỐI";
 
@@ -57,7 +55,7 @@ namespace TeacherAITools.Application.TeacherLessons.Commands.UpdateStatusTeacher
                     break;
                 case Domain.Common.LessonStatus.Pending:
                 case Domain.Common.LessonStatus.Approved:
-                    mailRequest.ToEmail = _currentUserService.Email ?? string.Empty;
+                    mailRequest.ToEmail = teacherLesson.User.Email;
 
                     mailRequest.Subject = "BÀI GIẢNG CỦA BẠN ĐÃ ĐƯỢC PHÊ DUYỆT";
 
