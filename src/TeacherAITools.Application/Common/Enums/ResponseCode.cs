@@ -208,5 +208,8 @@ namespace TeacherAITools.Application.Common.Enums
 
         [Description("Lesson has already existed")]
         LESSON_HAS_ALREADY_EXISTED = 66,
+
+        [Description("Old Password does not match")]
+        PASSWORD_DOES_NOT_MATCH = 67,
     }
 }
