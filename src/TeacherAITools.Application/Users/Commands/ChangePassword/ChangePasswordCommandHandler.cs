@@ -15,7 +15,7 @@ namespace TeacherAITools.Application.Users.Commands.ChangePassword
         public async Task<Response<string>> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
         {
             List<string> errorMessages = [];
-            var userQuery = await _unitOfWork.Users.GetAsync(u => u.Username.Equals(request.UsernameOrEmail) || u.Email.Equals(request.UsernameOrEmail));
+            var userQuery = await _unitOfWork.Users.GetAsync(u => u.PasswordHash.Equals(request.OldPassword));
 
             var user = userQuery.FirstOrDefault();
 
