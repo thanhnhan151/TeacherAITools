@@ -6,6 +6,8 @@ namespace TeacherAITools.Application.Common.Interfaces.Services
     {
         public string? CurrentPrincipal { get; }
 
+        public string? Email { get; }
+
         public ClaimsPrincipal GetCurrentPrincipalFromToken(string token);
     }
 }

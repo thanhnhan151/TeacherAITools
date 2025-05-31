@@ -32,6 +32,20 @@ namespace TeacherAITools.Infrastructure.Services
             }
         }
 
+        public string? Email
+        {
+            get
+            {
+                if (_accessor?.HttpContext?.User.Identity is not ClaimsIdentity identity || !identity.IsAuthenticated) return null;
+
+                var claims = identity.Claims;
+
+                var userId = claims.FirstOrDefault(o => o.Type == ClaimTypes.Email)?.Value ?? null;
+
+                return userId;
+            }
+        }
+
         public ClaimsPrincipal GetCurrentPrincipalFromToken(string token)
         {
             var tokenValidationParams = new TokenValidationParameters()

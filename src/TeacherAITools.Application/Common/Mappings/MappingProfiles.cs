@@ -132,7 +132,8 @@ namespace TeacherAITools.Application.Common.Mappings
             CreateMap<Lesson, GetLessonResponse>()
                 .ForMember(c => c.LessonType, c => c.MapFrom(c => c.LessonType.LessonTypeName))
                 .ForMember(c => c.Module, c => c.MapFrom(c => c.Module.Name))
-                .ForMember(c => c.Note, c => c.MapFrom(c => c.Note.Description));
+                .ForMember(c => c.Note, c => c.MapFrom(c => c.Note.Description))
+                .ForMember(c => c.GradeNumber, c => c.MapFrom(c => c.Module.GradeId));
             CreateMap<LessonType, GetLessonTypeResponse>();
             CreateMap<Note, GetNoteResponse>();
             CreateMap<Requirement, GetRequirementResponse>();
