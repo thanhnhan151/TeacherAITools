@@ -54,6 +54,7 @@ namespace TeacherAITools.Application.TeacherLessons.Commands.UpdateStatusTeacher
                     teacherLesson.DisapprovedReason = string.Empty;
                     break;
                 case Domain.Common.LessonStatus.Pending:
+                    break;
                 case Domain.Common.LessonStatus.Approved:
                     mailRequest.ToEmail = teacherLesson.User.Email;
 
