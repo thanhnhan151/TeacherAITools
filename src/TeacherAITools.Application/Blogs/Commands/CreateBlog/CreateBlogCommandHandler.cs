@@ -41,6 +41,11 @@ namespace TeacherAITools.Application.Blogs.Commands.CreateBlog
                 UserId = request.UserId
             };
 
+            if (newBlog.CategoryId != 1)
+            {
+                newBlog.LessonPlanId = null;
+            }
+
             var res = await _unitOfWork.Blogs.AddAsync(newBlog);
 
             await _unitOfWork.CompleteAsync();

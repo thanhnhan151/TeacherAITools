@@ -38,6 +38,8 @@ namespace TeacherAITools.Application.Blogs.Commands.CreateBlog
 
         private async Task<bool> AlreadyExistLessonId(int teacherLessonId)
         {
+            if (teacherLessonId == 0) return true;
+
             var category = await _unitOfWork.TeacherLessons.GetByIdAsync(teacherLessonId);
 
             if (category is null) return false;
