@@ -12,7 +12,7 @@ namespace TeacherAITools.Application.Common.Interfaces.Persistence
             , string? sortOrder
             , int? userId
             , int? categoryId
-            , bool isActive
+            , int? isActive
             , int page
             , int pageSize);
     }
