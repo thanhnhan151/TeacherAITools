@@ -8,7 +8,7 @@ namespace TeacherAITools.Application.Blogs.Queries.GetBlogs
         string? SearchTerm,
         string? SortColumn,
         string? SortOrder,
-        bool IsActive,
+        int? IsActive,
         int? UserId,
         int? CategoryId,
         int Page,
