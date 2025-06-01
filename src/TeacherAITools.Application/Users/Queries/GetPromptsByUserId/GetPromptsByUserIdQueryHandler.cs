@@ -23,6 +23,7 @@ namespace TeacherAITools.Application.Users.Queries.GetPromptsByUserId
 
             var user = userQuery
                 .Include(r => r.Prompts)
+                .ThenInclude(r => r.Lesson)
                 .FirstOrDefault() ?? throw new ApiException(ResponseCode.USER_NOT_FOUND);
 
             return new Response<List<GetPromptResponse>>(code: (int)ResponseCode.SUCCESS, data: _mapper.Map<List<GetPromptResponse>>(user.Prompts), message: ResponseCode.SUCCESS.GetDescription());

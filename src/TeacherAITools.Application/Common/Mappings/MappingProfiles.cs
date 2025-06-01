@@ -143,7 +143,9 @@ namespace TeacherAITools.Application.Common.Mappings
             #endregion
 
             #region Prompt
-            CreateMap<Prompt, GetPromptResponse>();
+            CreateMap<Prompt, GetPromptResponse>()
+                .ForMember(p => p.LessonName, p => p.MapFrom(p => p.Lesson.Name))
+                .ForMember(p => p.CreatedAt, p => p.MapFrom(p => p.CreatedAt.GetFormatDateTime()));
             CreateMap<PaginatedList<Prompt>, PaginatedList<GetPromptResponse>>();
             #endregion
 
