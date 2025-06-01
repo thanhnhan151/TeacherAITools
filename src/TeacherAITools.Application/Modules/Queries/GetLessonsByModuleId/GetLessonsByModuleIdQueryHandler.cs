@@ -26,7 +26,7 @@ namespace TeacherAITools.Application.Modules.Queries.GetLessonsByModuleId
             {
                 var teacherModule = moduleQuery
                     .Include(m => m.Lessons
-                    .Where(l => l.IsActive)
+                    .Where(l => l.IsActive && !string.IsNullOrEmpty(l.SpecialAbility))
                     .OrderBy(l => l.LessonId))
                     .ThenInclude(l => l.LessonType)
                     .FirstOrDefault() ?? throw new ApiException(ResponseCode.MODULE_NOT_FOUND);
